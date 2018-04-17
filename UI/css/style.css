@@ -9,6 +9,10 @@ main{
   display: flex;
   flex-direction: row;
 }
+.img-responsive {
+  max-width: 100%;
+  height: auto;
+}
 
 nav {
   justify-content: flex-end;

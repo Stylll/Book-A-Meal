@@ -37,11 +37,11 @@
     <div class="container text-center black-text">
       <div class="hor-card">
         <div class="container">
-          <img src="./assets/spaghetti.jpg" alt="meal-image" class="img" />
+          <img src="./assets/spaghetti.jpg" alt="meal-image" class="img-responsive" />
         </div>
         <div class="card-content">
           <div class="card-text black-text">
-            <form>
+            <form onsubmit="redirectTo('./order-complete.html'); return false;">
               <h1 class="left">Spaghetti and Meat Balls with crayfish.</h1>
               <h3 class="right">Price: 1500</h3>
               <p>Quantity (plates): <select>
@@ -55,7 +55,7 @@
               <input type="submit" class="btn btn-secondary" value="Confirm" />
             </form>
             <br />
-            <a href="./index.html">Back to menu list</a>
+            <a href="./index.html">Back to menu</a>
           </div>
         </div>
       </div>
