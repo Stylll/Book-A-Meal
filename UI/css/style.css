@@ -12,6 +12,7 @@ main{
 .img-responsive {
   max-width: 100%;
   height: auto;
+  max-height: 300px;
 }
 
 nav {
@@ -57,6 +58,16 @@ nav {
 .btn-secondary:hover{
   cursor: pointer;
   background-color: rgb(103, 175, 105);
+}
+
+.btn-danger {
+  background-color:rgb(209, 32, 32);
+  border: none;
+  color: white;
+}
+.btn-danger:hover{
+  cursor: pointer;
+  background-color: rgb(211, 61, 61);
 }
 
 .container{
