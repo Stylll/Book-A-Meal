@@ -94,6 +94,12 @@ nav {
   padding-bottom: 10px;
 }
 
+.textbox {
+  height: 40px;
+  padding: 5px;
+  font-size: 20px;
+}
+
 /* Target for smaller screen Starts */
 @media (min-width:320px) and (max-width:720px) {
   .flex-display {
