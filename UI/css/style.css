@@ -65,6 +65,12 @@ nav {
 .text-center{
   text-align: center;
 }
+.text-left{
+  text-align: left;
+}
+.text-right{
+  text-align: right;
+}
 .card {
   min-height: 300px;
   width: 70%;
