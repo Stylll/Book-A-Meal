@@ -1,2 +1,2 @@
 # Book-A-Meal
-An application where customers can make food orders and vendors can know what a customer wants to eat
+Book-A-Meal is an application that allows customers to make food orders and helps the food vendor know what the customers what to eat.
