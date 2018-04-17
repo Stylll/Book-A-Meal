@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../css/style.css" type="text/css" />
+  <title>Manage Meals</title>
+</head>
+
+<body>
+  <main>
+    <!-- Navigation bar Starts -->
+    <nav class="navbar primary-bg-color flex-display">
+      <div class="navitem flexleft">
+        <a href="../orders/order-menu.html" class="navlink">Book-A-Meal</a>
+      </div>
+      <div class="navitem">
+        <a href="../menus/manage-menus.html" class="navlink">Menus</a>
+      </div>
+      <div class="navitem">
+        <a href="../meals/manage-meals.html" class="navlink">Meals</a>
+      </div>
+      <div class="navitem">
+        <a href="../orders/pending-orders.html" class="navlink">Pending Orders</a>
+      </div>
+      <div class="navitem">
+        <a href="../orders/order-history.html" class="navlink">Order History</a>
+      </div>
+      <div class="navitem">
+        <a href="../orders/order-summary.html" class="navlink">Summary</a>
+      </div>
+      <div class="navitem">
+        <a href="../users/profile.html" class="navlink">My Profile</a>
+      </div>
+      <div class="navitem">
+        <a href="../users/signin.html" class="navlink">Logout</a>
+      </div>
+    </nav>
+    <!-- Navigation bar Ends -->
+    <!-- Header Content Start -->
+    <div class="container">
+      <h1 class="secondary-text-color text-center">Manage Meals</h1>
+
+      <div class="text-center">
+        <div>
+          <p>
+            <form>
+              <input type="text" class="textbox" placeholder="select by menu name..." />
+              <input type="submit" value="GO" class="btn btn-secondary" />
+            </form>
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- Header Content Ends -->
+    <hr />
+    <!-- Meal List Starts -->
+    <div class="container">
+      <div>
+        <a href="../meals/edit.html" class="btn btn-primary">Add New Meal</a>
+      </div>
+        <!-- Meal Starts -->
+        <div class="card-container">
+          <div class="card flex-display">
+            <div class="">
+              <img src="../assets/spaghetti.jpg" alt="meal-image" class="card-img" />
+            </div>
+            <div class="card-content">
+              <div class="card-text black-text">
+                <h1 class="left primary-text-color">Spaghetti and Meat Balls with crayfish.</h1>
+                <h3 class="right">Price: 1500</h3>
+                <br />
+                <a href="../meals/edit.html" class="btn btn-secondary">Edit</a>
+                <a href="../meals/delete.html" class="btn red-text">Delete</a>
+                <br/><br/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Meal Ends -->
+        <!-- Meal Starts -->
+        <div class="card-container">
+            <div class="card flex-display">
+              <div class="">
+                <img src="../assets/bakedchicken.jpg" alt="meal-image" class="card-img" />
+              </div>
+              <div class="card-content">
+                <div class="card-text black-text">
+                  <h1 class="left primary-text-color">Baked chicked with fries on the side.</h1>
+                  <h3 class="right">Price: 3500</h3>
+                  <br />
+                  <a href="../meals/edit.html" class="btn btn-secondary">Edit</a>
+                  <a href="../meals/delete.html" class="btn red-text">Delete</a>
+                  <br /><br />
+                </div>
+              </div>
+            </div>
+        </div>
+        <!-- Meal Ends -->
+      </div>
+      <!-- Meal List Ends -->
+
+  </main>
+  <footer>
+    <div class="secondary-bg-color container">
+      <div class="text-center white-text">
+        Book-A-Meal &copy; 2018
+      </div>
+    </div>
+  </footer>
+
+  <script type="text/javascript" src="../js/script.js"></script>
+</body>
+
+</html>

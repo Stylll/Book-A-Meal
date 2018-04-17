@@ -34,7 +34,7 @@ nav {
 }
 .btn {
   height: 50px;
-  padding: 20px;
+  padding: 10px;
   border-radius: 5px;
   text-decoration: none;
 }
@@ -95,7 +95,7 @@ nav {
 }
 
 .textbox {
-  height: 40px;
+  height: 30px;
   padding: 5px;
   font-size: 20px;
 }
@@ -133,6 +133,9 @@ nav {
 }
 .black-text {
   color: #333131;
+}
+.red-text {
+  color: rgb(209, 32, 32);
 }
 /** Colors End **/
 
