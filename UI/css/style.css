@@ -28,6 +28,33 @@ nav {
 .flexleft{
   margin-right: auto;
 }
+.btn {
+  height: 50px;
+  padding: 20px;
+  border-radius: 5px;
+  text-decoration: none;
+}
+.btn-primary {
+  background-color: #700353;
+  border: none;
+  color: white;
+}
+.btn-primary:hover{
+  cursor: pointer;
+  background-color: #701458;
+}
+
+.btn-secondary {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+}
+
+.btn-secondary:hover{
+  cursor: pointer;
+  background-color: rgb(103, 175, 105);
+}
+
 .container{
   padding: 10px;
 }
@@ -40,6 +67,10 @@ nav {
   border: 1px solid;
   box-shadow: 5px 10px 18px #888888;
 
+}
+.hor-card {
+  border: 1px solid;
+  box-shadow: 5px 10px 18px #888888;
 }
 .card-container {
   display: flex;
