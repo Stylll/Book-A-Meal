@@ -1,0 +1,108 @@
+/*Containers Start*/
+body{
+  margin: 0;
+}
+main{
+
+}
+.flex-display {
+  display: flex;
+  flex-direction: row;
+}
+
+nav {
+  justify-content: flex-end;
+  align-items: center;
+  min-height: 10vh;
+}
+.navitem{
+  padding: 10px;
+}
+.navlink{
+  text-decoration: none;
+  color: white;
+}
+.navlink:hover{
+  text-decoration: underline;
+}
+.flexleft{
+  margin-right: auto;
+}
+.container{
+  padding: 10px;
+}
+.text-center{
+  text-align: center;
+}
+.card {
+  min-height: 300px;
+  width: 70%;
+  border: 1px solid;
+  box-shadow: 5px 10px 18px #888888;
+
+}
+.card-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.card-img {
+  height: 100%;
+  width: 100%;
+
+}
+.card-content {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+}
+
+/* Target for smaller screen Starts */
+@media (min-width:320px) and (max-width:720px) {
+  .flex-display {
+    display: flex;
+    flex-direction: column;
+  }
+  .card {
+    width: 90%;
+  }
+}
+
+/* Target for smaller screen Ends */
+
+/*Containers End*/
+
+/** Colors Start **/
+.primary-bg-color {
+  background-color: #700353;
+}
+.secondary-bg-color {
+  background-color: #4CAF50;
+}
+.primary-text-color {
+  color: #700353;
+}
+.secondary-text-color {
+  color: #4CAF50;
+}
+.white-text {
+  color: white;
+}
+.black-text {
+  color: #161515;
+}
+/** Colors End **/
+
+/** Paddings & Margins Start **/
+.padding-top {
+  padding-top: 10px;
+}
+.no-padding-top {
+  padding-top: 0;
+}
+.no-margin {
+  margin: 0 !important;
+}
+/** Paddings & Margins End **/
