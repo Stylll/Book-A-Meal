@@ -3,7 +3,7 @@ body{
   margin: 0;
 }
 main{
-
+  min-height: 100vh;
 }
 .flex-display {
   display: flex;
