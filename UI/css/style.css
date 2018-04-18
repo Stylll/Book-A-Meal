@@ -1,6 +1,11 @@
+/*Import Font Starts*/
+@import url('https://fonts.googleapis.com/css?family=Berkshire+Swash|Roboto|Satisfy');
+/*Import Font End*/
+
 /*Containers Start*/
 body{
   margin: 0;
+  font-family: 'Roboto', sans-serif;
 }
 main{
   min-height: 100vh;

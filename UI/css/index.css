@@ -15,4 +15,8 @@
 }
 .title {
   font-size: 70px;
+  font-family: 'Satisfy', cursive;
+}
+.sub-text{
+  font-family: 'Berkshire Swash', cursive;
 }
