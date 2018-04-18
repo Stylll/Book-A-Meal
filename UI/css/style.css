@@ -87,6 +87,13 @@ nav {
 .text-right{
   text-align: right;
 }
+.logo-title {
+  font-size: 70px;
+  font-family: 'Satisfy', cursive;
+}
+.logo-text {
+  font-family: 'Satisfy', cursive;
+}
 .card {
   min-height: 300px;
   width: 70%;
