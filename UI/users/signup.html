@@ -30,11 +30,13 @@
           </div>
           <div class="container white-text text-center">
             <h2>Book a meal in 3 easy steps:</h2>
-            <ol>
-              <li>Create an Account.</li>
-              <li>Sign in to your account.</li>
-              <li>Order for any meal on the menu.</li>
-            </ol>
+            <div class="list-container">
+              <ol class="list-steps">
+                <li>Create an Account.</li>
+                <li>Sign in to your account.</li>
+                <li>Order for any meal on the menu.</li>
+              </ol>
+            </div>
             <p>Simple as reading A, B, C. right ?</p>
           </div>
         </div>
@@ -42,28 +44,28 @@
       </div>
       <div class="content">
         <div class="container text-center">
-          <h2 class="secondary-text-color">Create an account</h2>
+          <h1 class="black-text bold-text">Create an account</h1>
         </div>
         <div class="container">
           <form onsubmit="redirectTo('../orders/order-menu.html'); return false;">
             <div>
-              <h4 class="primary-text-color">Username:</h4>
-              <input type="text" required class="signup-textbox" placeholder="enter username here..." />
+              <h4 class="black-text light-text">Username</h4>
+              <input type="text" required class="textbox" placeholder="Enter username here..." />
             </div>
             <div>
-              <h4 class="primary-text-color">Email:</h4>
-              <input type="email" required class="signup-textbox" placeholder="enter email here..." />
+              <h4 class="black-text light-text">Email</h4>
+              <input type="email" required class="textbox" placeholder="Enter email here..." />
             </div>
             <div>
-              <h4 class="primary-text-color">Password:</h4>
-              <input type="password" required class="signup-textbox" placeholder="enter password here..." />
+              <h4 class="black-text light-text">Password</h4>
+              <input type="password" required class="textbox" placeholder="Enter password here..." />
             </div>
             <div>
-              <h4 class="primary-text-color">Confirm Password:</h4>
-              <input type="password" required class="signup-textbox" placeholder="enter password again..." />
+              <h4 class="black-text light-text">Confirm Password</h4>
+              <input type="password" required class="textbox" placeholder="Enter password again..." />
             </div>
             <div>
-              <h4 class="primary-text-color">Account Type:</h4>
+              <h4 class="black-text light-text">Account Type</h4>
               <select class="signup-select" required>
                 <option>Customer</option>
                 <option>Caterer</option>
@@ -72,16 +74,13 @@
             <br/>
             <br/>
             <div class="container text-center">
-              <input type="submit" class="btn btn-secondary" value="Sign up" />
+              <input type="submit" class="btn btn-secondary" value="Sign Up" />
             </div>
             <br />
             <div class="container text-center">
-              <a href="../users/signin.html" class="secondary-text-color">Have an account already ?. Click here to sign in.</a>
+              <a href="../users/signin.html" class="secondary-text-color">Have an account ?. Sign In.</a>
             </div>
             <br />
-            <div class="text-center">
-              <a href="../meals/manage.html" class="btn btn-secondary">Sign up as caterer</a>
-            </div>
           </form>
         </div>
       </div>

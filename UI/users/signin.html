@@ -29,11 +29,13 @@
           </div>
           <div class="container white-text text-center">
             <h2>Book a meal in 3 easy steps:</h2>
-            <ol>
-              <li>Create an Account.</li>
-              <li>Sign in to your account.</li>
-              <li>Order for any meal on the menu.</li>
-            </ol>
+            <div class="list-container">
+              <ol class="list-steps">
+                <li>Create an Account.</li>
+                <li>Sign in to your account.</li>
+                <li>Order for any meal on the menu.</li>
+              </ol>
+            </div>
             <p>Simple as reading A, B, C. right ?</p>
           </div>
         </div>
@@ -41,31 +43,30 @@
       </div>
       <div class="content">
         <div class="container text-center">
-          <h2 class="secondary-text-color">Sign in to your account</h2>
+          <h1 class="black-text bold-text">Sign in to your account</h1>
         </div>
         <div class="container">
           <form onsubmit="redirectTo('../orders/order-menu.html'); return false;" >
             <div>
-              <h4 class="primary-text-color">Email:</h4>
-              <input type="text" class="signin-textbox" placeholder="enter email here..." />
+              <h4 class="black-text light-text">Email</h4>
+              <input type="text" class="textbox" placeholder="Enter email here..." />
             </div>
             <div>
-              <h4 class="primary-text-color">Password:</h4>
-              <input type="password" class="signin-textbox" placeholder="enter password here..." />
-              <a href="../user/forgotpassword.html" class="primary-text-color">forgot password ?</a>
+              <h4 class="black-text light-text">Password</h4>
+              <input type="password" class="textbox" placeholder="Enter password here..." />
+            </div>
+            <div class="container text-right">
+              <a href="../user/forgotpassword.html" class="black-text light-text">forgot password ?</a>
             </div>
             <br/><br/>
             <div class="container text-center">
-              <input type="submit" class="btn btn-secondary" value="Sign in" />
+              <input type="submit" class="btn btn-secondary" value="Sign In" />
             </div>
             <br />
             <div class="container text-center">
-                <a href="../users/signup.html" class="secondary-text-color">Don't have an account ?. Click here to sign up.</a>
+                <a href="../users/signup.html" class="secondary-text-color">Don't have an account ?.Sign Up.</a>
             </div>
             <br />
-            <div class="text-center">
-                <a href="../meals/manage.html" class="btn btn-secondary">Sign in as caterer</a>
-            </div>
             </form>
         </div>
       </div>

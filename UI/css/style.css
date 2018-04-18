@@ -1,11 +1,11 @@
 /*Import Font Starts*/
-@import url('https://fonts.googleapis.com/css?family=Berkshire+Swash|Roboto|Satisfy');
+@import url('https://fonts.googleapis.com/css?family=Berkshire+Swash|Roboto|Satisfy|Average+Sans');
 /*Import Font End*/
 
 /*Containers Start*/
 body{
   margin: 0;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Average Sans', sans-serif;
 }
 main{
   min-height: 100vh;
@@ -129,6 +129,20 @@ nav {
   font-size: 15px;
 }
 
+/* Text Variant Starts */
+
+.bold-text {
+  font-weight: 600;
+}
+.normal-text {
+  font-weight: 400;
+}
+.light-text {
+  font-weight: 200;
+}
+
+/* Text Variant Ends */
+
 /* Target for smaller screen Starts */
 @media (min-width:320px) and (max-width:720px) {
   .flex-display {
@@ -161,7 +175,7 @@ nav {
   color: white;
 }
 .black-text {
-  color: #333131;
+  color: #363535;
 }
 .red-text {
   color: rgb(209, 32, 32);
