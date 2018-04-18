@@ -1,0 +1,18 @@
+.level-one{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.main {
+  background-color: #700353;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image:
+        linear-gradient(rgba(37, 42, 48, 0.7), rgba(37, 42, 48, 0.7)),
+        url("../assets/foods.jpg");
+}
+.title {
+  font-size: 70px;
+}
