@@ -202,6 +202,12 @@ nav {
 .padding-top {
   padding-top: 10px;
 }
+.padding-left {
+  padding-left: 10px;
+}
+.padding-right {
+  padding-right: 10px;
+}
 .no-padding-top {
   padding-top: 0;
 }
