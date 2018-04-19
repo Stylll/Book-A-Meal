@@ -6,11 +6,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="../css/style.css" type="text/css" />
+  <link rel="stylesheet" href="../css/modal.css" type="text/css" />
   <title>Manage Meals</title>
 </head>
 
 <body>
   <main>
+    <!-- Modal Starts -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <div class="container text-center black-text">
+          <h1 class="red-text">Delete Meal</h1>
+          <div class="">
+            <img src="../assets/error.png" alt="success" class="img-responsive" />
+          </div>
+          <div class="">
+            <h1>Are you sure ?</h1>
+            <form onsubmit="redirectTo('../meals/manage.html'); return false;">
+              <input type="submit" class="btn btn-danger" value="Yes" />
+              <button type="button" onclick="modalClosePopup(); return false;" class="btn btn-secondary modal-close">No</button>
+            </form>
+            <br />
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal Ends -->
     <!-- Navigation bar Starts -->
     <nav class="navbar primary-bg-color flex-display">
       <div class="navitem flexleft">
@@ -60,45 +81,47 @@
       <div>
         <a href="../meals/edit.html" class="btn btn-primary">Add New Meal</a>
       </div>
-        <!-- Meal Starts -->
-        <div class="card-container">
-          <div class="card flex-display">
-            <div class="card-img-container">
-              <img src="../assets/spaghetti.jpg" alt="meal-image" class="card-img" />
-            </div>
-            <div class="card-content">
-              <div class="card-text black-text">
-                <h3 class="black-text bold-text">Spaghetti and Meat Balls with crayfish.</h3>
-                <h4 class="black-text light-text">Price: &#8358;1500</h4>
-                <a href="../meals/edit.html" class="btn btn-secondary">Edit</a>
-                <a href="../meals/delete.html" class="btn btn-danger">Delete</a>
-                <br /><br />
-              </div>
+      <!-- Meal Starts -->
+      <div class="card-container">
+        <div class="card flex-display">
+          <div class="card-img-container">
+            <img src="../assets/spaghetti.jpg" alt="meal-image" class="card-img" />
+          </div>
+          <div class="card-content">
+            <div class="card-text black-text">
+              <h3 class="black-text bold-text">Spaghetti and Meat Balls with crayfish.</h3>
+              <h4 class="black-text light-text">Price: &#8358;1500</h4>
+              <a href="../meals/edit.html" class="btn btn-secondary">Edit</a>
+              <a href="" onclick="modalPopup(); return false;" class="btn btn-danger">Delete</a>
+              <br />
+              <br />
             </div>
           </div>
         </div>
-        <!-- Meal Ends -->
-        <!-- Meal Starts -->
-        <div class="card-container">
-            <div class="card flex-display">
-              <div class="card-img-container">
-                <img src="../assets/bakedchicken.jpg" alt="meal-image" class="card-img" />
-              </div>
-              <div class="card-content">
-                <div class="card-text black-text">
-                  <h3 class="black-text bold-text">Baked chicked with fries on the side.</h3>
-                  <h4 class="black-text light-text">Price: &#8358;3500</h4>
-                  <br />
-                  <a href="../meals/edit.html" class="btn btn-secondary">Edit</a>
-                  <a href="../meals/delete.html" class="btn btn-danger">Delete</a>
-                  <br /><br />
-                </div>
-              </div>
-            </div>
-        </div>
-        <!-- Meal Ends -->
       </div>
-      <!-- Meal List Ends -->
+      <!-- Meal Ends -->
+      <!-- Meal Starts -->
+      <div class="card-container">
+        <div class="card flex-display">
+          <div class="card-img-container">
+            <img src="../assets/bakedchicken.jpg" alt="meal-image" class="card-img" />
+          </div>
+          <div class="card-content">
+            <div class="card-text black-text">
+              <h3 class="black-text bold-text">Baked chicked with fries on the side.</h3>
+              <h4 class="black-text light-text">Price: &#8358;3500</h4>
+              <br />
+              <a href="../meals/edit.html" class="btn btn-secondary">Edit</a>
+              <a href="" onclick="modalPopup(); return false;" class="btn btn-danger">Delete</a>
+              <br />
+              <br />
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Meal Ends -->
+    </div>
+    <!-- Meal List Ends -->
 
   </main>
   <footer>
@@ -110,6 +133,7 @@
   </footer>
 
   <script type="text/javascript" src="../js/script.js"></script>
+  <script type="text/javascript" src="../js/modal.js"></script>
 </body>
 
 </html>
