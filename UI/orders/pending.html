@@ -28,29 +28,25 @@
       <h1 class="secondary-text-color">Pending Orders</h1>
     </div>
     <!-- Header Content End -->
-    <hr />
     <!-- Order List Starts -->
     <div class="container">
         <!-- Order Starts -->
         <div class="card-container">
           <div class="card flex-display">
-            <div class="">
+            <div class="card-img-container">
               <img src="../assets/spaghetti.jpg" alt="meal-image" class="card-img" />
             </div>
             <div class="card-content">
               <div class="card-text black-text">
-                <h4>Order Date: Friday, 13 April 2018</h4>
-                <h1 class="primary-text-color">Spaghetti and Meat Balls with crayfish.</h1>
-                <h4>Price: 1500</h4>
-                <h4>Quantity: 4</h4>
-                <h3>Cost: 6000</h3>
-                <h4>Order By: James Harden</h4>
+                <h4 class="black-text light-text">Order Date: Friday, 13 April 2018</h4>
+                <h3 class="black-text bold-text">Spaghetti and Meat Balls with crayfish.</h3>
+                <h4 class="black-text light-text">Price: &#8358;1500 x 4 = &#8358;6000</h4>
+                <h4 class="black-text light-text">Order By: James Harden</h4>
                 <form>
                   <input type="submit" class="btn btn-secondary" value="Approve" />
-                  <a href="../orders/decline.html" class="btn btn-danger">Decline</a>
+                  <button type="button" onclick="redirectTo('../orders/decline.html'); return false;" class="btn btn-danger">Decline</button>
+                  
                 </form>
-                <br/>
-                <br />
               </div>
             </div>
           </div>
@@ -59,23 +55,20 @@
         <!-- Order Starts -->
         <div class="card-container">
             <div class="card flex-display">
-              <div class="">
+              <div class="card-img-container">
                 <img src="../assets/bakedchicken.jpg" alt="meal-image" class="card-img" />
               </div>
               <div class="card-content">
                 <div class="card-text black-text">
-                  <h4>Order Date: Monday, 9 April 2018</h4>
-                  <h1 class="primary-text-color">Baked chicked with fries on the side.</h1>
-                  <h4>Price: 3500</h4>
-                  <h4>Quantity: 1</h4>
-                  <h3>Cost: 3500</h3>
-                  <h4>Order By: James Harden</h4>
+                  <h4 class="black-text light-text">Order Date: Monday, 9 April 2018</h4>
+                  <h3 class="black-text bold-text">Baked chicked with fries on the side.</h1>
+                  <h4 class="black-text light-text">Price: &#8358;3500 x 1 = &#8358;3500</h4>
+                  <h4 class="black-text light-text">Order By: James Harden</h4>
                   <form>
                       <input type="submit" class="btn btn-secondary" value="Approve" />
-                      <a href="../orders/decline.html" class="btn btn-danger">Decline</a>
+                      <button type="button" onclick="redirectTo('../orders/decline.html'); return false;" class="btn btn-danger">Decline</button>
+                      
                   </form>
-                <br/>
-                <br />
                 </div>
               </div>
             </div>
