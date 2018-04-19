@@ -15,3 +15,9 @@ const modalClosePopup = () => {
   modal.style.display = 'none';
 };
 
+// function to close modal if area outside modal box is clicked
+window.onclick = () => {
+  if(event.target == modal) {
+    modal.style.display = 'none';
+  }
+}

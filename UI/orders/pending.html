@@ -1,26 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="../css/style.css" type="text/css" />
+  <link rel="stylesheet" href="../css/modal.css" type="text/css" />
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <title>Pending Orders</title>
 </head>
+
 <body>
   <main>
+    <!-- Modal Starts -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <div class="container text-center black-text">
+          <h1 class="red-text">Decline Order</h1>
+          <div class="">
+            <img src="../assets/error.png" alt="success" class="img-responsive" />
+          </div>
+          <div class="">
+            <h1>Are you sure ?</h1>
+            <form onsubmit="redirectTo('../orders/pending.html'); return false;">
+              <input type="submit" class="btn btn-danger" value="Yes" />
+              <button type="button" onclick="modalClosePopup(); return false;" class="btn btn-secondary">No</button>
+            </form>
+            <br />
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal Ends -->
     <!-- Navigation bar Starts -->
     <nav class="navbar primary-bg-color flex-display">
-        <div class="navitem flexleft"><a href="../orders/order-menu.html" class="navlink logo-text">Book-A-Meal</a></div>
-        <div class="navitem"><a href="../orders/order-menu.html" class="navlink">View Menu</a></div>
-      <div class="navitem"><a href="../menus/manage.html" class="navlink">Menus</a></div>
-      <div class="navitem"><a href="../meals/manage.html" class="navlink">Meals</a></div>
-      <div class="navitem"><a href="../orders/pending.html" class="navlink">Pending Orders</a></div>
-      <div class="navitem"><a href="../orders/order-history.html" class="navlink">Order History</a></div>
-      <div class="navitem"><a href="../orders/summary.html" class="navlink">Summary</a></div>
-      <div class="navitem"><a href="../users/profile.html" class="navlink">My Profile</a></div>
-      <div class="navitem"><a href="../users/signin.html" class="navlink">Logout</a></div>
+      <div class="navitem flexleft">
+        <a href="../orders/order-menu.html" class="navlink logo-text">Book-A-Meal</a>
+      </div>
+      <div class="navitem">
+        <a href="../menus/manage.html" class="navlink">Menus</a>
+      </div>
+      <div class="navitem">
+        <a href="../meals/manage.html" class="navlink">Meals</a>
+      </div>
+      <div class="navitem">
+        <a href="../orders/pending.html" class="navlink">Pending Orders</a>
+      </div>
+      <div class="navitem">
+        <a href="../orders/order-history.html" class="navlink">Order History</a>
+      </div>
+      <div class="navitem">
+        <a href="../orders/summary.html" class="navlink">Summary</a>
+      </div>
+      <div class="navitem">
+        <a href="../users/profile.html" class="navlink">My Profile</a>
+      </div>
+      <div class="navitem">
+        <a href="../users/signin.html" class="navlink">Logout</a>
+      </div>
     </nav>
     <!-- Navigation bar Ends -->
     <!-- Header Content Start -->
@@ -30,50 +68,50 @@
     <!-- Header Content End -->
     <!-- Order List Starts -->
     <div class="container">
-        <!-- Order Starts -->
-        <div class="card-container">
-          <div class="card flex-display">
-            <div class="card-img-container">
-              <img src="../assets/spaghetti.jpg" alt="meal-image" class="card-img" />
-            </div>
-            <div class="card-content">
-              <div class="card-text black-text">
-                <h4 class="black-text light-text">Order Date: Friday, 13 April 2018</h4>
-                <h3 class="black-text bold-text">Spaghetti and Meat Balls with crayfish.</h3>
-                <h4 class="black-text light-text">Price: &#8358;1500 x 4 = &#8358;6000</h4>
-                <h4 class="black-text light-text">Order By: James Harden</h4>
-                <form>
-                  <input type="submit" class="btn btn-secondary" value="Approve" />
-                  <button type="button" onclick="redirectTo('../orders/decline.html'); return false;" class="btn btn-danger">Decline</button>
-                  
-                </form>
-              </div>
+      <!-- Order Starts -->
+      <div class="card-container">
+        <div class="card flex-display">
+          <div class="card-img-container">
+            <img src="../assets/spaghetti.jpg" alt="meal-image" class="card-img" />
+          </div>
+          <div class="card-content">
+            <div class="card-text black-text">
+              <h4 class="black-text light-text">Order Date: Friday, 13 April 2018</h4>
+              <h3 class="black-text bold-text">Spaghetti and Meat Balls with crayfish.</h3>
+              <h4 class="black-text light-text">Price: &#8358;1500 x 4 = &#8358;6000</h4>
+              <h4 class="black-text light-text">Order By: James Harden</h4>
+              <form>
+                <input type="submit" class="btn btn-secondary" value="Approve" />
+                <button type="button" onclick="modalPopup(); return false;" class="btn btn-danger">Decline</button>
+
+              </form>
             </div>
           </div>
         </div>
-        <!-- Order Ends -->
-        <!-- Order Starts -->
-        <div class="card-container">
-            <div class="card flex-display">
-              <div class="card-img-container">
-                <img src="../assets/bakedchicken.jpg" alt="meal-image" class="card-img" />
-              </div>
-              <div class="card-content">
-                <div class="card-text black-text">
-                  <h4 class="black-text light-text">Order Date: Monday, 9 April 2018</h4>
-                  <h3 class="black-text bold-text">Baked chicked with fries on the side.</h1>
-                  <h4 class="black-text light-text">Price: &#8358;3500 x 1 = &#8358;3500</h4>
-                  <h4 class="black-text light-text">Order By: James Harden</h4>
-                  <form>
-                      <input type="submit" class="btn btn-secondary" value="Approve" />
-                      <button type="button" onclick="redirectTo('../orders/decline.html'); return false;" class="btn btn-danger">Decline</button>
-                      
-                  </form>
-                </div>
-              </div>
+      </div>
+      <!-- Order Ends -->
+      <!-- Order Starts -->
+      <div class="card-container">
+        <div class="card flex-display">
+          <div class="card-img-container">
+            <img src="../assets/bakedchicken.jpg" alt="meal-image" class="card-img" />
+          </div>
+          <div class="card-content">
+            <div class="card-text black-text">
+              <h4 class="black-text light-text">Order Date: Monday, 9 April 2018</h4>
+              <h3 class="black-text bold-text">Baked chicked with fries on the side.</h1>
+                <h4 class="black-text light-text">Price: &#8358;3500 x 1 = &#8358;3500</h4>
+                <h4 class="black-text light-text">Order By: James Harden</h4>
+                <form>
+                  <input type="submit" class="btn btn-secondary" value="Approve" />
+                  <button type="button" onclick="modalPopup(); return false;" class="btn btn-danger">Decline</button>
+
+                </form>
             </div>
           </div>
-          <!-- Order Ends -->
+        </div>
+      </div>
+      <!-- Order Ends -->
     </div>
     <!-- Order List Ends -->
 
@@ -85,12 +123,12 @@
       </div>
     </div>
   </footer>
-  
-  <script
-  src="https://code.jquery.com/jquery-3.3.1.min.js"
-  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-  crossorigin="anonymous"></script>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script type="text/javascript" src="../js/script.js"></script>
+  <script type="text/javascript" src="../js/modal.js"></script>
 </body>
+
 </html>

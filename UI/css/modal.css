@@ -14,3 +14,12 @@
   background-color: #fefefe;
   overflow: hidden;
 }
+
+/* Target for smaller screen Starts */
+@media (min-width:320px) and (max-width:720px) {
+  .modal-content {
+    width: 90%;
+  }
+}
+
+/* Target for smaller screen Ends */
