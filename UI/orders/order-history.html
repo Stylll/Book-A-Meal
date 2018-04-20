@@ -11,10 +11,10 @@
 <body>
   <main>
     <!-- Navigation bar Starts -->
-    <nav class="navbar primary-bg-color flex-display">
+    <nav class="navbar primary-bg-color flex-display-nav">
       
-      <div class="navitem flexleft"><a href="../orders/order-menu.html" class="navlink logo-text">Book-A-Meal</a></div>
-    <div class="navitem">
+        <div class="navitem flexleft"><a href="../orders/order-menu.html" class="navlink logo-text navicon">Book-A-Meal</a></div>
+        <div class="navitem">
       <a href="../menus/manage.html" class="navlink">Menus</a>
     </div>
     <div class="navitem">
@@ -35,6 +35,7 @@
     <div class="navitem">
       <a href="../users/signin.html" class="navlink">Logout</a>
     </div>
+    <div class="navitem flexright breadcrumb"><a id='nav-trigger' href="javascript:void(0);" onclick="expandNav();" class="navlink">&#9776;</a></div>
   </nav>
     <!-- Navigation bar Ends -->
     <!-- Header Content Starts -->
@@ -66,25 +67,52 @@
               </div>
             </div>
           </div>
-        </div>
-        <!-- Order Ends -->
-        <!-- Order Starts -->
-        <div class="card-container">
-            <div class="card flex-display">
+          <!-- Order Starts -->
+          <div class="card flex-display">
               <div class="card-img-container">
                 <img src="../assets/bakedchicken.jpg" alt="meal-image" class="card-img" />
               </div>
               <div class="card-content">
                 <div class="card-text black-text">
-                  <h4 class="black-text light-text">#2130 - Monday, 9 April 2018</h4>
+                  <h4 class="black-text light-text">#2130 - Wednesday, 11 April 2018</h4>
                   <h3 class="black-text bold-text">Baked chicked with fries on the side.</h3>
                   <h4 class="black-text light-text">Price: &#8358;3500 x 1 = &#8358;3500</h4>
                   <h4 class="black-text light-text">Order By: James Harden</h4>
                 </div>
               </div>
             </div>
-          </div>
           <!-- Order Ends -->
+          <!-- Order Starts -->
+          <div class="card flex-display">
+              <div class="card-img-container">
+                <img src="../assets/butter-bean-stew.jpg" alt="meal-image" class="card-img" />
+              </div>
+              <div class="card-content">
+                <div class="card-text black-text">
+                  <h4 class="black-text light-text">#2120 - Tuesday, 10 April 2018</h4>
+                  <h3 class="black-text bold-text">Butter beans stew.</h3>
+                  <h4 class="black-text light-text">Price: &#8358;2000 x 1 = &#8358;2000</h4>
+                  <h4 class="black-text light-text">Order By: James Harden</h4>
+                </div>
+              </div>
+            </div>
+          <!-- Order Ends -->
+          <!-- Order Starts -->
+          <div class="card flex-display">
+              <div class="card-img-container">
+                <img src="../assets/crispy-chicken.jpg" alt="meal-image" class="card-img" />
+              </div>
+              <div class="card-content">
+                <div class="card-text black-text">
+                  <h4 class="black-text light-text">#2100 - Monday, 9 April 2018</h4>
+                  <h3 class="black-text bold-text">Crispy Chicken.</h3>
+                  <h4 class="black-text light-text">Price: &#8358;3000 x 1 = &#8358;3000</h4>
+                  <h4 class="black-text light-text">Order By: James Harden</h4>
+                </div>
+              </div>
+            </div>
+          <!-- Order Ends -->
+        </div>
     </div>
     <!-- Order List Ends -->
     

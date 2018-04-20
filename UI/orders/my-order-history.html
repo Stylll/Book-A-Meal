@@ -11,12 +11,14 @@
 <body>
   <main>
     <!-- Navigation bar Starts -->
-    <nav class="navbar primary-bg-color flex-display">
-      <div class="navitem flexleft"><a href="../orders/order-menu.html" class="navlink logo-text">Book-A-Meal</a></div>
+    <nav class="navbar primary-bg-color flex-display-nav">
+      <div class="navitem flexleft"><a href="../orders/order-menu.html" class="navlink logo-text navicon">Book-A-Meal</a></div>
       <div class="navitem"><a href="../orders/order-menu.html" class="navlink">View Menu</a></div>
-      <div class="navitem"><a href="./my-order-history.html" class="navlink">My Order History</a></div>
+      <div class="navitem"><a href="../orders/my-pending.html" class="navlink">My Pending Orders</a></div>
+      <div class="navitem"><a href="./my-order-history.html" class="navlink">My Orders</a></div>
       <div class="navitem"><a href="../users/profile.html" class="navlink">My Profile</a></div>
       <div class="navitem"><a href="../users/signin.html" class="navlink">Logout</a></div>
+      <div class="navitem flexright breadcrumb"><a id='nav-trigger' href="javascript:void(0);" onclick="expandNav();" class="navlink">&#9776;</a></div>
     </nav>
     <!-- Navigation bar Ends -->
     <!-- Header Content Starts -->
@@ -33,8 +35,9 @@
     <!-- Header Content Ends -->
     <!-- Order List Starts -->
     <div class="container">
-        <!-- Order Starts -->
+        
         <div class="card-container">
+          <!-- Order Starts -->
           <div class="card flex-display">
             <div class="card-img-container">
               <img src="../assets/spaghetti.jpg" alt="meal-image" class="card-img" />
@@ -48,25 +51,52 @@
               </div>
             </div>
           </div>
-        </div>
-        <!-- Order Ends -->
-        <!-- Order Starts -->
-        <div class="card-container">
-            <div class="card flex-display">
-              <div class="card-img-container">
-                <img src="../assets/bakedchicken.jpg" alt="meal-image" class="card-img" />
-              </div>
-              <div class="card-content">
-                <div class="card-text black-text">
-                  <h4 class="black-text light-text">#1118 - Monday, 9 April 2018</h4>
-                  <h3 class="black-text bold-text">Baked chicked with fries on the side.</h3>
-                  <h4 class="black-text light-text">Price: &#8358;3500 x 1</h4>
-                  <h4 class="black-text normal-text">Cost: &#8358;3500</h4>
-                </div>
+          <!-- Order Starts -->
+          <div class="card flex-display">
+            <div class="card-img-container">
+              <img src="../assets/bakedchicken.jpg" alt="meal-image" class="card-img" />
+            </div>
+            <div class="card-content">
+              <div class="card-text black-text">
+                <h4 class="black-text light-text">#1101 - Thursday, 12 April 2018</h4>
+                <h3 class="black-text bold-text">Baked chicken with fries on the side.</h3>
+                <h4 class="black-text light-text">Price: &#8358;3000 x 1</h4>
+                <h4 class="black-text normal-text">Cost: &#8358;3000</h4>
               </div>
             </div>
           </div>
           <!-- Order Ends -->
+          <!-- Order Starts -->
+          <div class="card flex-display">
+            <div class="card-img-container">
+              <img src="../assets/basmati-rice.jpg" alt="meal-image" class="card-img" />
+            </div>
+            <div class="card-content">
+              <div class="card-text black-text">
+                <h4 class="black-text light-text">#1099 - Wednesday, 13 April 2018</h4>
+                <h3 class="black-text bold-text">Basmati rice and pepper sauce.</h3>
+                <h4 class="black-text light-text">Price: &#8358;1000 x 4</h4>
+                <h4 class="black-text normal-text">Cost: &#8358;4000</h4>
+              </div>
+            </div>
+          </div>
+          <!-- Order Ends -->
+          <!-- Order Starts -->
+          <div class="card flex-display">
+            <div class="card-img-container">
+              <img src="../assets/spaghetti.jpg" alt="meal-image" class="card-img" />
+            </div>
+            <div class="card-content">
+              <div class="card-text black-text">
+                <h4 class="black-text light-text">#1080 - Monday, 11 April 2018</h4>
+                <h3 class="black-text bold-text">Spaghetti and Meat Balls with crayfish.</h3>
+                <h4 class="black-text light-text">Price: &#8358;1500 x 4</h4>
+                <h4 class="black-text normal-text">Cost: &#8358;6000</h4>
+              </div>
+            </div>
+          </div>
+          <!-- Order Ends -->
+        </div>
     </div>
     <!-- Order List Ends -->
     

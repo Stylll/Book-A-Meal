@@ -17,13 +17,13 @@
     <div id="modal" class="modal">
       <div class="modal-content">
         <div class="container text-center black-text">
-          <h1 class="red-text">Decline Order</h1>
+          <h1 class="red-text">Cancel Order</h1>
           <div class="">
             <img src="../assets/error.png" alt="success" class="img-responsive" />
           </div>
           <div class="">
             <h1>Are you sure ?</h1>
-            <form onsubmit="redirectTo('../orders/pending.html'); return false;">
+            <form onsubmit="redirectTo('../orders/my-pending.html'); return false;">
               <input type="submit" class="btn btn-danger" value="Yes" />
               <button type="button" onclick="modalClosePopup(); return false;" class="btn btn-secondary">No</button>
             </form>
@@ -35,29 +35,12 @@
     <!-- Modal Ends -->
     <!-- Navigation bar Starts -->
     <nav class="navbar primary-bg-color flex-display-nav">
-      
-        <div class="navitem flexleft"><a href="../orders/order-menu.html" class="navlink logo-text navicon">Book-A-Meal</a></div>
-        <div class="navitem">
-      <a href="../menus/manage.html" class="navlink">Menus</a>
-    </div>
-    <div class="navitem">
-      <a href="../meals/manage.html" class="navlink">Meals</a>
-    </div>
-    <div class="navitem">
-      <a href="../orders/pending.html" class="navlink">Pending Orders</a>
-    </div>
-    <div class="navitem">
-      <a href="../orders/order-history.html" class="navlink">Order History</a>
-    </div>
-    <div class="navitem">
-      <a href="../orders/summary.html" class="navlink">Summary</a>
-    </div>
-    <div class="navitem">
-      <a href="../users/profile.html" class="navlink">My Profile</a>
-    </div>
-    <div class="navitem">
-      <a href="../users/signin.html" class="navlink">Logout</a>
-    </div>
+      <div class="navitem flexleft"><a href="../orders/order-menu.html" class="navlink logo-text navicon">Book-A-Meal</a></div>
+      <div class="navitem"><a href="../orders/order-menu.html" class="navlink">View Menu</a></div>
+      <div class="navitem"><a href="../orders/my-pending.html" class="navlink">My Pending Orders</a></div>
+    <div class="navitem"><a href="./my-order-history.html" class="navlink">My Order History</a></div>
+    <div class="navitem"><a href="../users/profile.html" class="navlink">My Profile</a></div>
+    <div class="navitem"><a href="../users/signin.html" class="navlink">Logout</a></div>
     <div class="navitem flexright breadcrumb"><a id='nav-trigger' href="javascript:void(0);" onclick="expandNav();" class="navlink">&#9776;</a></div>
   </nav>
     <!-- Navigation bar Ends -->
@@ -80,32 +63,28 @@
               <h4 class="black-text light-text">Order Date: Friday, 13 April 2018</h4>
               <h3 class="black-text bold-text">Spaghetti and Meat Balls with crayfish.</h3>
               <h4 class="black-text light-text">Price: &#8358;1500 x 4 = &#8358;6000</h4>
-              <h4 class="black-text light-text">Order By: James Harden</h4>
               <form>
-                <input type="submit" class="btn btn-secondary" value="Approve" />
-                <button type="button" onclick="modalPopup(); return false;" class="btn btn-danger">Decline</button>
+                <button type="button" onclick="modalPopup(); return false;" class="btn btn-danger">Cancel</button>
 
               </form>
             </div>
           </div>
         </div>
         <!-- Order Ends -->
-        <!-- Order Start -->
+        <!-- Order Starts -->
         <div class="card flex-display">
             <div class="card-img-container">
-              <img src="../assets/bakedchicken.jpg" alt="meal-image" class="card-img" />
+              <img src="../assets/spaghetti.jpg" alt="meal-image" class="card-img" />
             </div>
             <div class="card-content">
               <div class="card-text black-text">
-                <h4 class="black-text light-text">Order Date: Monday, 9 April 2018</h4>
-                <h3 class="black-text bold-text">Baked chicked with fries on the side.</h3>
-                  <h4 class="black-text light-text">Price: &#8358;3500 x 1 = &#8358;3500</h4>
-                  <h4 class="black-text light-text">Order By: James Harden</h4>
-                  <form>
-                    <input type="submit" class="btn btn-secondary" value="Approve" />
-                    <button type="button" onclick="modalPopup(); return false;" class="btn btn-danger">Decline</button>
+                <h4 class="black-text light-text">Order Date: Friday, 13 April 2018</h4>
+                <h3 class="black-text bold-text">Spaghetti and Meat Balls with crayfish.</h3>
+                <h4 class="black-text light-text">Price: &#8358;1500 x 4 = &#8358;6000</h4>
+                <form>
+                  <button type="button" onclick="modalPopup(); return false;" class="btn btn-danger">Cancel</button>
   
-                  </form>
+                </form>
               </div>
             </div>
           </div>
