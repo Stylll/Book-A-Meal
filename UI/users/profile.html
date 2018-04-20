@@ -12,20 +12,15 @@
 <body>
   <main>
     <!-- Navigation bar Starts -->
-    <nav class="navbar primary-bg-color flex-display">
-      <div class="navitem flexleft">
-        <a href="../orders/order-menu.html" class="navlink logo-text">Book-A-Meal</a>
-      </div>
-      <div class="navitem">
-        <a href="../orders/my-order-history.html" class="navlink">My Order History</a>
-      </div>
-      <div class="navitem">
-        <a href="../users/profile.html" class="navlink">My Profile</a>
-      </div>
-      <div class="navitem">
-        <a href="../users/signin.html" class="navlink">Logout</a>
-      </div>
-    </nav>
+    <nav class="navbar primary-bg-color flex-display-nav">
+        <div class="navitem flexleft"><a href="../orders/order-menu.html" class="navlink logo-text navicon">Book-A-Meal</a></div>
+        <div class="navitem"><a href="../orders/order-menu.html" class="navlink">View Menu</a></div>
+        <div class="navitem"><a href="../orders/my-pending.html" class="navlink">My Pending Orders</a></div>
+        <div class="navitem"><a href="./my-order-history.html" class="navlink">My Orders</a></div>
+        <div class="navitem"><a href="../users/profile.html" class="navlink">My Profile</a></div>
+        <div class="navitem"><a href="../users/signin.html" class="navlink">Logout</a></div>
+        <div class="navitem flexright breadcrumb"><a id='nav-trigger' href="javascript:void(0);" onclick="expandNav();" class="navlink">&#9776;</a></div>
+      </nav>
     <!-- Navigation bar Ends -->
     <!-- Header Content Starts -->
     <div class="container text-center black-text">
@@ -34,7 +29,7 @@
     <!-- Header Content Ends -->
     <!-- Main Content Starts -->
     <div class="container text-center black-text">
-      <div class="hor-card">
+      <div class="profile-card">
         <div>
           <h4 class="black-text bold-text">Username</h4>
           <h4 class="black-text light-text">Stephen Aribaba</h4>
