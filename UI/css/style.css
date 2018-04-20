@@ -69,13 +69,13 @@ nav {
   text-decoration: none;
 }
 .btn-primary {
-  background-color: #700353;
+  background-color: #4CAF50;
   border: none;
   color: white;
 }
 .btn-primary:hover{
   cursor: pointer;
-  background-color: #701458;
+  background-color: #4CAF50;
 }
 
 .btn-secondary {
@@ -244,13 +244,13 @@ nav {
 
 /** Colors Start **/
 .primary-bg-color {
-  background-color: #700353;
+  background-color: #4CAF50;
 }
 .secondary-bg-color {
   background-color: #4CAF50;
 }
 .primary-text-color {
-  color: #700353;
+  color: #4CAF50;
 }
 .secondary-text-color {
   color: #4CAF50;
