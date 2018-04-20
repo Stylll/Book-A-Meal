@@ -11,16 +11,36 @@
 <body>
   <main>
     <!-- Navigation bar Starts -->
-    <nav class="navbar primary-bg-color flex-display">
-      <div class="navitem flexleft"><a href="../orders/order-menu.html" class="navlink logo-text">Book-A-Meal</a></div>
-      <div class="navitem"><a href="../menus/manage.html" class="navlink">Menus</a></div>
-      <div class="navitem"><a href="../meals/manage.html" class="navlink">Meals</a></div>
-      <div class="navitem"><a href="../orders/pending.html" class="navlink">Pending Orders</a></div>
-      <div class="navitem"><a href="../orders/order-history.html" class="navlink">Order History</a></div>
-      <div class="navitem"><a href="../orders/summary.html" class="navlink">Summary</a></div>
-      <div class="navitem"><a href="../users/profile.html" class="navlink">My Profile</a></div>
-      <div class="navitem"><a href="../users/signin.html" class="navlink">Logout</a></div>
-    </nav>
+    <nav class="navbar primary-bg-color flex-display-nav">
+
+        <div class="navitem flexleft">
+          <a href="../orders/order-menu.html" class="navlink logo-text navicon">Book-A-Meal</a>
+        </div>
+        <div class="navitem">
+          <a href="../menus/manage.html" class="navlink">Menus</a>
+        </div>
+        <div class="navitem">
+          <a href="../meals/manage.html" class="navlink">Meals</a>
+        </div>
+        <div class="navitem">
+          <a href="../orders/pending.html" class="navlink">Pending Orders</a>
+        </div>
+        <div class="navitem">
+          <a href="../orders/order-history.html" class="navlink">Order History</a>
+        </div>
+        <div class="navitem">
+          <a href="../orders/summary.html" class="navlink">Summary</a>
+        </div>
+        <div class="navitem">
+          <a href="../users/profile.html" class="navlink">My Profile</a>
+        </div>
+        <div class="navitem">
+          <a href="../users/signin.html" class="navlink">Logout</a>
+        </div>
+        <div class="navitem flexright breadcrumb">
+          <a id='nav-trigger' href="javascript:void(0);" onclick="expandNav();" class="navlink">&#9776;</a>
+        </div>
+      </nav>
     <!-- Navigation bar Ends -->
     <!-- Header Content Starts -->
     <div class="container text-center">
@@ -30,8 +50,9 @@
     <!-- Header Content Ends -->
     <!-- Meal List Starts -->
     <div class="container">
-          <!-- Meal Starts -->
+          
           <div class="card-container">
+            <!-- Meal Starts -->
             <div class="card flex-display">
               <div class="card-img-container">
                 <img src="../assets/spaghetti.jpg" alt="meal-image" class="card-img" />
@@ -43,11 +64,9 @@
                 </div>
               </div>
             </div>
-          </div>
-          <!-- Meal Ends -->
-          <!-- Meal Starts -->
-          <div class="card-container">
-              <div class="card flex-display">
+            <!-- Meal Ends -->
+            <!-- Meal Starts -->
+            <div class="card flex-display">
                 <div class="card-img-container">
                   <img src="../assets/bakedchicken.jpg" alt="meal-image" class="card-img" />
                 </div>
@@ -58,8 +77,21 @@
                   </div>
                 </div>
               </div>
+            <!-- Meal Ends -->
+            <!-- Meal Starts -->
+            <div class="card flex-display">
+                <div class="card-img-container">
+                  <img src="../assets/basmati-rice.jpg" alt="meal-image" class="card-img" />
+                </div>
+                <div class="card-content">
+                  <div class="card-text black-text">
+                    <h3 class="black-text bold-text">Basmati rice with pepper sauce.</h3>
+                    <h3 class="black-text light-text">Price: &#8358;1000</h3>
+                  </div>
+                </div>
+              </div>
+            <!-- Meal Ends -->
           </div>
-          <!-- Meal Ends -->
         </div>
         <!-- Meal List Ends -->
 
