@@ -33,6 +33,7 @@ a:hover{
   max-height: 300px;
 }
 
+/* Navigation Starts */
 nav {
   justify-content: flex-end;
   align-items: center;
@@ -50,8 +51,16 @@ nav {
 .navlink:hover{
   text-decoration: underline;
 }
+.breadcrumb{
+  display: none;
+}
+
+/* Navigation Ends */
 .flexleft{
   margin-right: auto;
+}
+.flexright{
+  margin-left: auto;
 }
 .btn {
   height: 40px;
@@ -109,6 +118,8 @@ nav {
 .logo-text {
   font-family: 'Satisfy', cursive;
 }
+
+/* Card Style Starts */
 .card {
   min-height: 100px;
   width: 300px;
@@ -141,6 +152,8 @@ nav {
   padding-right: 10px;
   padding-bottom: 10px;
 }
+
+/* Card Style Ends */
 
 .textbox {
   height: 20px;
@@ -184,6 +197,34 @@ nav {
     display: flex;
     flex-direction: column;
   }
+  /* Navigation Starts */
+  .navbar .navitem:not(.flexleft):not(.flexright) {
+    display: none;
+    margin-right: auto;
+  }
+  .navbar.responsive .navitem:not(.flexleft):not(.flexright) {
+    display: block;
+  }
+  .navbar .breadcrumb{
+    display: block;
+    float: right;
+    position: absolute;
+    margin-right: auto;
+    right: 0;
+    top: 0;
+  }
+  .navbar .navicon{
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 10px;
+  }
+
+  .navitem.flexleft {
+    height: 20px;
+  }
+
+  /* Navigation Ends */
 }
 
 /* Target for smaller screen Ends */
