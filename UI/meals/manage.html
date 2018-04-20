@@ -33,9 +33,10 @@
     </div>
     <!-- Modal Ends -->
     <!-- Navigation bar Starts -->
-    <nav class="navbar primary-bg-color flex-display">
+    <nav class="navbar primary-bg-color flex-display-nav">
+
       <div class="navitem flexleft">
-        <a href="../orders/order-menu.html" class="navlink logo-text">Book-A-Meal</a>
+        <a href="../orders/order-menu.html" class="navlink logo-text navicon">Book-A-Meal</a>
       </div>
       <div class="navitem">
         <a href="../menus/manage.html" class="navlink">Menus</a>
@@ -57,6 +58,9 @@
       </div>
       <div class="navitem">
         <a href="../users/signin.html" class="navlink">Logout</a>
+      </div>
+      <div class="navitem flexright breadcrumb">
+        <a id='nav-trigger' href="javascript:void(0);" onclick="expandNav();" class="navlink">&#9776;</a>
       </div>
     </nav>
     <!-- Navigation bar Ends -->
@@ -98,28 +102,61 @@
             </div>
           </div>
         </div>
-      </div>
-      <!-- Meal Ends -->
-      <!-- Meal Starts -->
-      <div class="card-container">
+        <!-- Meal Starts -->
         <div class="card flex-display">
-          <div class="card-img-container">
-            <img src="../assets/bakedchicken.jpg" alt="meal-image" class="card-img" />
-          </div>
-          <div class="card-content">
-            <div class="card-text black-text">
-              <h3 class="black-text bold-text">Baked chicked with fries on the side.</h3>
-              <h4 class="black-text light-text">Price: &#8358;3500</h4>
-              <br />
-              <a href="../meals/edit.html" class="btn btn-secondary">Edit</a>
-              <a href="" onclick="modalPopup(); return false;" class="btn btn-danger">Delete</a>
-              <br />
-              <br />
+            <div class="card-img-container">
+              <img src="../assets/bakedchicken.jpg" alt="meal-image" class="card-img" />
+            </div>
+            <div class="card-content">
+              <div class="card-text black-text">
+                <h3 class="black-text bold-text">Baked chicked with fries on the side.</h3>
+                <h4 class="black-text light-text">Price: &#8358;3500</h4>
+                <br />
+                <a href="../meals/edit.html" class="btn btn-secondary">Edit</a>
+                <a href="" onclick="modalPopup(); return false;" class="btn btn-danger">Delete</a>
+                <br />
+                <br />
+              </div>
             </div>
           </div>
-        </div>
+        <!-- Meal Ends -->
+        <!-- Meal Starts -->
+        <div class="card flex-display">
+            <div class="card-img-container">
+              <img src="../assets/basmati-rice.jpg" alt="meal-image" class="card-img" />
+            </div>
+            <div class="card-content">
+              <div class="card-text black-text">
+                <h3 class="black-text bold-text">Basmati rice and pepper sauce..</h3>
+                <h4 class="black-text light-text">Price: &#8358;1000</h4>
+                <br />
+                <a href="../meals/edit.html" class="btn btn-secondary">Edit</a>
+                <a href="" onclick="modalPopup(); return false;" class="btn btn-danger">Delete</a>
+                <br />
+                <br />
+              </div>
+            </div>
+          </div>
+        <!-- Meal Ends -->
+        <!-- Meal Starts -->
+        <div class="card flex-display">
+            <div class="card-img-container">
+              <img src="../assets/butter-bean-stew.jpg" alt="meal-image" class="card-img" />
+            </div>
+            <div class="card-content">
+              <div class="card-text black-text">
+                <h3 class="black-text bold-text">Butter beans stew.</h3>
+                <h4 class="black-text light-text">Price: &#8358;2500</h4>
+                <br />
+                <a href="../meals/edit.html" class="btn btn-secondary">Edit</a>
+                <a href="" onclick="modalPopup(); return false;" class="btn btn-danger">Delete</a>
+                <br />
+                <br />
+              </div>
+            </div>
+          </div>
+        <!-- Meal Ends -->
       </div>
-      <!-- Meal Ends -->
     </div>
     <!-- Meal List Ends -->
 
