@@ -4,6 +4,7 @@
   "description": "An application where customers can make food orders and vendors can know what a customer wants to eat",
   "main": "index.js",
   "scripts": {
+    "test:server":"set NODE_ENV=test&&mocha --compilers js:babel-core/register server/tests/**/*.test.js --timeout 5000 --exit",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,7 +24,10 @@
   "homepage": "https://github.com/Stylll/Book-A-Meal#readme",
   "dependencies": {
     "body-parser": "^1.18.2",
-    "express": "^4.16.3"
+    "chai": "^4.1.2",
+    "express": "^4.16.3",
+    "mocha": "^5.1.1",
+    "supertest": "^3.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
