@@ -1,0 +1,24 @@
+{
+  "name": "book-a-meal",
+  "version": "1.0.0",
+  "description": "An application where customers can make food orders and vendors can know what a customer wants to eat",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Stylll/Book-A-Meal.git"
+  },
+  "keywords": [
+    "Book",
+    "Meal",
+    "Food"
+  ],
+  "author": "Stephen Aribaba",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Stylll/Book-A-Meal/issues"
+  },
+  "homepage": "https://github.com/Stylll/Book-A-Meal#readme"
+}
