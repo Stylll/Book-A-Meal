@@ -1,4 +1,7 @@
+import bcrypt from 'bcrypt';
+
 import generateId from '../utils/generateId';
+
 
 // variable to store the user records.
 const UserStore = [];
@@ -11,6 +14,7 @@ class Users {
    */
   static add(user) {
     const newUser = user;
+    newUser.password = bcrypt.hashSync(newUser.password, 10); // hash user password
     newUser.id = generateId(UserStore);
     newUser.createdAt = new Date();
     newUser.updatedAt = new Date();
@@ -37,6 +41,7 @@ class Users {
    */
   static update(user) {
     const updateUser = user;
+    updateUser.password = bcrypt.hashSync(updateUser.password, 10); // hash user password
     updateUser.updatedAt = new Date();
 
     // if user exists in the db
@@ -68,7 +73,7 @@ class Users {
   /**
    * static method to get user by user email
    * @param {integer} email
-   * @returns {object} user
+   * @returns {object|null} user
    */
   static getByEmail(email) {
     const result = UserStore.filter(x => x.email === email);
@@ -81,7 +86,7 @@ class Users {
   /**
    * static method to get user by username
    * @param {string} username
-   * @return {object} user
+   * @return {object|null} user
    */
   static getByUsername(username) {
     const result = UserStore.filter(x => x.username === username);
@@ -96,6 +101,13 @@ class Users {
    */
   static getAll() {
     return UserStore;
+  }
+
+  /**
+   * truncate data in UserStore array.
+   */
+  static truncate() {
+    UserStore.length = 0;
   }
 }
 

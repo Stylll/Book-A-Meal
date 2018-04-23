@@ -1,4 +1,6 @@
 import { expect } from 'chai';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 import request from 'supertest';
 import app from '../../server';
 import {
@@ -6,10 +8,19 @@ import {
   validUser2,
   existingUser,
   invalidUser,
-} from '../../utils/seeder';
+  insertSeedUsers,
+  clearUsers,
+} from '../../utils/seeders/userSeeder';
+
+dotenv.config();
 
 /* eslint-disable no-undef */
 describe('Test suite for User Controller', () => {
+  beforeEach(() => {
+    clearUsers();
+    insertSeedUsers(existingUser);
+  });
+
   describe('POST: Signup User - /api/v1/signup', () => {
     it('should create account with valid email, username, password and account type', (done) => {
       request(app)
@@ -29,15 +40,12 @@ describe('Test suite for User Controller', () => {
           expect(resp.status).to.equal(400);
           expect(resp.body).to.haveOwnProperty('message');
           expect(resp.body.message).to.equal('Email is invalid');
-          done();
         });
-    });
 
-    it('should require a valid username', (done) => {
       request(app)
         .post('/api/v1/users/signup')
         .send({
-          email: validUser1.email,
+          email: '  ',
           username: invalidUser.username,
           password: invalidUser.password,
           accountType: invalidUser.accountType,
@@ -45,7 +53,24 @@ describe('Test suite for User Controller', () => {
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
           expect(resp.body).to.haveOwnProperty('message');
-          expect(resp.body.message).to.equal('Username is invalid');
+          expect(resp.body.message).to.equal('Email is required');
+          done();
+        });
+    });
+
+    it('should require a username', (done) => {
+      request(app)
+        .post('/api/v1/users/signup')
+        .send({
+          email: validUser1.email,
+          username: '  ',
+          password: invalidUser.password,
+          accountType: invalidUser.accountType,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(400);
+          expect(resp.body).to.haveOwnProperty('message');
+          expect(resp.body.message).to.equal('Username is required');
           done();
         });
     });
@@ -62,12 +87,26 @@ describe('Test suite for User Controller', () => {
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
           expect(resp.body).to.haveOwnProperty('message');
-          expect(resp.body.message).to.equal('Password is invalid');
+          expect(resp.body.message).to.equal('Password must have atleast 5 characters');
+        });
+
+      request(app)
+        .post('/api/v1/users/signup')
+        .send({
+          email: validUser1.email,
+          username: validUser1.username,
+          password: '   ',
+          accountType: invalidUser.accountType,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(400);
+          expect(resp.body).to.haveOwnProperty('message');
+          expect(resp.body.message).to.equal('Password is required');
           done();
         });
     });
 
-    it('should not require a valid account type', (done) => {
+    it('should require a valid account type', (done) => {
       request(app)
         .post('/api/v1/users/signup')
         .send({
@@ -80,6 +119,20 @@ describe('Test suite for User Controller', () => {
           expect(resp.status).to.equal(400);
           expect(resp.body).to.haveOwnProperty('message');
           expect(resp.body.message).to.equal('Account type is invalid');
+        });
+
+      request(app)
+        .post('/api/v1/users/signup')
+        .send({
+          email: validUser1.email,
+          username: validUser1.username,
+          password: validUser1.password,
+          accountType: '   ',
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(400);
+          expect(resp.body).to.haveOwnProperty('message');
+          expect(resp.body.message).to.equal('Account type is required');
           done();
         });
     });
@@ -115,30 +168,29 @@ describe('Test suite for User Controller', () => {
 
     it('should return response data and code in correct form for valid sign up', (done) => {
       request(app)
-        .post('api/v1/users/signup')
+        .post('/api/v1/users/signup')
         .send(validUser1)
         .end((err, resp) => {
           expect(resp.status).to.equal(201);
-          expect(resp.body).to.haveOwnProperty('email');
-          expect(resp.body).to.haveOwnProperty('username');
-          expect(resp.body).to.haveOwnProperty('password');
-          expect(resp.body).to.haveOwnProperty('accountType');
-          expect(resp.body.email).to.equal(validUser1.email);
-          expect(resp.body.username).to.equal(validUser1.username);
-          expect(resp.body.password).to.equal(validUser1.password);
-          expect(resp.body.accountType).to.equal(validUser1.accountType);
+          expect(resp.body.user).to.haveOwnProperty('id');
+          expect(resp.body.user).to.haveOwnProperty('email');
+          expect(resp.body.user).to.haveOwnProperty('username');
+          expect(resp.body.user).to.haveOwnProperty('accountType');
+          expect(resp.body.user.email).to.equal(validUser1.email);
+          expect(resp.body.user.username).to.equal(validUser1.username);
+          expect(resp.body.user.accountType).to.equal(validUser1.accountType);
           done();
         });
     });
 
     it('should return a valid jwt token after signup', (done) => {
       request(app)
-        .post('api/v1/users/signup')
-        .send(validUser1)
+        .post('/api/v1/users/signup')
+        .send(validUser2)
         .end((err, resp) => {
           expect(resp.status).to.equal(201);
           expect(resp.body).to.haveOwnProperty('token');
-          // check using jwt if token is valid
+          expect(jwt.verify(resp.body.token, process.env.SECRET)).to.not.equal(null);
           done();
         });
     });

@@ -1,15 +1,17 @@
+import users from '../../db/users';
+
 
 const validUser1 = {
   email: 'matthew@yahoo.com',
   username: 'Matthew',
-  password: 'Mat123',
+  password: 'Mat1234',
   accountType: 'customer',
 };
 
 const validUser2 = {
   email: 'jane@yahoo.com',
   username: 'jane',
-  password: 'jannee',
+  password: 'janneeh',
   accountType: 'caterer',
 };
 
@@ -23,7 +25,7 @@ const existingUser = {
 const invalidUser = {
   email: 'myemail',
   username: '',
-  password: '',
+  password: 'abc',
   accountType: 'supervisor',
 };
 
@@ -31,7 +33,14 @@ const invalidUser = {
  * inserts seed users into database for testing
  */
 const insertSeedUsers = () => {
-  
+  users.add(existingUser);
+};
+
+/**
+ * truncates the data in users table
+ */
+const clearUsers = () => {
+  users.truncate();
 };
 
 export {
@@ -40,4 +49,5 @@ export {
   existingUser,
   invalidUser,
   insertSeedUsers,
+  clearUsers,
 };
