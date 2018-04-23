@@ -4,8 +4,10 @@
   "description": "An application where customers can make food orders and vendors can know what a customer wants to eat",
   "main": "index.js",
   "scripts": {
-    "test:server":"set NODE_ENV=test&&mocha --compilers js:babel-core/register server/tests/**/*.test.js --timeout 5000 --exit",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test:server": "set NODE_ENV=test&&mocha --compilers js:babel-core/register server/tests/**/*.test.js --timeout 5000 --exit",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "babel-node ./server/server",
+    "start:dev": "nodemon --exec babel-node ./server/server"
   },
   "repository": {
     "type": "git",
@@ -27,6 +29,9 @@
     "chai": "^4.1.2",
     "express": "^4.16.3",
     "mocha": "^5.1.1",
+    "morgan": "^1.9.0",
+    "open": "0.0.5",
+    "path": "^0.12.7",
     "supertest": "^3.0.0"
   },
   "devDependencies": {
@@ -38,7 +43,9 @@
     "babel-preset-env": "^1.6.1",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
+    "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.11.0",
+    "nodemon": "^1.17.3",
     "rimraf": "^2.6.2"
   }
 }
