@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../css/style.css" type="text/css" />
+  <link rel="stylesheet" href="../css/meals-edit.css" type="text/css" />
+  <title>Edit Meal</title>
+</head>
+
+<body>
+  <main>
+    <!-- Navigation bar Starts -->
+    <nav class="navbar primary-bg-color flex-display-nav">
+
+        <div class="navitem flexleft">
+          <a href="../orders/order-menu.html" class="navlink logo-text navicon">Book-A-Meal</a>
+        </div>
+        <div class="navitem">
+          <a href="../menus/manage.html" class="navlink">Menus</a>
+        </div>
+        <div class="navitem">
+          <a href="../meals/manage.html" class="navlink">Meals</a>
+        </div>
+        <div class="navitem">
+          <a href="../orders/pending.html" class="navlink">Pending Orders</a>
+        </div>
+        <div class="navitem">
+          <a href="../orders/order-history.html" class="navlink">Order History</a>
+        </div>
+        <div class="navitem">
+          <a href="../orders/summary.html" class="navlink">Summary</a>
+        </div>
+        <div class="navitem">
+          <a href="../users/profile.html" class="navlink">My Profile</a>
+        </div>
+        <div class="navitem">
+          <a href="../users/signin.html" class="navlink">Logout</a>
+        </div>
+        <div class="navitem flexright breadcrumb">
+          <a id='nav-trigger' href="javascript:void(0);" onclick="expandNav();" class="navlink">&#9776;</a>
+        </div>
+      </nav>
+    <!-- Navigation bar Ends -->
+    <!-- Header Content Start -->
+    <div class="container">
+      <h1 class="secondary-text-color text-center">Add / Edit Meal</h1>
+    </div>
+    <!-- Header Content Ends -->
+    <!-- Form Content Starts -->
+    <div class="container text-center">
+      <form onsubmit="redirectTo('../meals/manage.html'); return false;">
+        <div>
+          <h3 class="black-text bold-text">Meal Name</h3>
+          <input type="text" class="textbox" placeholder="Enter meal name..." />
+        </div>
+        <div>
+          <h3 class="black-text bold-text">Meal Price &#8358;</h3>
+          <input type="number" class="textbox" placeholder="Enter meal price..." />
+        </div>
+        <div>
+          <h3 class="black-text bold-text">Upload Image</h3>
+          <input type="file" class=""  />
+        </div>
+        <br /><br />
+        <div>
+          <input type="submit" class="btn btn-secondary" value="Save" />
+          <a href="../meals/manage.html">Cancel</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- Form Content Ends -->
+
+  </main>
+  <footer>
+    <div class="secondary-bg-color container">
+      <div class="text-center white-text">
+        Book-A-Meal &copy; 2018
+      </div>
+    </div>
+  </footer>
+  <script type="text/javascript" src="../js/script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../css/style.css" type="text/css" />
+  <title>Delete Meal</title>
+</head>
+<body>
+  <main>
+    <!-- Navigation bar Starts -->
+    <nav class="navbar primary-bg-color flex-display-nav">
+
+        <div class="navitem flexleft">
+          <a href="../orders/order-menu.html" class="navlink logo-text navicon">Book-A-Meal</a>
+        </div>
+        <div class="navitem">
+          <a href="../menus/manage.html" class="navlink">Menus</a>
+        </div>
+        <div class="navitem">
+          <a href="../meals/manage.html" class="navlink">Meals</a>
+        </div>
+        <div class="navitem">
+          <a href="../orders/pending.html" class="navlink">Pending Orders</a>
+        </div>
+        <div class="navitem">
+          <a href="../orders/order-history.html" class="navlink">Order History</a>
+        </div>
+        <div class="navitem">
+          <a href="../orders/summary.html" class="navlink">Summary</a>
+        </div>
+        <div class="navitem">
+          <a href="../users/profile.html" class="navlink">My Profile</a>
+        </div>
+        <div class="navitem">
+          <a href="../users/signin.html" class="navlink">Logout</a>
+        </div>
+        <div class="navitem flexright breadcrumb">
+          <a id='nav-trigger' href="javascript:void(0);" onclick="expandNav();" class="navlink">&#9776;</a>
+        </div>
+      </nav>
+    <!-- Navigation bar Ends -->
+    <!-- Main Content Starts -->
+    <div class="container text-center black-text">
+        <h1 class="red-text">Delete Meal</h1>
+        <div class="">
+          <img src="../assets/error.png" alt="success" class="img-responsive" />
+        </div>
+        <div class="">
+          <h1>Are you sure ?</h1>
+          <form onsubmit="redirectTo('../meals/manage.html'); return false;">
+              <input type="submit" class="btn btn-danger" value="Yes" />
+              <button type="button" onclick="redirectTo('../meals/manage.html'); return false;" class="btn btn-secondary">No</button>
+          </form>
+          <br />
+        </div>
+      </div>
+      <!-- Main Content Ends -->
+
+  </main>
+  <footer>
+    <div class="secondary-bg-color container">
+      <div class="text-center white-text">
+        Book-A-Meal &copy; 2018
+      </div>
+    </div>
+  </footer>
+  
+  <script type="text/javascript" src="../js/script.js"></script>
+</body>
+</html>

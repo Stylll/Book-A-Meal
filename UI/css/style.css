@@ -1,0 +1,285 @@
+/*Import Font Starts*/
+@import url('https://fonts.googleapis.com/css?family=Roboto|Satisfy|Average+Sans');
+/*Import Font End*/
+
+/*Containers Start*/
+body{
+  margin: 0;
+  font-family: 'Average Sans', 'Roboto', sans-serif;
+}
+main{
+  min-height: 100vh;
+}
+a {
+  color: #4CAF50;
+  text-decoration: none;
+}
+a:hover{
+  text-decoration: underline;
+}
+.flex-display {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-display-nav {
+  display: flex;
+  flex-direction: row;
+}
+
+.img-responsive {
+  max-width: 100%;
+  height: auto;
+  max-height: 300px;
+}
+
+/* Navigation Starts */
+nav {
+  justify-content: flex-end;
+  align-items: center;
+  min-height: 10vh;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.navitem{
+  padding: 10px;
+}
+.navlink{
+  text-decoration: none;
+  color: white;
+}
+.navlink:hover{
+  text-decoration: underline;
+}
+.breadcrumb{
+  display: none;
+}
+
+/* Navigation Ends */
+.flexleft{
+  margin-right: auto;
+}
+.flexright{
+  margin-left: auto;
+}
+.btn {
+  height: 40px;
+  padding: 10px;
+  border-radius: 5px;
+  text-decoration: none;
+}
+.btn-primary {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+}
+.btn-primary:hover{
+  cursor: pointer;
+  background-color: #4CAF50;
+}
+
+.btn-secondary {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+}
+
+.btn-secondary:hover{
+  cursor: pointer;
+  background-color: rgb(103, 175, 105);
+}
+
+.btn-danger {
+  background-color:rgb(209, 32, 32);
+  border: none;
+  color: white;
+}
+.btn-danger:hover{
+  cursor: pointer;
+  background-color: rgb(211, 61, 61);
+}
+
+.container{
+  padding: 10px;
+}
+.text-center{
+  text-align: center;
+}
+.text-left{
+  text-align: left;
+}
+.text-right{
+  text-align: right;
+}
+.logo-title {
+  font-size: 70px;
+  font-family: 'Satisfy', cursive;
+}
+.logo-text {
+  font-family: 'Satisfy', cursive;
+}
+
+/* Card Style Starts */
+.card {
+  min-height: 100px;
+  width: 300px;
+  margin: 10px;
+  border: 0.4px solid #888888;
+  box-shadow: 0px 2px 2px #888888;
+
+}
+.hor-card {
+  border: 0.4px solid #888888;
+  box-shadow: 0px 2px 2px #888888;
+  margin: 10px;
+}
+.profile-card {
+  margin:auto !important; 
+  width:50%;
+  border: 0.4px solid #888888;
+  box-shadow: 0px 2px 2px #888888;
+}
+.card-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.card-img {
+  height: 100%;
+  width: 100%
+}
+.card-img-container{
+  height: 200px;
+  width: 100%;
+}
+.card-content {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+}
+
+/* Card Style Ends */
+
+.textbox {
+  height: 20px;
+  padding: 5px;
+  font-size: 15px;
+}
+
+/* Text Variant Starts */
+
+.bold-text {
+  font-weight: 600;
+}
+.normal-text {
+  font-weight: 400;
+}
+.light-text {
+  font-weight: 200;
+}
+
+/* Text Variant Ends */
+
+/* Target for smaller screen Starts */
+@media (min-width:320px) and (max-width:720px) {
+  .flex-display {
+    display: flex;
+    flex-direction: column;
+  }
+  .flex-display-nav {
+    display: flex;
+    flex-direction: column;
+  }
+  .card {
+    width: 90%;
+    margin: 10px auto;
+  }
+  .profile-card {
+    margin:auto !important; 
+    width:90%;
+  }
+  .card-img-container{
+    height: 200px;
+    width: 100%;
+  }
+  .card-container {
+    display: flex;
+    flex-direction: column;
+  }
+  /* Navigation Starts */
+  .navbar .navitem:not(.flexleft):not(.flexright) {
+    display: none;
+    margin-right: auto;
+  }
+  .navbar.responsive .navitem:not(.flexleft):not(.flexright) {
+    display: block;
+  }
+  .navbar .breadcrumb{
+    display: block;
+    float: right;
+    position: absolute;
+    margin-right: auto;
+    right: 0;
+    top: 0;
+  }
+  .navbar .navicon{
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 10px;
+  }
+
+  .navitem.flexleft {
+    height: 20px;
+  }
+
+  /* Navigation Ends */
+}
+
+/* Target for smaller screen Ends */
+
+/*Containers End*/
+
+/** Colors Start **/
+.primary-bg-color {
+  background-color: #4CAF50;
+}
+.secondary-bg-color {
+  background-color: #4CAF50;
+}
+.primary-text-color {
+  color: #4CAF50;
+}
+.secondary-text-color {
+  color: #4CAF50;
+}
+.white-text {
+  color: white;
+}
+.black-text {
+  color: #363535;
+}
+.red-text {
+  color: rgb(209, 32, 32);
+}
+/** Colors End **/
+
+/** Paddings & Margins Start **/
+.padding-top {
+  padding-top: 10px;
+}
+.padding-left {
+  padding-left: 10px;
+}
+.padding-right {
+  padding-right: 10px;
+}
+.no-padding-top {
+  padding-top: 0;
+}
+.no-margin {
+  margin: 0 !important;
+}
+/** Paddings & Margins End **/
