@@ -24,9 +24,16 @@ const upload = multer({ storage });
  */
 
 const meals = (router) => {
+  // meal router to handle post requests
   router.post(
     '/meals', upload.single('image'), validateAccount.user,
     validateAccount.caterer, validateMeal.post, MealController.post,
+  );
+
+  // meal router to handle pull requests
+  router.put(
+    '/meals/:id', upload.single('image'), validateAccount.user,
+    validateAccount.caterer, validateMeal.put, MealController.put,
   );
 };
 

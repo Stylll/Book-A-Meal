@@ -41,8 +41,8 @@ class MealController {
   /**
    * Static method to handle meal put requests
    * updates meal using meal id
-   * @param {*} req 
-   * @param {*} res 
+   * @param {*} req
+   * @param {*} res
    */
   static async put(req, res) {
     // get meal from the db
