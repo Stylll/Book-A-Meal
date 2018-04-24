@@ -194,7 +194,6 @@ describe('Test Suite for Meal Controller', () => {
   });
 
   describe('PUT: Update Meal - /api/v1/meals/:id', () => {
-
     it('should require an authentication token', (done) => {
       request(app)
         .put('/api/v1/meals/1')
