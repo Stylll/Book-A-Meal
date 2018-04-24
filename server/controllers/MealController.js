@@ -1,16 +1,27 @@
 import meals from '../db/meals';
 import { defaultImage } from '../utils/seeders/mealSeeder';
+import CloudUpload from '../utils/cloudUpload';
 
 /**
  * Controller Class to handle user meal requests
  */
 class MealController {
-  static post(req, res) {
+  static async post(req, res) {
+    let image = defaultImage;
+
+    // upload image to cloudinary and get image link if image was passed
+    if (req.image && req.image.path) {
+      const result = await CloudUpload.uploadImage(req.image);
+      if (result && result.secure_url) {
+        image = result.secure_url;
+      }
+    }
+
     // add meal to db
     const meal = meals.add({
       name: req.body.name,
       price: req.body.price,
-      image: (req.body.image) ? req.body.image : defaultImage,
+      image,
       userId: req.decoded.user.id,
     });
     // if meal exists and there's no error object in it
