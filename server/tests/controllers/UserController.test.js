@@ -21,7 +21,7 @@ describe('Test suite for User Controller', () => {
     insertSeedUsers(existingUser);
   });
 
-  describe('POST: Signup User - /api/v1/signup', () => {
+  describe('POST: Signup User - /api/v1/users/signup', () => {
     it('should create account with valid email, username, password and account type', (done) => {
       request(app)
         .post('/api/v1/users/signup')
@@ -196,12 +196,13 @@ describe('Test suite for User Controller', () => {
     });
   });
 
-  describe('POST Signin User - /api/v1/signin', () => {
+  describe('POST Signin User - /api/v1/users/signin', () => {
     it('should require an email', (done) => {
-      request.post('/api/v1/signin')
+      request(app)
+        .post('/api/v1/users/signin')
         .send({ email: '   ' })
         .end((err, resp) => {
-          expect(resp.status).to.be(400);
+          expect(resp.status).to.equal(400);
           expect(resp.body).to.haveOwnProperty('message');
           expect(resp.body.message).to.equal('Email is required');
           done();
@@ -209,21 +210,23 @@ describe('Test suite for User Controller', () => {
     });
 
     it('should require a valid email', (done) => {
-      request.post('/api/v1/signin')
+      request(app)
+        .post('/api/v1/users/signin')
         .send({ email: invalidUser.email })
         .end((err, resp) => {
-          expect(resp.status).to.be(400);
+          expect(resp.status).to.equal(400);
           expect(resp.body).to.haveOwnProperty('message');
           expect(resp.body.message).to.equal('Email is invalid');
           done();
         });
     });
 
-    it('should require a password', () => {
-      request.post('/api/v1/signin')
+    it('should require a password', (done) => {
+      request(app)
+        .post('/api/v1/users/signin')
         .send({ email: existingUser.email, password: '   ' })
         .end((err, resp) => {
-          expect(resp.status).to.be(400);
+          expect(resp.status).to.equal(400);
           expect(resp.body).to.haveOwnProperty('message');
           expect(resp.body.message).to.equal('Password is required');
           done();
@@ -231,26 +234,28 @@ describe('Test suite for User Controller', () => {
     });
 
     it('should return proper response data and status code for authenticated users', (done) => {
-      request.post('/api/v1/signin')
+      request(app)
+        .post('/api/v1/users/signin')
         .send(existingUser)
         .end((err, resp) => {
-          expect(resp.status).to.be(200);
+          expect(resp.status).to.equal(200);
           expect(resp.body).to.haveOwnProperty('user');
           expect(resp.body.user).to.haveOwnProperty('id');
           expect(resp.body.user).to.haveOwnProperty('email');
           expect(resp.body.user).to.haveOwnProperty('username');
           expect(resp.body.user).to.haveOwnProperty('accountType');
-          expect(resp.body).to.equal('token');
+          expect(resp.body).to.haveOwnProperty('token');
           expect(jwt.verify(resp.body.token, process.env.SECRET)).to.not.equal(null);
           done();
         });
     });
 
     it('should not grant access to wrong credentials', (done) => {
-      request.post('/api/v1/signin')
+      request(app)
+        .post('/api/v1/users/signin')
         .send(validUser2)
         .end((err, resp) => {
-          expect(resp.status).to.be(401);
+          expect(resp.status).to.equal(401);
           expect(resp.body).to.haveOwnProperty('message');
           expect(resp.body.message).to.equal('Email or Password is incorrect');
           done();

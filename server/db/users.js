@@ -37,7 +37,7 @@ class Users {
     if (user.password.trim().length <= 5) return { err: new Error('Password must have atleast 5 characters') };
 
     // add the user to the db
-    const newUser = user;
+    const newUser = { ...user };
     newUser.password = bcrypt.hashSync(newUser.password, 10); // hash user password
     newUser.id = generateId(UserStore);
     newUser.createdAt = new Date();

@@ -12,6 +12,7 @@ router.get('/', (req, res) => {
   res.status(200).send({ message: 'Welcome to Book A Meal API version 1.' });
 });
 
+// routes requests related to users authentication
 users(router);
 
 export default router;
