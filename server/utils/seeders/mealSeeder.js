@@ -1,25 +1,41 @@
+import Meals from '../../db/meals';
+
 const validMeal1 = {
-  mealName: 'Rice and Stew',
-  mealPrice: 1500,
-  mealImage: 'https://res.cloudinary.com/styll/image/upload/v1524560568/foods.jpg',
+  name: 'Rice and Stew',
+  price: 1500,
+  image: 'https://res.cloudinary.com/styll/image/upload/v1524560568/foods.jpg',
 };
 
 const validMeal2 = {
-  mealName: 'Crispy Chicken',
-  mealPrice: 3500,
-  mealImage: 'https://res.cloudinary.com/styll/image/upload/v1524560568/foods.jpg',
+  name: 'Crispy Chicken',
+  price: 3500,
+  image: 'https://res.cloudinary.com/styll/image/upload/v1524560568/foods.jpg',
 };
 
 const invalidMeal = {
-  mealName: '',
-  mealPrice: 0,
-  mealImage: '',
+  name: '',
+  price: 0,
+  image: '',
 };
 
 const existingMeal = {
-  mealName: 'Curry Rice',
-  mealPrice: 1000,
-  mealImage: 'https://res.cloudinary.com/styll/image/upload/v1524560568/foods.jpg',
+  name: 'Curry Rice',
+  price: 1000,
+  image: 'https://res.cloudinary.com/styll/image/upload/v1524560568/foods.jpg',
+};
+
+/**
+ * inserts seed meal into database for testing
+ */
+const insertSeedMeal = (meal) => {
+  Meals.add(meal);
+};
+
+/**
+ * truncates the data in meals table
+ */
+const clearMeals = () => {
+  Meals.truncate();
 };
 
 export {
@@ -27,4 +43,6 @@ export {
   validMeal2,
   invalidMeal,
   existingMeal,
+  insertSeedMeal,
+  clearMeals,
 };

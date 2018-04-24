@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+const defaultImage = 'https://res.cloudinary.com/styll/image/upload/v1524560568/foods.jpg';
+
 class CloudUpload {
   /**
    * Method to upload image file to cloudinary
@@ -27,8 +29,8 @@ class CloudUpload {
    * @returns {Promise}
    */
   static uploadImage(src) {
-    if (!src.trim()) return 'https://res.cloudinary.com/styll/image/upload/v1524560568/foods.jpg'; // default image
-    const result = CloudUpload.uploadImageToCloud(src).then(res => res).catch(error => error);
+    if (!src.trim()) return defaultImage;
+    const result = this.uploadImageToCloud(src).then(res => res).catch(error => error);
 
     return result;
   }
