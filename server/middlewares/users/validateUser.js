@@ -60,6 +60,31 @@ class validateUser {
     // all checks passes, then call the next function
     return next();
   }
+
+  /**
+   * static method to validate a signin request body
+   * @param {*} req
+   * @param {*} res
+   * @param {*} next
+   */
+  static signin(req, res, next) {
+    // check if email is provided
+    if (!req.body.email.trim()) {
+      return res.status(400).send({ message: 'Email is required' });
+    }
+
+    // check if email is valid
+    if (!validator.isEmail(req.body.email.trim())) {
+      return res.status(400).send({ message: 'Email is invalid' });
+    }
+
+    // check if password is provided
+    if (!req.body.password.trim()) {
+      return res.status(400).send({ message: 'Password is required' });
+    }
+
+    return next();
+  }
 }
 
 export default validateUser;

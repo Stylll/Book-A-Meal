@@ -9,6 +9,8 @@ import validateUser from '../middlewares/users/validateUser';
 
 const users = (router) => {
   router.post('/users/signup', validateUser.signup, UserController.signup);
+
+  router.post('/users/signin', validateUser.signin, UserController.signin);
 };
 
 export default users;
