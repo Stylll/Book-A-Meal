@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-
+import validator from 'validator';
 import generateId from '../utils/generateId';
 
 
@@ -13,11 +13,36 @@ class Users {
    * @returns {object} newly added user
    */
   static add(user) {
+    // if user email is not provided
+    if (!user.email.trim()) return { err: new Error('Email is required') };
+
+    // if user email is not valid
+    if (!validator.isEmail(user.email.trim())) return { err: new Error('Email is invalid') };
+
+    // if user email exists
+    if (UserStore.filter(x => x.email === user.email.trim()).length > 0) return { err: new Error('Email exists') };
+
+    // if username is not provided
+    if (!user.username.trim()) return { err: new Error('Username is required') };
+
+    // if username exists
+    if (UserStore.filter(x => x.username === user.username.trim()).length > 0) {
+      return { err: new Error('Username exists') };
+    }
+
+    // if password is not provided
+    if (!user.password.trim()) return { err: new Error('Password is required') };
+
+    // if password is invalid
+    if (user.password.trim().length <= 5) return { err: new Error('Password must have atleast 5 characters') };
+
+    // add the user to the db
     const newUser = user;
     newUser.password = bcrypt.hashSync(newUser.password, 10); // hash user password
     newUser.id = generateId(UserStore);
     newUser.createdAt = new Date();
     newUser.updatedAt = new Date();
+    newUser.accountType = newUser.accountType || 'customer';
     UserStore.push(newUser);
 
     return newUser;
@@ -29,7 +54,7 @@ class Users {
    *
    */
   static addBulk(userArray) {
-    userArray.foreach((user) => {
+    userArray.forEach((user) => {
       this.add(user);
     });
   }
@@ -40,17 +65,22 @@ class Users {
    * @return {object} updated user
    */
   static update(user) {
-    const updateUser = user;
-    updateUser.password = bcrypt.hashSync(updateUser.password, 10); // hash user password
-    updateUser.updatedAt = new Date();
+    // if password is not provided
+    if (!user.password.trim()) return { err: new Error('Password is required') };
+
+    // if password is invalid
+    if (user.password.trim().length <= 5) return { err: new Error('Password must have atleast 5 characters') };
 
     // if user exists in the db
-    if (UserStore[updateUser.id - 1]) {
+    if (UserStore[user.id - 1]) {
+      const updateUser = UserStore[user.id - 1];
+      updateUser.password = bcrypt.hashSync(updateUser.password, 10); // hash user password
+      updateUser.updatedAt = new Date();
       UserStore[updateUser.id - 1] = updateUser;
       return updateUser;
     }
     // else return null
-    return null;
+    return { err: new Error('User does not exist') };
   }
 
   /**

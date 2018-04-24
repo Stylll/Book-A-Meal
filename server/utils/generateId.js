@@ -5,7 +5,7 @@
  * @returns {Integer} generated id
  */
 const generateId = (arrItem) => {
-  if (!Array.isArray) {
+  if (!Array.isArray(arrItem)) {
     return 0;
   }
   return arrItem.length + 1;
