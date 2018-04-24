@@ -32,6 +32,9 @@ class Meals {
     // check if image link exists
     if (!meal.image.trim()) return { err: new Error('Image link is required') };
 
+    // check if user id is provided
+    if (!meal.userId) return { err: new Error('User id is required') };
+
     // add meal to db
     const newMeal = { ...meal };
     newMeal.id = generateId(MealStore); // generate meal id

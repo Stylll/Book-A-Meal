@@ -1,15 +1,19 @@
 import Meals from '../../db/meals';
 
+const defaultImage = 'https://res.cloudinary.com/styll/image/upload/v1524560568/foods.jpg';
+
 const validMeal1 = {
   name: 'Rice and Stew',
   price: 1500,
   image: 'https://res.cloudinary.com/styll/image/upload/v1524560568/foods.jpg',
+  userId: 1,
 };
 
 const validMeal2 = {
   name: 'Crispy Chicken',
   price: 3500,
   image: 'https://res.cloudinary.com/styll/image/upload/v1524560568/foods.jpg',
+  userId: 1,
 };
 
 const invalidMeal = {
@@ -22,6 +26,7 @@ const existingMeal = {
   name: 'Curry Rice',
   price: 1000,
   image: 'https://res.cloudinary.com/styll/image/upload/v1524560568/foods.jpg',
+  userId: 1,
 };
 
 /**
@@ -39,6 +44,7 @@ const clearMeals = () => {
 };
 
 export {
+  defaultImage,
   validMeal1,
   validMeal2,
   invalidMeal,

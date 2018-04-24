@@ -7,7 +7,12 @@ import {
   insertSeedMeal,
   clearMeals,
 } from '../../utils/seeders/mealSeeder';
+import { existingUser, insertSeedUsers } from '../../utils/seeders/userSeeder';
+
 import meals from '../../db/meals';
+
+// insert a default user
+insertSeedUsers(existingUser);
 
 /* eslint-disable no-undef */
 describe('Test suite for meals model', () => {
@@ -46,6 +51,13 @@ describe('Test suite for meals model', () => {
       name: validMeal1.name, price: validMeal1.price, image: invalidMeal.image,
     });
     expect(result.err.message).to.equal('Image link is required');
+  });
+
+  it('should require user id', () => {
+    const result = meals.add({
+      name: validMeal1.name, price: validMeal1.price, image: validMeal1.image,
+    });
+    expect(result.err.message).to.equal('User id is required');
   });
 
   it('should add new meal', () => {

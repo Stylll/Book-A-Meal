@@ -1,9 +1,9 @@
 import cloudinary from 'cloudinary';
 import dotenv from 'dotenv';
+import { defaultImage } from '../utils/seeders/mealSeeder';
 
 dotenv.config();
 
-const defaultImage = 'https://res.cloudinary.com/styll/image/upload/v1524560568/foods.jpg';
 
 class CloudUpload {
   /**
