@@ -195,4 +195,66 @@ describe('Test suite for User Controller', () => {
         });
     });
   });
+
+  describe('POST Signin User - /api/v1/signin', () => {
+    it('should require an email', (done) => {
+      request.post('/api/v1/signin')
+        .send({ email: '   ' })
+        .end((err, resp) => {
+          expect(resp.status).to.be(400);
+          expect(resp.body).to.haveOwnProperty('message');
+          expect(resp.body.message).to.equal('Email is required');
+          done();
+        });
+    });
+
+    it('should require a valid email', (done) => {
+      request.post('/api/v1/signin')
+        .send({ email: invalidUser.email })
+        .end((err, resp) => {
+          expect(resp.status).to.be(400);
+          expect(resp.body).to.haveOwnProperty('message');
+          expect(resp.body.message).to.equal('Email is invalid');
+          done();
+        });
+    });
+
+    it('should require a password', () => {
+      request.post('/api/v1/signin')
+        .send({ email: existingUser.email, password: '   ' })
+        .end((err, resp) => {
+          expect(resp.status).to.be(400);
+          expect(resp.body).to.haveOwnProperty('message');
+          expect(resp.body.message).to.equal('Password is required');
+          done();
+        });
+    });
+
+    it('should return proper response data and status code for authenticated users', (done) => {
+      request.post('/api/v1/signin')
+        .send(existingUser)
+        .end((err, resp) => {
+          expect(resp.status).to.be(200);
+          expect(resp.body).to.haveOwnProperty('user');
+          expect(resp.body.user).to.haveOwnProperty('id');
+          expect(resp.body.user).to.haveOwnProperty('email');
+          expect(resp.body.user).to.haveOwnProperty('username');
+          expect(resp.body.user).to.haveOwnProperty('accountType');
+          expect(resp.body).to.equal('token');
+          expect(jwt.verify(resp.body.token, process.env.SECRET)).to.not.equal(null);
+          done();
+        });
+    });
+
+    it('should not grant access to wrong credentials', (done) => {
+      request.post('/api/v1/signin')
+        .send(validUser2)
+        .end((err, resp) => {
+          expect(resp.status).to.be(401);
+          expect(resp.body).to.haveOwnProperty('message');
+          expect(resp.body.message).to.equal('Email or Password is incorrect');
+          done();
+        });
+    });
+  });
 });
