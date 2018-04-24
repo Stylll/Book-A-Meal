@@ -1,5 +1,6 @@
 import express from 'express';
 import users from './users';
+import meals from './meals';
 
 /**
  * Route handler for api v1
@@ -14,5 +15,8 @@ router.get('/', (req, res) => {
 
 // routes requests related to users authentication
 users(router);
+
+// routes requests related to meals
+meals(router);
 
 export default router;

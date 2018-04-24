@@ -7,7 +7,6 @@ import {
   validMeal1,
   validMeal2,
   existingMeal,
-  invalidMeal,
   insertSeedMeal,
   clearMeals,
 } from '../../utils/seeders/mealSeeder';
@@ -25,14 +24,13 @@ describe('Test Suite for Meal Controller', () => {
   insertSeedUsers(validUser1);
 
   // generate access token for users
-  const catererToken = Authenticate.authenticateUser(existingUser);
-  const customerToken = Authenticate.authenticateUser(validUser1);
+  const catererToken = Authenticate.authenticateUser({ id: 1, ...existingUser });
+  const customerToken = Authenticate.authenticateUser({ id: 2, ...validUser1 });
 
   describe('POST: Create Meal - /api/v1/meals', () => {
-
     beforeEach(() => {
       clearMeals();
-      insertSeedMeal(validMeal1);
+      insertSeedMeal(existingMeal);
     });
 
     it('should require an authentication token', (done) => {
@@ -96,9 +94,9 @@ describe('Test Suite for Meal Controller', () => {
         .set({
           'x-access-token': catererToken,
         })
-        .send(validMeal1)
+        .send(existingMeal)
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
+          expect(resp.status).to.equal(409);
           expect(resp.body.message).to.equal('Meal name already exists');
           done();
         });
@@ -120,7 +118,41 @@ describe('Test Suite for Meal Controller', () => {
         });
     });
 
-    it('should set default image if image is not provided', () => {
+    it('should require a valid price', (done) => {
+      request(app)
+        .post('/api/v1/meals')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .send({
+          name: validMeal1.name,
+          price: 'Three zero',
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(400);
+          expect(resp.body.message).to.equal('Price is invalid');
+          done();
+        });
+    });
+
+    it('should require meal price above 1', (done) => {
+      request(app)
+        .post('/api/v1/meals')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .send({
+          name: validMeal1.name,
+          price: 1,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(400);
+          expect(resp.body.message).to.equal('Price must be greater than one');
+          done();
+        });
+    });
+
+    it('should set default image if image is not provided', (done) => {
       request(app)
         .post('/api/v1/meals')
         .set({
@@ -138,7 +170,7 @@ describe('Test Suite for Meal Controller', () => {
         });
     });
 
-    it('should return meal with proper objects and proper status code', () => {
+    it('should return meal with proper objects and proper status code', (done) => {
       request(app)
         .post('/api/v1/meals')
         .set({
@@ -155,6 +187,7 @@ describe('Test Suite for Meal Controller', () => {
           expect(resp.body.meal.price).to.equal(validMeal2.price);
           expect(resp.body.meal.image).to.equal(defaultImage);
           expect(resp.body.meal).to.haveOwnProperty('userId');
+          expect(resp.body.meal.userId).to.not.equal(null);
           done();
         });
     });

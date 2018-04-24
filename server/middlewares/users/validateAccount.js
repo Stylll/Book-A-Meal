@@ -36,7 +36,7 @@ class ValidateAccount {
    * @param {*} next
    */
   static caterer(req, res, next) {
-    const { decoded } = req.decoded;
+    const { decoded } = req;
     if (decoded && decoded.user && decoded.user.accountType === 'caterer') {
       return next();
     }
@@ -51,7 +51,7 @@ class ValidateAccount {
    * @param {*} next
    */
   static customer(req, res, next) {
-    const { decoded } = req.decoded;
+    const { decoded } = req;
     if (decoded && decoded.user && decoded.user.accountType === 'customer') {
       return next();
     }
