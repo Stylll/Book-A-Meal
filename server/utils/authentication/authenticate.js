@@ -36,7 +36,12 @@ class Authenticate {
    * @returns {object} decoded
    */
   static verifyToken(token) {
-    const decoded = jwt.verify(token, process.env.SECRET);
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.SECRET);
+    } catch (err) {
+      console.log(err);
+    }
     if (decoded) {
       return decoded;
     }
