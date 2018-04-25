@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import request from 'supertest';
 import app from '../../server';
+import meals from '../../db/meals';
 import Authenticate from '../../utils/authentication/authenticate';
 import {
   defaultImage,
@@ -405,6 +406,78 @@ describe('Test Suite for Meal Controller', () => {
             .to.have.all.deep.keys('id', 'name', 'price', 'image', 'userId', 'createdAt', 'updatedAt');
           expect(resp.body.meals.length).to.be.greaterThan(1);
           expect(resp.body.meals[0].id).to.equal(1);
+          done();
+        });
+    });
+  });
+
+  describe('DELETE: Delete Meal - /api/v1/meals', () => {
+    // before each hook to clean and insert data to the db
+    beforeEach(() => {
+      clearMeals();
+      insertSeedMeal(existingMeal);
+      insertSeedMeal(validMeal1);
+      insertSeedMeal(validMeal2);
+    });
+
+    it('should require an authentication token', (done) => {
+      request(app)
+        .delete('/api/v1/meals/1')
+        .end((err, resp) => {
+          expect(resp.status).to.equal(401);
+          expect(resp.body.message).to.equal('Authentication failed. No token provided');
+          done();
+        });
+    });
+
+    it('should require a valid authentication token', (done) => {
+      request(app)
+        .delete('/api/v1/meals/1')
+        .set({
+          'x-access-token': 'rkrri444443223sdkd.rererer.weewewe3434',
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(401);
+          expect(resp.body.message).to.equal('Token is invalid or has expired');
+          done();
+        });
+    });
+
+    it('should require a caterer user account', (done) => {
+      request(app)
+        .delete('/api/v1/meals/1')
+        .set({
+          'x-access-token': customerToken,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(401);
+          expect(resp.body.message).to.equal('Unauthorized Access');
+          done();
+        });
+    });
+
+    it('should require an existing meal', (done) => {
+      request(app)
+        .delete('/api/v1/meals/99')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(404);
+          expect(resp.body.message).to.equal('Meal does not exist');
+          done();
+        });
+    });
+
+    it('should delete meal with valid meal id', (done) => {
+      request(app)
+        .delete('/api/v1/meals/1')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(204);
+          expect(meals.getByName(existingMeal.name)).to.equal(null);
           done();
         });
     });
