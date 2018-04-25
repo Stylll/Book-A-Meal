@@ -6,7 +6,7 @@ import {
   invalidMenuMeal3,
   existingMenuMeal,
   insertSeedMenuMeal,
-  clearMenuMeal,
+  clearMenuMeals,
 } from '../../utils/seeders/menuMealSeeder';
 
 import {
@@ -41,7 +41,7 @@ describe('Test Suite for MenuMeal Model', () => {
     clearUsers();
     clearMeals();
     clearMenus();
-    clearMenuMeal();
+    clearMenuMeals();
     insertSeedUsers(existingUser);
     insertSeedMeal(existingMeal);
     insertSeedMeal(validMeal1);
@@ -78,9 +78,14 @@ describe('Test Suite for MenuMeal Model', () => {
     expect(result.err.message).to.equal('Meal does not exist');
   });
 
-  it('should require menumeal id to get meals by id', () => {
+  it('should return undefined if menumeal id does not exist', () => {
     const result = menuMeals.get(0);
-    expect(result.err.message).to.equal('MenuMeal id is required');
+    expect(result).to.equal(undefined);
+  });
+
+  it('should return null if menumeal id is invalid', () => {
+    const result = menuMeals.get('eeeoi');
+    expect(result).to.equal(null);
   });
 
   it('should get meals by id', () => {
@@ -92,16 +97,16 @@ describe('Test Suite for MenuMeal Model', () => {
     expect(result).to.haveOwnProperty('updatedAt');
   });
 
-  it('should require menu id to get by menu id', () => {
+  it('should return null if menu id is invalid', () => {
     const result = menuMeals.getByMenuId(invalidMenuMeal3.menuId);
-    expect(result.err.message).to.equal('Menu id is required');
+    expect(result).to.equal(null);
   });
 
   it('should return meal and menu with valid menu id', () => {
     const result = menuMeals.getByMenuId(existingMenuMeal.menuId);
     expect(result).to.be.an('array');
-    expect(result[0].mealId).to.equal(existingMeal.mealId);
-    expect(result[0].menuId).to.equal(existingMeal.menuId);
+    expect(result[0].mealId).to.equal(existingMenuMeal.mealId);
+    expect(result[0].menuId).to.equal(existingMenuMeal.menuId);
   });
 
   it('should add meal to a menu', () => {
@@ -122,16 +127,11 @@ describe('Test Suite for MenuMeal Model', () => {
     menuMeals.addBulk([validMenuMeal1, validMenuMeal2]);
     const result = menuMeals.getAll();
     expect(result).to.be.an('array');
-    expect(result[0].mealId).to.equal(existingMeal.mealId);
-    expect(result[0].menuId).to.equal(existingMeal.menuId);
+    expect(result[0].mealId).to.equal(existingMenuMeal.mealId);
+    expect(result[0].menuId).to.equal(existingMenuMeal.menuId);
     expect(result[0]).to.haveOwnProperty('createdAt');
     expect(result[0]).to.haveOwnProperty('updatedAt');
     expect(result.length).to.be.greaterThan(1);
-  });
-
-  it('should require menu meal id before deletion', () => {
-    const result = menuMeals.delete(0);
-    expect(result.err.message).to.equal('Menumeal id is required');
   });
 
   it('should delete menu meal by menu meal id', () => {
@@ -139,14 +139,9 @@ describe('Test Suite for MenuMeal Model', () => {
     expect(menuMeals.get(1)).to.equal(undefined);
   });
 
-  it('should require menu id before deletion with menu id', () => {
-    menuMeals.deleteByMenuId(0);
-    expect(result.err.message).to.equal('Menu id is required');
-  });
-
   it('should delete menu meal with menu id', () => {
     menuMeals.deleteByMenuId(1);
-    expect(menuMeals.getByMenuId(1)).to.equal(undefined);
+    expect(menuMeals.getByMenuId(1)).to.equal(null);
   });
 
   it('should delete all records in menumeal table', () => {

@@ -85,7 +85,7 @@ class MenuMeals {
       const result = MenuMealStore.filter(menumeal => menumeal.menuId === id);
       if (result.length > 0) {
         result.forEach((item) => {
-          delete MenuMealStore[item.id];
+          delete MenuMealStore[item.id - 1];
         });
       }
     }
@@ -112,7 +112,7 @@ class MenuMeals {
     if (Number.isInteger(id)) {
       const result = MenuMealStore.filter(menumeal => menumeal.menuId === id);
       if (result.length > 0) {
-        return result[0];
+        return result;
       }
       return null;
     }
