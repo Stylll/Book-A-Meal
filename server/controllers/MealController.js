@@ -6,14 +6,19 @@ import CloudUpload from '../utils/cloudUpload';
  * Controller Class to handle user meal requests
  */
 class MealController {
+  /**
+   * static method to handle meal post request.
+   * creates meal.
+   * @param {*} req
+   * @param {*} res
+   */
   static async post(req, res) {
     let image = defaultImage;
-
     // upload image to cloudinary and get image link if image was passed
-    if (req.image && req.image.path) {
-      const result = await CloudUpload.uploadImage(req.image);
-      if (result && result.secure_url) {
-        image = result.secure_url;
+    if (req.file && req.file.path) {
+      const result = await CloudUpload.uploadImage(req.file.path);
+      if (result) {
+        image = result;
       }
     }
 
@@ -30,6 +35,42 @@ class MealController {
       return res.status(201).send({ meal });
     }
     return res.status(500).send({ message: 'Internal Server Error' });
+  }
+
+  /**
+   * Static method to handle meal put requests
+   * updates meal using meal id
+   * @param {*} req
+   * @param {*} res
+   */
+  static async put(req, res) {
+    // get meal from the db
+    const oldMeal = { ...meals.get(parseInt(req.params.id, 10)) };
+    if (oldMeal) {
+      let { image } = oldMeal;
+
+      // upload image to cloudinary and get image link if image was passed
+      if (req.file && req.file.path) {
+        const result = await CloudUpload.uploadImage(req.file.path);
+        if (result) {
+          image = result;
+        }
+      }
+
+      // update oldMeal with new data if exists
+      oldMeal.name = req.body.name || oldMeal.name;
+      oldMeal.price = req.body.price || oldMeal.price;
+      oldMeal.image = image;
+
+      // save updated data
+      const updatedMeal = meals.update(oldMeal);
+
+      if (updatedMeal && !updatedMeal.err) {
+        return res.status(200).send({ meal: updatedMeal });
+      }
+      return res.status(500).send({ message: 'Internal Server Error' });
+    }
+    return res.status(404).send({ message: 'Meal does not exist' });
   }
 }
 

@@ -100,7 +100,7 @@ describe('Test suite for meals model', () => {
 
   it('should delete meal', () => {
     meals.delete(1);
-    expect(meals.get(1)).to.equal(null);
+    expect(meals.get(1)).to.equal(undefined);
   });
 
   it('should get all meals', () => {

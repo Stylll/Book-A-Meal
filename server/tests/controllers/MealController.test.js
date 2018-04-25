@@ -28,6 +28,7 @@ describe('Test Suite for Meal Controller', () => {
   const customerToken = Authenticate.authenticateUser({ id: 2, ...validUser1 });
 
   describe('POST: Create Meal - /api/v1/meals', () => {
+    // before each hook to clean and insert data to the db
     beforeEach(() => {
       clearMeals();
       insertSeedMeal(existingMeal);
@@ -184,6 +185,159 @@ describe('Test Suite for Meal Controller', () => {
           expect(resp.status).to.equal(201);
           expect(resp.body).to.haveOwnProperty('meal');
           expect(resp.body.meal.name).to.equal(validMeal2.name);
+          expect(resp.body.meal.price).to.equal(validMeal2.price);
+          expect(resp.body.meal.image).to.equal(defaultImage);
+          expect(resp.body.meal).to.haveOwnProperty('userId');
+          expect(resp.body.meal.userId).to.not.equal(null);
+          done();
+        });
+    });
+  });
+
+  describe('PUT: Update Meal - /api/v1/meals/:id', () => {
+    // before each hook to clean and insert data to the db
+    beforeEach(() => {
+      clearMeals();
+      insertSeedMeal(existingMeal);
+    });
+
+    it('should require an authentication token', (done) => {
+      request(app)
+        .put('/api/v1/meals/1')
+        .send({})
+        .end((err, resp) => {
+          expect(resp.status).to.equal(401);
+          expect(resp.body.message).to.equal('Authentication failed. No token provided');
+          done();
+        });
+    });
+
+    it('should require a valid authentication token', (done) => {
+      request(app)
+        .put('/api/v1/meals/1')
+        .set({
+          'x-access-token': 'rkrri444443223sdkd.rererer.weewewe3434',
+        })
+        .send({})
+        .end((err, resp) => {
+          expect(resp.status).to.equal(401);
+          expect(resp.body.message).to.equal('Token is invalid or has expired');
+          done();
+        });
+    });
+
+    it('should require a caterer user account', (done) => {
+      request(app)
+        .put('/api/v1/meals/1')
+        .set({
+          'x-access-token': customerToken,
+        })
+        .send({})
+        .end((err, resp) => {
+          expect(resp.status).to.equal(401);
+          expect(resp.body.message).to.equal('Unauthorized Access');
+          done();
+        });
+    });
+
+    it('should require existing meal using meal id', (done) => {
+      request(app)
+        .put('/api/v1/meals/30')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .send({})
+        .end((err, resp) => {
+          expect(resp.status).to.equal(404);
+          expect(resp.body.message).to.equal('Meal does not exist');
+          done();
+        });
+    });
+
+    it('should require a unique meal name', (done) => {
+      insertSeedMeal(validMeal2);
+      request(app)
+        .put('/api/v1/meals/1')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .send({ name: validMeal2.name, ...existingMeal })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(409);
+          expect(resp.body.message).to.equal('Meal name already exists');
+          done();
+        });
+    });
+
+    it('should require a valid price', (done) => {
+      request(app)
+        .put('/api/v1/meals/1')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .send({
+          name: validMeal1.name,
+          price: 'Three zero',
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(400);
+          expect(resp.body.message).to.equal('Price is invalid');
+          done();
+        });
+    });
+
+    it('should require meal price above 1', (done) => {
+      request(app)
+        .put('/api/v1/meals/1')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .send({
+          name: validMeal1.name,
+          price: 1,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(400);
+          expect(resp.body.message).to.equal('Price must be greater than one');
+          done();
+        });
+    });
+
+    it('should use previous image if image is not provided', (done) => {
+      request(app)
+        .put('/api/v1/meals/1')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .send({
+          name: validMeal1.name,
+          price: validMeal2.price,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(200);
+          expect(resp.body).to.haveOwnProperty('meal');
+          expect(resp.body.meal.image).to.equal(defaultImage);
+          done();
+        });
+    });
+
+    it('should return updated meal with proper objects and proper status code', (done) => {
+      insertSeedMeal(validMeal2);
+      validMeal2.name = 'Jollof rice';
+      validMeal2.price = 4030;
+      request(app)
+        .put('/api/v1/meals/1')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .send({
+          name: validMeal1.name,
+          price: validMeal2.price,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(200);
+          expect(resp.body).to.haveOwnProperty('meal');
+          expect(resp.body.meal.name).to.equal(validMeal1.name);
           expect(resp.body.meal.price).to.equal(validMeal2.price);
           expect(resp.body.meal.image).to.equal(defaultImage);
           expect(resp.body.meal).to.haveOwnProperty('userId');

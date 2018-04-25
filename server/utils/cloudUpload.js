@@ -29,7 +29,7 @@ class CloudUpload {
    * @returns {Promise}
    */
   static uploadImage(src) {
-    if (!src || !src.trim()) return { secure_url: defaultImage };
+    if (!src || !src.trim()) return defaultImage;
     const result = this.uploadImageToCloud(src).then(res => res).catch(error => error);
 
     return result;
