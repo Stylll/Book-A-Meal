@@ -28,6 +28,7 @@ describe('Test Suite for Meal Controller', () => {
   const customerToken = Authenticate.authenticateUser({ id: 2, ...validUser1 });
 
   describe('POST: Create Meal - /api/v1/meals', () => {
+    // before each hook to clean and insert data to the db
     beforeEach(() => {
       clearMeals();
       insertSeedMeal(existingMeal);
@@ -194,6 +195,12 @@ describe('Test Suite for Meal Controller', () => {
   });
 
   describe('PUT: Update Meal - /api/v1/meals/:id', () => {
+    // before each hook to clean and insert data to the db
+    beforeEach(() => {
+      clearMeals();
+      insertSeedMeal(existingMeal);
+    });
+
     it('should require an authentication token', (done) => {
       request(app)
         .put('/api/v1/meals/1')
@@ -237,7 +244,7 @@ describe('Test Suite for Meal Controller', () => {
       request(app)
         .put('/api/v1/meals/30')
         .set({
-          'x-access-token': customerToken,
+          'x-access-token': catererToken,
         })
         .send({})
         .end((err, resp) => {
@@ -303,31 +310,34 @@ describe('Test Suite for Meal Controller', () => {
           'x-access-token': catererToken,
         })
         .send({
-          name: validMeal2.name,
+          name: validMeal1.name,
           price: validMeal2.price,
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(201);
+          expect(resp.status).to.equal(200);
           expect(resp.body).to.haveOwnProperty('meal');
           expect(resp.body.meal.image).to.equal(defaultImage);
           done();
         });
     });
 
-    it('should return meal with proper objects and proper status code', (done) => {
+    it('should return updated meal with proper objects and proper status code', (done) => {
+      insertSeedMeal(validMeal2);
+      validMeal2.name = 'Jollof rice';
+      validMeal2.price = 4030;
       request(app)
         .put('/api/v1/meals/1')
         .set({
           'x-access-token': catererToken,
         })
         .send({
-          name: validMeal2.name,
+          name: validMeal1.name,
           price: validMeal2.price,
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(201);
+          expect(resp.status).to.equal(200);
           expect(resp.body).to.haveOwnProperty('meal');
-          expect(resp.body.meal.name).to.equal(validMeal2.name);
+          expect(resp.body.meal.name).to.equal(validMeal1.name);
           expect(resp.body.meal.price).to.equal(validMeal2.price);
           expect(resp.body.meal.image).to.equal(defaultImage);
           expect(resp.body.meal).to.haveOwnProperty('userId');

@@ -39,8 +39,8 @@ class ValidateMeal {
    */
   static put(req, res, next) {
     // check if meal id exists
-    if (req.params.id && !meals.get(req.params.id)) {
-      return res.status(404).send({ message: 'Meal does not exists' });
+    if (!meals.get(parseInt(req.params.id, 10))) {
+      return res.status(404).send({ message: 'Meal does not exist' });
     }
 
     // check if meal name exists

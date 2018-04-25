@@ -14,12 +14,11 @@ class MealController {
    */
   static async post(req, res) {
     let image = defaultImage;
-
     // upload image to cloudinary and get image link if image was passed
-    if (req.image && req.image.path) {
-      const result = await CloudUpload.uploadImage(req.image);
-      if (result && result.secure_url) {
-        image = result.secure_url;
+    if (req.file && req.file.path) {
+      const result = await CloudUpload.uploadImage(req.file.path);
+      if (result) {
+        image = result;
       }
     }
 
@@ -46,15 +45,15 @@ class MealController {
    */
   static async put(req, res) {
     // get meal from the db
-    const oldMeal = meals.get(req.params.id);
+    const oldMeal = { ...meals.get(parseInt(req.params.id, 10)) };
     if (oldMeal) {
       let { image } = oldMeal;
 
       // upload image to cloudinary and get image link if image was passed
-      if (req.image && req.image.path) {
-        const result = await CloudUpload.uploadImage(req.image);
-        if (result && result.secure_url) {
-          image = result.secure_url;
+      if (req.file && req.file.path) {
+        const result = await CloudUpload.uploadImage(req.file.path);
+        if (result) {
+          image = result;
         }
       }
 

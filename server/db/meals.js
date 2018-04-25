@@ -84,7 +84,7 @@ class Meals {
     updateMeal.name = meal.name || updateMeal.name;
     updateMeal.price = meal.price || updateMeal.price;
     updateMeal.image = meal.image || updateMeal.image;
-    updateMeal.updatedAt = Date.now();
+    updateMeal.updatedAt = new Date();
 
     // save meal in db
     MealStore[meal.id - 1] = updateMeal;
@@ -107,9 +107,8 @@ class Meals {
    * @returns {object|null} meal
    */
   static get(id) {
-    const result = MealStore.filter(x => x.id === id);
-    if (result.length > 0) {
-      return result[0];
+    if (Number.isInteger(id)) {
+      return MealStore[id - 1];
     }
     return null;
   }

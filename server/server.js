@@ -14,7 +14,7 @@ const address = `http://localhost:${port}/api/v1`;
 // Middleware
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Pass api/v1 requests to routes
 app.use('/api/v1', routes);
