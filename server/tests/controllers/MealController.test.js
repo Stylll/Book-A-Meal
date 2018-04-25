@@ -403,7 +403,7 @@ describe('Test Suite for Meal Controller', () => {
           expect(resp.body.meals).to.be.an('array');
           expect(resp.body.meals[0])
             .to.have.all.deep.keys('id', 'name', 'price', 'image', 'userId', 'createdAt', 'updatedAt');
-          expect(resp.body.meals.count).to.be.greaterThan(1);
+          expect(resp.body.meals.length).to.be.greaterThan(1);
           expect(resp.body.meals[0].id).to.equal(1);
           done();
         });
