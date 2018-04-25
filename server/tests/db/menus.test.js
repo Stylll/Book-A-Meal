@@ -23,7 +23,7 @@ describe('Test Suite for Menu Model', () => {
   });
 
   it('should require valid menu date', () => {
-    const result = menus.add({ date: 'djddd', ...invalidMenu3 });
+    const result = menus.add({ date: 'djddd' });
     expect(result.err.message).to.equal('Menu date is invalid');
   });
 
@@ -42,7 +42,7 @@ describe('Test Suite for Menu Model', () => {
     expect(menus.getAll().length).to.equal(3);
   });
 
-  it('should get menu and meals in a menu', () => {
+  it('should get menu', () => {
     const result = menus.get(1);
     expect(result.name).to.equal(existingMenu.name);
     expect(result.date).to.equal(existingMenu.date);
@@ -50,7 +50,10 @@ describe('Test Suite for Menu Model', () => {
   });
 
   it('should require a user id', () => {
-    const result = menus.add({ userId: 0, ...validMenu2 });
+    const result = menus.add({
+      date: validMenu1.date,
+      userId: 0,
+    });
     expect(result.err.message).to.equal('User id is required');
   });
 
@@ -60,18 +63,22 @@ describe('Test Suite for Menu Model', () => {
   });
 
   it('should require unique menu date when updating', () => {
-    const result = menus.add(existingMenu);
+    const result = menus.update({ id: 1, ...existingMenu });
     expect(result.err.message).to.equal('Menu date already exists');
   });
 
   it('should require valid menu date before updating', () => {
-    const result = menus.update({ date: 'djddd', ...invalidMenu3 });
+    const result = menus.update({ id: 1, date: 'djddd' });
     expect(result.err.message).to.equal('Menu date is invalid');
   });
 
   it('should update menu date', () => {
-    const result = menus.add({ date: '2018-03-01', ...validMenu1 });
-    expect(result.name).to.equal('Menu For Thursday, March 2018');
+    const result = menus.add({
+      date: '2018-03-01',
+      id: 1,
+      userId: 1,
+    });
+    expect(result.name).to.equal('Menu For Thursday, 1 March 2018');
   });
 
   it('should get menu by date', () => {
