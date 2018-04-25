@@ -12,7 +12,6 @@ import {
 import {
   validMenu1,
   validMenu2,
-  invalidMenu3,
   existingMenu,
   insertSeedMenu,
   clearMenus,
@@ -22,7 +21,6 @@ import {
   validMeal1,
   validMeal2,
   existingMeal,
-  invalidMeal,
   insertSeedMeal,
   clearMeals,
 } from '../../utils/seeders/mealSeeder';
@@ -37,7 +35,7 @@ import {
 describe('Test Suite for MenuMeal Model', () => {
   /**
    * before each hook to populate db with required data
-   * 
+   *
    */
   beforeEach(() => {
     clearUsers();

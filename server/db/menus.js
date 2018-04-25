@@ -33,8 +33,8 @@ class Menus {
     newMenu.id = generateId(MenuStore);
     newMenu.name = `Menu For ${beautifyDate(menu.date)}`;
     newMenu.userId = menu.userId;
-    newMenu.createdAt = Date.now();
-    newMenu.updatedAt = Date.now();
+    newMenu.createdAt = new Date();
+    newMenu.updatedAt = new Date();
 
     // add the menu
     MenuStore.push(newMenu);
@@ -77,7 +77,7 @@ class Menus {
     const updatedMenu = { ...MenuStore[menu.id - 1] };
     updatedMenu.name = `Menu For ${beautifyDate(menu.date)}`;
     updatedMenu.date = menu.date;
-    updatedMenu.updatedAt = Date.now();
+    updatedMenu.updatedAt = new Date();
 
     // save menu in db
     MenuStore[menu.id - 1] = updatedMenu;
