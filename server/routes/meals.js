@@ -38,6 +38,12 @@ const meals = (router) => {
 
   // meal router to handle get requests
   router.get('/meals', validateAccount.user, validateAccount.caterer, MealController.get);
+
+  // meal router to handle delete requests
+  router.delete(
+    '/meals/:id', validateAccount.user, validateAccount.caterer,
+    validateMeal.delete, MealController.delete,
+  );
 };
 
 export default meals;

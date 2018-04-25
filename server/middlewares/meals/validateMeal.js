@@ -60,6 +60,19 @@ class ValidateMeal {
 
     return next();
   }
+
+  /**
+   * Static method to validate meal delete requests
+   * @param {*} req
+   * @param {*} res
+   */
+  static delete(req, res, next) {
+    // check if meal exists
+    if (meals.get(parseInt(req.params.id, 10))) {
+      return next();
+    }
+    return res.status(404).send({ message: 'Meal does not exist' });
+  }
 }
 
 export default ValidateMeal;
