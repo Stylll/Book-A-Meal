@@ -17,12 +17,12 @@ class ValidateMenu {
     if (!req.params.id) return res.status(400).send({ message: 'Menu id is required' });
 
     // check if menu id is valid
-    if (!Number.isInteger(req.params.id)) {
+    if (!Number.isInteger(parseInt(req.params.id, 10))) {
       return res.status(400).send({ message: 'Menu id is invalid' });
     }
 
     // check if menu id exists
-    if (!menus.get(req.params.id)) return res.status(400).send({ message: 'Menu does not exist' });
+    if (!menus.get(parseInt(req.params.id, 10))) return res.status(404).send({ message: 'Menu does not exist' });
 
     // check if meal id is provided
     if (!req.body.mealId) return res.status(400).send({ message: 'Meal id is required' });
@@ -33,7 +33,7 @@ class ValidateMenu {
     }
 
     // check if meal id exists in meals db
-    if (!meals.get(req.body.mealId)) return res.status(400).send({ message: 'Meal does not exist' });
+    if (!meals.get(req.body.mealId)) return res.status(404).send({ message: 'Meal does not exist' });
 
     // check if meal id exists in menumeals db
     const result = menuMeals.getByMenuId(req.params.id);

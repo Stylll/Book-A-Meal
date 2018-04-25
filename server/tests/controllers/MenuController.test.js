@@ -197,7 +197,6 @@ describe('Test Suite for Menu Controller', () => {
           'x-access-token': catererToken,
         })
         .send({
-          mealId: 0,
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
@@ -229,11 +228,11 @@ describe('Test Suite for Menu Controller', () => {
           'x-access-token': catererToken,
         })
         .send({
-          mealId: 0,
+          mealId: 'avc',
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Meal id is not valid');
+          expect(resp.body.message).to.equal('Meal id is invalid');
           done();
         });
     });
@@ -266,7 +265,7 @@ describe('Test Suite for Menu Controller', () => {
         .end((err, resp) => {
           expect(resp.status).to.equal(201);
           expect(resp.body.menuMeal.menuId).to.equal(1);
-          expect(resp.body.menuMeal.mealId).to.equal(1);
+          expect(resp.body.menuMeal.mealId).to.equal(2);
           expect(resp.body.menuMeal).to.haveOwnProperty('createdAt');
           expect(resp.body.menuMeal).to.haveOwnProperty('updatedAt');
           expect(resp.body.menuMeal).to.haveOwnProperty('id');

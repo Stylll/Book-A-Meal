@@ -9,6 +9,8 @@ const MenuMealStore = [];
  * Menu model class
  * Performs CRUD operations on a menu
  */
+
+/* eslint-disable no-param-reassign */
 class MenuMeals {
   /**
    * Static method to add menumeal to db
@@ -70,6 +72,7 @@ class MenuMeals {
    * @param {integer} menuMealId
    */
   static delete(id) {
+    id = parseInt(id, 10);
     if (Number.isInteger(id)) {
       delete MenuMealStore[id - 1];
     }
@@ -81,6 +84,7 @@ class MenuMeals {
    *
    */
   static deleteByMenuId(id) {
+    id = parseInt(id, 10);
     if (Number.isInteger(id)) {
       const result = MenuMealStore.filter(menumeal => menumeal.menuId === id);
       if (result.length > 0) {
@@ -97,6 +101,7 @@ class MenuMeals {
    * @return {object|null} menumeal | null
    */
   static get(id) {
+    id = parseInt(id, 10);
     if (Number.isInteger(id)) {
       return MenuMealStore[id - 1];
     }
@@ -109,6 +114,7 @@ class MenuMeals {
    * @return {object|null} menumeal | null
    */
   static getByMenuId(id) {
+    id = parseInt(id, 10);
     if (Number.isInteger(id)) {
       const result = MenuMealStore.filter(menumeal => menumeal.menuId === id);
       if (result.length > 0) {

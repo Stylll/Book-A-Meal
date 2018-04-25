@@ -34,8 +34,8 @@ class MenuController {
   static postMeal(req, res) {
     // create meal object
     const meal = {
-      menuId: req.params.id,
-      mealId: req.body.mealId,
+      menuId: parseInt(req.params.id, 10),
+      mealId: parseInt(req.body.mealId, 10),
     };
 
     // save meal in the db
@@ -43,7 +43,7 @@ class MenuController {
 
     // return new meal if save was successful
     if (newMeal && !newMeal.err) {
-      return res.status(201).send({ meal: newMeal });
+      return res.status(201).send({ menuMeal: newMeal });
     }
     return res.status(500).send({ message: 'Internal Server Error' });
   }
