@@ -35,6 +35,9 @@ const meals = (router) => {
     '/meals/:id', upload.single('image'), validateAccount.user,
     validateAccount.caterer, validateMeal.put, MealController.put,
   );
+
+  // meal router to handle get requests
+  router.get('/meals', validateAccount.user, validateAccount.caterer, MealController.get);
 };
 
 export default meals;
