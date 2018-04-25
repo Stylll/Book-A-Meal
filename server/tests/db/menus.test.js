@@ -46,11 +46,7 @@ describe('Test Suite for Menu Model', () => {
     const result = menus.get(1);
     expect(result.name).to.equal(existingMenu.name);
     expect(result.date).to.equal(existingMenu.date);
-    expect(result).to.haveOwnProperty('createdAt');
-    expect(result).to.haveOwnProperty('updatedAt');
     expect(result).to.haveOwnProperty('id');
-    expect(result).to.haveOwnProperty('meals');
-    expect(result.meals).to.be.an('array');
   });
 
   it('should require a user id', () => {
@@ -89,11 +85,7 @@ describe('Test Suite for Menu Model', () => {
     expect(result).to.be.an('array');
     expect(result[0].name).to.equal(existingMenu.name);
     expect(result[0].date).to.equal(existingMenu.date);
-    expect(result[0]).to.haveOwnProperty('createdAt');
-    expect(result[0]).to.haveOwnProperty('updatedAt');
     expect(result[0]).to.haveOwnProperty('id');
-    expect(result[0]).to.haveOwnProperty('meals');
-    expect(result[0].meals).to.be.an('array');
   });
 
   it('should delete all menu from the menu data store', () => {

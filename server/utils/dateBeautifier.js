@@ -20,6 +20,7 @@ const getCurrentDate = () => new Date();
  */
 const beautifyDate = (date) => {
   const d = new Date(date);
+  if (d === 'Invalid Date') return null;
   return `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
 };
 
@@ -31,6 +32,7 @@ const beautifyDate = (date) => {
  */
 const getNormalDate = (date) => {
   const d = new Date(date);
+  if (d === 'Invalid Date') return null;
   return `${d.getFullYear()}-0${d.getMonth() + 1}-${d.getDate()}`;
 };
 
