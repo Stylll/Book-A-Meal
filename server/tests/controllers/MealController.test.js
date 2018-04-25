@@ -346,4 +346,67 @@ describe('Test Suite for Meal Controller', () => {
         });
     });
   });
+
+  describe('GET: Get Meals = /api/v1/meals', () => {
+    // before each hook to clean and insert data to the db
+    beforeEach(() => {
+      clearMeals();
+      insertSeedMeal(existingMeal);
+      insertSeedMeal(validMeal1);
+      insertSeedMeal(validMeal2);
+    });
+
+    it('should require an authentication token', (done) => {
+      request(app)
+        .get('/api/v1/meals')
+        .end((err, resp) => {
+          expect(resp.status).to.equal(401);
+          expect(resp.body.message).to.equal('Authentication failed. No token provided');
+          done();
+        });
+    });
+
+    it('should require a valid authentication token', (done) => {
+      request(app)
+        .get('/api/v1/meals')
+        .set({
+          'x-access-token': 'rkrri444443223sdkd.rererer.weewewe3434',
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(401);
+          expect(resp.body.message).to.equal('Token is invalid or has expired');
+          done();
+        });
+    });
+
+    it('should require a caterer user account', (done) => {
+      request(app)
+        .get('/api/v1/meals')
+        .set({
+          'x-access-token': customerToken,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(401);
+          expect(resp.body.message).to.equal('Unauthorized Access');
+          done();
+        });
+    });
+
+    it('should return an array of meals', (done) => {
+      request(app)
+        .get('/api/v1/meals')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(200);
+          expect(resp.body.meals).to.be.an('array');
+          expect(resp.body.meals[0])
+            .to.have.all.deep.keys('id', 'name', 'price', 'image', 'userId', 'createdAt', 'updatedAt');
+          expect(resp.body.meals.count).to.be.greaterThan(1);
+          expect(resp.body.meals[0].id).to.equal(1);
+          done();
+        });
+    });
+  });
 });
