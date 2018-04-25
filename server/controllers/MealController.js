@@ -82,6 +82,17 @@ class MealController {
     const mealArray = meals.getAll();
     res.status(200).send({ meals: mealArray });
   }
+
+  /**
+   * static method to handle meal delete request
+   * @param {*} req
+   * @param {*} res
+   */
+  static delete(req, res) {
+    meals.delete(parseInt(req.params.id, 10));
+
+    res.send(204);
+  }
 }
 
 export default MealController;
