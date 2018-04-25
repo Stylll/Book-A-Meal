@@ -72,6 +72,16 @@ class MealController {
     }
     return res.status(404).send({ message: 'Meal does not exist' });
   }
+
+  /**
+   * static method to handle meal get request
+   * @param {*} req
+   * @param {*} res
+   */
+  static get(req, res) {
+    const mealArray = meals.getAll();
+    res.status(200).send({ meals: mealArray });
+  }
 }
 
 export default MealController;
