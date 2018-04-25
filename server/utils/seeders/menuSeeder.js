@@ -1,4 +1,5 @@
 import Menus from '../../db/menus';
+import { getNormalDate, getCurrentBeautifiedDate } from '../dateBeautifier';
 
 /**
  * This script contains template menu data to use for test.
@@ -27,6 +28,12 @@ const existingMenu = {
   userId: 1,
 };
 
+const currentMenu = {
+  name: `Menu For ${getCurrentBeautifiedDate()}`,
+  date: getNormalDate(new Date()),
+  userId: 1,
+};
+
 const insertSeedMenu = (menu) => {
   Menus.add(menu);
 };
@@ -40,6 +47,7 @@ export {
   validMenu2,
   invalidMenu3,
   existingMenu,
+  currentMenu,
   insertSeedMenu,
   clearMenus,
 };
