@@ -1,6 +1,8 @@
+import 'babel-polyfill';
 import express from 'express';
 import users from './users';
 import meals from './meals';
+import menus from './menus';
 
 /**
  * Route handler for api v1
@@ -18,5 +20,8 @@ users(router);
 
 // routes requests related to meals
 meals(router);
+
+// routes request related to menus
+menus(router);
 
 export default router;

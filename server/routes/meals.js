@@ -18,7 +18,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 /**
- * Router to handle user requests
+ * Router to handle meal requests
  * @param {*} router router object from express
  * @returns {} response object
  */
