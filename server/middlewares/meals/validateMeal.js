@@ -68,10 +68,10 @@ class ValidateMeal {
    */
   static delete(req, res, next) {
     // check if meal exists
-    if (!meals.get(parseInt(req.params.id, 10))) {
-      return res.status(404).send({ message: 'Meal does not exist' });
+    if (meals.get(parseInt(req.params.id, 10))) {
+      return next();
     }
-    return next();
+    return res.status(404).send({ message: 'Meal does not exist' });
   }
 }
 

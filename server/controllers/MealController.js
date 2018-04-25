@@ -91,7 +91,7 @@ class MealController {
   static delete(req, res) {
     meals.delete(parseInt(req.params.id, 10));
 
-    res.send(204);
+    res.status(204).send();
   }
 }
 

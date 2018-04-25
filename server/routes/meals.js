@@ -40,7 +40,10 @@ const meals = (router) => {
   router.get('/meals', validateAccount.user, validateAccount.caterer, MealController.get);
 
   // meal router to handle delete requests
-  router.delete('/meals', validateAccount.user, validateAccount.caterer, MealController.delete);
+  router.delete(
+    '/meals/:id', validateAccount.user, validateAccount.caterer,
+    validateMeal.delete, MealController.delete,
+  );
 };
 
 export default meals;
