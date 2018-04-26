@@ -33,7 +33,7 @@ class Orders {
     }
 
     // check if price is less than or equal to 1
-    if (order.price <= 1) return { err: new Error('Price must be greater than 1') };
+    if (order.price <= 1) return { err: new Error('Price must be greater than one') };
 
     // check if quantity is provided
     if (!order.quantity) return { err: new Error('Quantity is required') };
@@ -105,14 +105,14 @@ class Orders {
     }
 
     // check if price is less than or equal to 1 if provided
-    if (order.price && order.price <= 1) return { err: new Error('Price must be greater than 1') };
+    if (order.price && order.price <= 1) return { err: new Error('Price must be greater than one') };
 
     // check if quantity is valid if provided
     if (order.quantity && !Number.isInteger(order.quantity)) return { err: new Error('Quantity is invalid') };
 
     // check if status is valid if provided
     if (order.status) {
-      if(!(order.status === 'pending') && !(order.status === 'complete') && !(order.status === 'canceled')) {
+      if (!(order.status === 'pending') && !(order.status === 'complete') && !(order.status === 'canceled')) {
         return { err: new Error('Status is invalid') };
       }
     }

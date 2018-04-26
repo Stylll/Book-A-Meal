@@ -1,4 +1,4 @@
-
+import orders from '../../db/orders';
 /**
  * This script contains template order data to use for test.
  */
@@ -10,7 +10,7 @@ const validOrder1 = {
 };
 
 const validOrder2 = {
-  mealId: 2,
+  mealId: 1,
   price: 1000,
   quantity: 4,
   userId: 1,
@@ -53,7 +53,7 @@ const insertSeedOrder = (order) => {
 };
 
 const clearOrders = () => {
-  orders.trucate();
+  orders.truncate();
 };
 
 export {
