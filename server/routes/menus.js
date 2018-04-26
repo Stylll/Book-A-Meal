@@ -17,6 +17,9 @@ const menus = (router) => {
     '/menu/:id/meals', validateAccount.user,
     validateAccount.caterer, validateMenu.postMeal, MenuController.postMeal,
   );
+
+  // router to handle menu get request
+  router.get('/menu', validateAccount.user, MenuController.get);
 };
 
 export default menus;
