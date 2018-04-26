@@ -4,14 +4,20 @@
   "description": "An application where customers can make food orders and vendors can know what a customer wants to eat",
   "main": "index.js",
   "scripts": {
-    "test:server": "set NODE_ENV=test&&mocha --compilers js:babel-core/register server/tests/**/*.test.js --timeout 5000 --exit",
+    "test:server": "set NODE_ENV=test&& nyc --reporter=html --reporter=text mocha --compilers js:babel-core/register server/tests/**/*.test.js --timeout 5000 --exit",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "babel-node ./server/server",
-    "start:dev": "nodemon --exec babel-node ./server/server"
+    "start:dev": "nodemon --exec babel-node ./server/server",
+    "coveralls":"nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Stylll/Book-A-Meal.git"
+  },
+  "nyc": {
+    "exclude": [
+      "server/tests"
+    ]
   },
   "keywords": [
     "Book",
@@ -48,10 +54,13 @@
     "babel-eslint": "^8.2.3",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
+    "coveralls": "^3.0.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.11.0",
+    "istanbul": "^0.4.5",
     "nodemon": "^1.17.3",
+    "nyc": "^11.7.1",
     "rimraf": "^2.6.2"
   }
 }
