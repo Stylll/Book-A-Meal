@@ -6,7 +6,6 @@ const validOrder1 = {
   mealId: 1,
   price: 1500,
   quantity: 3,
-  status: 'pending',
   userId: 1,
 };
 
@@ -14,7 +13,6 @@ const validOrder2 = {
   mealId: 2,
   price: 1000,
   quantity: 4,
-  status: 'pending',
   userId: 1,
 };
 
