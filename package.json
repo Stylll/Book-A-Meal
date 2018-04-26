@@ -4,11 +4,11 @@
   "description": "An application where customers can make food orders and vendors can know what a customer wants to eat",
   "main": "index.js",
   "scripts": {
-    "test:server": "set NODE_ENV=test&& nyc --reporter=html --reporter=text mocha --compilers js:babel-core/register server/tests/**/*.test.js --timeout 5000 --exit",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:server": "set NODE_ENV=test&& nyc --reporter=html --reporter=text --reporter=lcov mocha --compilers js:babel-core/register server/tests/**/*.test.js --timeout 5000 --exit",
     "start": "babel-node ./server/server",
     "start:dev": "nodemon --exec babel-node ./server/server",
-    "coveralls":"nyc report --reporter=text-lcov | coveralls"
+    "coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "codeclimate": "codeclimate-test-reporter < coverage/lcov.info"
   },
   "repository": {
     "type": "git",
@@ -54,6 +54,7 @@
     "babel-eslint": "^8.2.3",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
+    "codeclimate-test-reporter": "^0.5.0",
     "coveralls": "^3.0.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",

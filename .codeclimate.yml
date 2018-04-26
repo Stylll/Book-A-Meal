@@ -1,0 +1,13 @@
+engines:
+  eslint:
+    enabled: true
+  duplication:
+    enabled: false
+
+ratings:
+  paths:
+  - server/**
+
+exclude_paths:
+  - server/tests/
+  - UI/
