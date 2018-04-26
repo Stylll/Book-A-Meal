@@ -12,7 +12,6 @@ import {
 /* eslint-disable no-undef */
 
 describe('Test Suite for orders', () => {
-
   // before each function to add required data
   beforeEach(() => {
     clearOrders();
@@ -52,11 +51,6 @@ describe('Test Suite for orders', () => {
   it('should require a valid quantity', () => {
     const result = orders.add({ ...validOrder1, quantity: 'abs' });
     expect(result.err.message).to.equal('Quantity is invalid');
-  });
-
-  it('should ensure quantity is a number', () => {
-    const result = orders.add({ ...validOrder1, quantity: 0.5 });
-    expect(result.err.message).to.equal('Quantity must be number');
   });
 
   it('should add, set default status to pending and calculate cost', () => {
