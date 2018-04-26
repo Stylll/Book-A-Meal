@@ -3,10 +3,6 @@ node_js:
   - "node"
   - "8"
 
-addons:
-    code_climate:
-        repo_token: NODE_ENV=CODECLIMATETOKEN
-
 env:
   - NODE_ENV=test
 
