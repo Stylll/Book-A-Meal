@@ -3,6 +3,7 @@ import express from 'express';
 import users from './users';
 import meals from './meals';
 import menus from './menus';
+import orders from './orders';
 
 /**
  * Route handler for api v1
@@ -23,5 +24,8 @@ meals(router);
 
 // routes request related to menus
 menus(router);
+
+// routes request related to orders
+orders(router);
 
 export default router;

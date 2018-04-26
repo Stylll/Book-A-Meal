@@ -1,12 +1,12 @@
 import generateId from '../utils/generateId';
 import meals from './meals';
 
-// variable to store the menu records.
+// variable to store the order records.
 const OrderStore = [];
 
 /**
  * Menu model class
- * Performs CRUD operations on a menu
+ * Performs CRUD operations on a order
  */
 class Orders {
   /**
