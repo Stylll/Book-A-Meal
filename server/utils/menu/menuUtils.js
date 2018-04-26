@@ -16,6 +16,7 @@ class MenuUtils {
   static buildMenu(menuObject) {
     const menu = { ...menuObject };
     menu.meals = [];
+
     // get the list of set meal for the menu
     const menuMealArray = menuMeals.getByMenuId(menu.id);
 
@@ -41,8 +42,8 @@ class MenuUtils {
    * @returns {array} completeMenuArray
    */
   static buildMenus(menuArray) {
-    const menuList = [...menuArray];
-    menuList.map(menu => this.buildMenu(menu));
+    let menuList = [...menuArray];
+    menuList = menuList.map(menu => this.buildMenu(menu));
     return menuList;
   }
 }

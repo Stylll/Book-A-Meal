@@ -23,8 +23,8 @@ const invalidMenu3 = {
 };
 
 const existingMenu = {
-  name: 'Menu For Thursday, 26 April 2018',
-  date: '2018-04-26',
+  name: 'Menu For Sunday, 22 April 2018',
+  date: '2018-04-22',
   userId: 1,
 };
 

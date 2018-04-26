@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import menus from '../db/menus';
 import menuMeals from '../db/menuMeals';
 import { getNormalDate } from '../utils/dateBeautifier';
@@ -17,7 +18,6 @@ class MenuController {
   static post(req, res) {
     const date = getNormalDate(new Date());
     const newMenu = menus.add({ date, userId: req.decoded.user.id });
-
     if (newMenu && !newMenu.err) {
       return res.status(201).send({ menu: newMenu });
     }
@@ -65,7 +65,7 @@ class MenuController {
      * and return them as an array
      */
     if (accountType === 'caterer') {
-      const menuList = { ...menus.getAll() };
+      const menuList = [...menus.getAll()];
       if (menuList.length > 0) {
         const properMenuList = menuUtils.buildMenus(menuList);
         return res.status(200).send({ menus: properMenuList });
@@ -77,12 +77,16 @@ class MenuController {
      * we get the menu for current date
      * and return it as an object
      */
-    const menuObject = { ...menus.getByDate(new Date()) };
-    if (menuObject) {
-      const properMenuObject = menuUtils.buildMenu(menuObject);
-      return res.status(200).send({ menu: properMenuObject });
+    if (accountType === 'customer') {
+      const menuObject = { ...menus.getByDate(new Date()) };
+      if (!isEmpty(menuObject)) {
+        const properMenuObject = menuUtils.buildMenu(menuObject);
+        return res.status(200).send({ menu: properMenuObject });
+      }
+      return res.status(404).send({ message: 'Menu for the day not set' });
     }
-    return res.status(404).send({ message: 'Menu for the day not set' });
+
+    return res.status(500).send({ message: 'Internal Server Error' });
   }
 }
 

@@ -1,21 +1,15 @@
 import { expect } from 'chai';
 import request from 'supertest';
 import app from '../../server';
-import menus from '../../db/menus';
 import Authenticate from '../../utils/authentication/authenticate';
 import { getNormalDate, beautifyDate } from '../../utils/dateBeautifier';
 import {
-  validMenuMeal1,
-  validMenuMeal2,
-  invalidMenuMeal3,
   existingMenuMeal,
   insertSeedMenuMeal,
   clearMenuMeals,
 } from '../../utils/seeders/menuMealSeeder';
 
 import {
-  validMenu1,
-  validMenu2,
   existingMenu,
   currentMenu,
   insertSeedMenu,
@@ -33,7 +27,7 @@ import {
 import {
   validUser1,
   existingUser,
-  insertSeedUsers
+  insertSeedUsers,
 } from '../../utils/seeders/userSeeder';
 
 /* eslint-disable no-undef */
@@ -93,6 +87,7 @@ describe('Test Suite for Menu Controller', () => {
     });
 
     it('should create menu with current date', (done) => {
+      clearMenus();
       request(app)
         .post('/api/v1/menu')
         .set({
@@ -277,7 +272,7 @@ describe('Test Suite for Menu Controller', () => {
 
   describe('GET: Get Menu - /api/v1/menu', () => {
     // before each hook to clean and insert data to the db
-    beforeEach(() => {
+    beforeEach((done) => {
       clearMenus();
       clearMeals();
       clearMenuMeals();
@@ -289,6 +284,7 @@ describe('Test Suite for Menu Controller', () => {
       insertSeedMenuMeal(existingMenuMeal);
       insertSeedMenuMeal({ menuId: 1, mealId: 2 });
       insertSeedMenuMeal({ menuId: 1, mealId: 3 });
+      done();
     });
 
     it('should require an authentication token', (done) => {
@@ -404,13 +400,13 @@ describe('Test Suite for Menu Controller', () => {
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(200);
-          expect(resp.body.menus).to.be.an('object');
-          expect(resp.body.menus.meals).to.be.an('array');
-          expect(resp.body.menus.meals[0].id).to.equal(1);
-          expect(resp.body.menus.meals[0].name).to.equal(existingMeal.name);
-          expect(resp.body.menus.meals[0].price).to.equal(existingMeal.price);
-          expect(resp.body.menus.meals[0].image).to.equal(existingMeal.image);
-          expect(resp.body.menus.meals.length).to.be.greaterThan(1);
+          expect(resp.body.menu).to.be.an('object');
+          expect(resp.body.menu.meals).to.be.an('array');
+          expect(resp.body.menu.meals[0].id).to.equal(1);
+          expect(resp.body.menu.meals[0].name).to.equal(existingMeal.name);
+          expect(resp.body.menu.meals[0].price).to.equal(existingMeal.price);
+          expect(resp.body.menu.meals[0].image).to.equal(existingMeal.image);
+          expect(resp.body.menu.meals.length).to.be.greaterThan(1);
           done();
         });
     });
