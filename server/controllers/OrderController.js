@@ -10,8 +10,8 @@ class OrderController {
   static post(req, res) {
     // create order object
     const order = {
-      menuId: parseInt(req.body.menuId, 10),
-      price: req.body.price,
+      mealId: parseInt(req.body.mealId, 10),
+      price: parseFloat(req.body.price, 10),
       quantity: parseInt(req.body.quantity, 10),
       userId: req.decoded.user.id,
     };
@@ -22,7 +22,6 @@ class OrderController {
     if (newOrder && !newOrder.err) {
       return res.status(201).send({ order: newOrder });
     }
-
     return res.status(500).send({ message: 'Internal Server Error' });
   }
 }

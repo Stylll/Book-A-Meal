@@ -51,11 +51,11 @@ class Orders {
     const newOrder = {
       id: generateId(OrderStore),
       mealId: parseInt(order.mealId, 10),
-      price: order.price,
+      price: parseFloat(order.price, 10),
       quantity: parseInt(order.quantity, 10),
       status: 'pending',
       userId: parseInt(order.userId, 10),
-      cost: order.price * parseInt(order.quantity, 10),
+      cost: parseFloat(order.price, 10) * parseInt(order.quantity, 10),
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -121,9 +121,9 @@ class Orders {
     const oldOrder = OrderStore[order.id - 1];
     if (oldOrder) {
       // populate oldOrder with new details if it exists
-      oldOrder.mealId = order.mealId || oldOrder.mealId;
-      oldOrder.price = order.price || oldOrder.price;
-      oldOrder.quantity = order.quantity || oldOrder.quantity;
+      oldOrder.mealId = parseInt(order.mealId, 10) || oldOrder.mealId;
+      oldOrder.price = parseFloat(order.price, 10) || oldOrder.price;
+      oldOrder.quantity = parseInt(order.quantity, 10) || oldOrder.quantity;
       oldOrder.cost = oldOrder.price * oldOrder.quantity;
       oldOrder.status = order.status || oldOrder.status;
       oldOrder.updatedAt = new Date();

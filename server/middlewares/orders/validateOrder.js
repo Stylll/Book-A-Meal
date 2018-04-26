@@ -16,27 +16,29 @@ class ValidateOrder {
     if (!req.body.mealId) return res.status(400).send({ message: 'Meal id is required' });
 
     // check if meal id is valid
-    if (!Number.isInteger(req.body.mealId)) return res.status(400).send({ message: 'Meal id is invalid' });
+    if (!Number.isInteger(parseInt(req.body.mealId, 10))) return res.status(400).send({ message: 'Meal id is invalid' });
 
     // check if meal id exists
-    if (!meals.get(req.body.mealId)) return res.status(404).send({ message: 'Meal does not exist' });
+    if (!meals.get(parseInt(req.body.mealId, 10))) return res.status(404).send({ message: 'Meal does not exist' });
 
     // check if price is provided
     if (!req.body.price) return res.status(400).send({ message: 'Price is required' });
 
-    // check if price is a number
+    // check if price is a integer or float
     if (/[^0-9.]/gi.test(req.body.price) === true) {
       return res.status(400).send({ message: 'Price is invalid' });
     }
 
     // check if price is less than or equal to 1
-    if (req.body.price <= 1) return res.status(400).send({ message: 'Price must be greater than one' });
-
-    // check if quantity is provided
-    if (!req.body.quantity) return res.status(400).send({ message: 'Quantity is required' });
+    if (parseFloat(req.body.price, 10) <= 1) return res.status(400).send({ message: 'Price must be greater than one' });
 
     // check if quantity is valid
-    if (!Number.isInteger(req.body.quantity)) return res.status(400).send({ message: 'Quantity is invalid' });
+    if (!Number.isInteger(parseInt(req.body.quantity, 10))) {
+      return res.status(400).send({ message: 'Quantity is invalid' });
+    }
+
+    // check if quantity is provided
+    if (!parseInt(req.body.quantity, 10)) return res.status(400).send({ message: 'Quantity is required' });
 
     // check if user id is provided
     if (!req.decoded.user.id) return res.status(400).send({ message: 'User id is required' });
