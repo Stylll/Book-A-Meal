@@ -100,7 +100,7 @@ describe('Test Suite for Order Controller', () => {
           mealId: 99,
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
+          expect(resp.status).to.equal(404);
           expect(resp.body.message).to.equal('Meal does not exist');
           done();
         });
@@ -152,7 +152,7 @@ describe('Test Suite for Order Controller', () => {
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Price should be greater than one');
+          expect(resp.body.message).to.equal('Price must be greater than one');
           done();
         });
     });
