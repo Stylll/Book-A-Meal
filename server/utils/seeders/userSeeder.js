@@ -32,8 +32,8 @@ const invalidUser = {
 /**
  * inserts seed users into database for testing
  */
-const insertSeedUsers = () => {
-  users.add(existingUser);
+const insertSeedUsers = (user) => {
+  users.add(user);
 };
 
 /**

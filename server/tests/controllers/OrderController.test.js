@@ -496,9 +496,11 @@ describe('Test Suite for Order Controller', () => {
           expect(resp.body.orders.length).to.equal(2);
           expect(resp.body.orders[0].id).to.equal(2);
           expect(resp.body.orders[0].mealId).to.equal(1);
-          expect(resp.body.orders[0].mealName).to.equal('Rice and Stew');
+          expect(resp.body.orders[0].meal.name).to.equal('Curry Rice');
           expect(resp.body.orders[0].status).to.equal('pending');
-          expect(resp.body.orders[3].image).to.not.equal(null);
+          expect(resp.body.orders[0].image).to.not.equal(null);
+          expect(resp.body.orders[0]).to.haveOwnProperty('createdAt');
+          expect(resp.body.orders[0]).to.haveOwnProperty('updatedAt');
           done();
         });
     });
@@ -515,10 +517,12 @@ describe('Test Suite for Order Controller', () => {
           expect(resp.body.orders.length).to.equal(4);
           expect(resp.body.orders[3].id).to.equal(4);
           expect(resp.body.orders[3].mealId).to.equal(1);
-          expect(resp.body.orders[3].mealName).to.equal('Rice and Stew');
+          expect(resp.body.orders[3].meal.name).to.equal('Curry Rice');
           expect(resp.body.orders[3].status).to.equal('pending');
           expect(resp.body.orders[3].image).to.not.equal(null);
           expect(resp.body.orders[3].cost).to.equal(4500);
+          expect(resp.body.orders[3]).to.haveOwnProperty('createdAt');
+          expect(resp.body.orders[3]).to.haveOwnProperty('updatedAt');
           done();
         });
     });

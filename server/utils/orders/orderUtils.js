@@ -27,12 +27,15 @@ class OrderUtils {
       quantity: orderObject.quantity,
       cost: orderObject.cost,
       userId: orderObject.userId,
+      status: orderObject.status,
+      createdAt: orderObject.createdAt,
+      updatedAt: orderObject.updatedAt,
       meal: {},
       user: {},
     };
 
     // get meal using meal id and add it to the order object
-    const meal = { ...meals.get(orderObject.id) };
+    const meal = { ...meals.get(orderObject.mealId) };
     if (meal) order.meal = meal;
 
     // get user using user id and add to the order object
