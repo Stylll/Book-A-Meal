@@ -8,7 +8,8 @@
     "start": "babel-node ./server/server",
     "start:dev": "nodemon --exec babel-node ./server/server",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
-    "lint": "eslint \"server/**/*.js\" app.js --fix"
+    "lint": "eslint \"server/**/*.js\" app.js --fix",
+    "heroku:server": "babel-node ./server/server.js"
   },
   "repository": {
     "type": "git",
