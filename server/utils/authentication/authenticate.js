@@ -40,7 +40,7 @@ class Authenticate {
     try {
       decoded = jwt.verify(token, process.env.SECRET);
     } catch (err) {
-      console.log(err);
+      //
     }
     if (decoded) {
       return decoded;
