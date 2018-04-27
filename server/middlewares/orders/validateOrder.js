@@ -1,4 +1,5 @@
 import meals from '../../db/meals';
+import orders from '../../db/orders';
 
 /**
  * Middleware class to validate Meal
@@ -47,6 +48,54 @@ class ValidateOrder {
     if (!Number.isInteger(req.decoded.user.id)) return res.status(400).send({ message: 'User id is invalid' });
 
     // return next if no error
+    return next();
+  }
+
+  /**
+   * Static method to validate order put request
+   * @param {*} req
+   * @param {*} res
+   * @param {*} next
+   */
+  static put(req, res, next) {
+    // check if order id is valid
+    if (!Number.isInteger(parseInt(req.params.id, 10))) return res.status(400).send({ message: 'Order id is invalid' });
+
+    // get order object
+    const existingOrder = orders.get(parseInt(req.params.id, 10));
+
+    // check if order id exists
+    if (!orders.get(parseInt(req.params.id, 10))) {
+      return res.status(404).send({ message: 'Order does not exist' });
+    }
+
+    // check if order status is provided
+    if (!req.body.status) return res.status(400).send({ message: 'Status is required' });
+
+    // check if order status is valid
+    if (!(req.body.status === 'pending') && !(req.body.status === 'complete') && !(req.body.status === 'canceled')) {
+      return res.status(400).send({ message: 'Status is invalid' });
+    }
+
+    // check user is a customer
+    if (req.decoded.user.accountType === 'customer') {
+      // check if customer is the owner of the order
+      if (existingOrder.userId !== req.decoded.user.id) {
+        return res.status(403).send({ message: 'Unauthorized Access' });
+      }
+
+      // check if customer order status is canceled
+      if (req.body.status !== 'canceled') {
+        return res.status(403).send({ message: 'Can only change status to canceled' });
+      }
+    }
+
+    // check if order status from db is pending
+    if (existingOrder.status !== 'pending') {
+      return res.status(403).send({ message: 'Cannot change status' });
+    }
+
+    // call next function
     return next();
   }
 }

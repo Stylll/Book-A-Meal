@@ -6,6 +6,7 @@ import {
   existingUser,
   insertSeedUsers,
   validUser1,
+  validUser2,
 } from '../../utils/seeders/userSeeder';
 import {
   existingMeal,
@@ -18,12 +19,14 @@ import {
   insertSeedOrder,
   validOrder1,
 } from '../../utils/seeders/orderSeeder';
+import Orders from '../../db/orders';
 
 /* eslint-disable no-undef */
 describe('Test Suite for Order Controller', () => {
   // create existing users
   insertSeedUsers(existingUser);
   insertSeedUsers(validUser1);
+  insertSeedUsers(validUser2);
 
   // generate access token for users
   const catererToken = Authenticate.authenticateUser({ id: 1, ...existingUser });
@@ -230,6 +233,214 @@ describe('Test Suite for Order Controller', () => {
           expect(resp.body.order.cost).to.equal(validOrder1.price * validOrder1.quantity);
           expect(resp.body.order).to.haveOwnProperty('createdAt');
           expect(resp.body.order).to.haveOwnProperty('updatedAt');
+          done();
+        });
+    });
+  });
+
+  describe('PUT: Update Order - /api/orders/:id', () => {
+    // before each hook to clean and insert data to the db
+    beforeEach(() => {
+      clearMeals();
+      clearOrders();
+      insertSeedMeal(existingMeal);
+      insertSeedOrder({ ...existingOrder, userId: 2 });
+      insertSeedOrder({ ...validOrder1, userId: 3 });
+    });
+
+    it('should require an authentication token', (done) => {
+      request(app)
+        .put('/api/v1/orders/1')
+        .send({})
+        .end((err, resp) => {
+          expect(resp.status).to.equal(401);
+          expect(resp.body.message).to.equal('Authentication failed. No token provided');
+          done();
+        });
+    });
+
+    it('should require a valid authentication token', (done) => {
+      request(app)
+        .put('/api/v1/orders/1')
+        .set({
+          'x-access-token': 'rkrri444443223sdkd.rererer.weewewe3434',
+        })
+        .send({})
+        .end((err, resp) => {
+          expect(resp.status).to.equal(401);
+          expect(resp.body.message).to.equal('Token is invalid or has expired');
+          done();
+        });
+    });
+
+    it('should require a valid order id', (done) => {
+      request(app)
+        .put('/api/v1/orders/abc')
+        .set({
+          'x-access-token': customerToken,
+        })
+        .send({})
+        .end((err, resp) => {
+          expect(resp.status).to.equal(400);
+          expect(resp.body.message).to.equal('Order id is invalid');
+          done();
+        });
+    });
+
+    it('should require an existing order', (done) => {
+      request(app)
+        .put('/api/v1/orders/100')
+        .set({
+          'x-access-token': customerToken,
+        })
+        .send({})
+        .end((err, resp) => {
+          expect(resp.status).to.equal(404);
+          expect(resp.body.message).to.equal('Order does not exist');
+          done();
+        });
+    });
+
+    it('should require a status', (done) => {
+      request(app)
+        .put('/api/v1/orders/1')
+        .set({
+          'x-access-token': customerToken,
+        })
+        .send({
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(400);
+          expect(resp.body.message).to.equal('Status is required');
+          done();
+        });
+    });
+
+    it('should require a valid status', (done) => {
+      request(app)
+        .put('/api/v1/orders/1')
+        .set({
+          'x-access-token': customerToken,
+        })
+        .send({
+          status: 'abc',
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(400);
+          expect(resp.body.message).to.equal('Status is invalid');
+          done();
+        });
+    });
+
+    it('should not update if order status is not pending', (done) => {
+      Orders.update({ id: 1, status: 'complete' });
+      request(app)
+        .put('/api/v1/orders/1')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .send({
+          status: 'canceled',
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(403);
+          expect(resp.body.message).to.equal('Cannot change status');
+          done();
+        });
+    });
+
+    it('should not allow customer update status to complete', (done) => {
+      request(app)
+        .put('/api/v1/orders/1')
+        .set({
+          'x-access-token': customerToken,
+        })
+        .send({
+          status: 'complete',
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(403);
+          expect(resp.body.message).to.equal('Can only change status to canceled');
+          done();
+        });
+    });
+
+    it('should not allow customer change another users order', (done) => {
+      request(app)
+        .put('/api/v1/orders/2')
+        .set({
+          'x-access-token': customerToken,
+        })
+        .send({
+          status: 'canceled',
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(403);
+          expect(resp.body.message).to.equal('Unauthorized Access');
+          done();
+        });
+    });
+
+    it('should allow caterer change another users order', (done) => {
+      request(app)
+        .put('/api/v1/orders/2')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .send({
+          status: 'complete',
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(200);
+          expect(resp.body.order.status).to.equal('complete');
+          done();
+        });
+    });
+
+    it('should allow customer update status to canceled', (done) => {
+      request(app)
+        .put('/api/v1/orders/1')
+        .set({
+          'x-access-token': customerToken,
+        })
+        .send({
+          status: 'canceled',
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(200);
+          expect(resp.body.order.status).to.equal('canceled');
+          done();
+        });
+    });
+
+    it('should allow caterer updated status to canceled', (done) => {
+      request(app)
+        .put('/api/v1/orders/1')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .send({
+          status: 'canceled',
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(200);
+          expect(resp.body.order.status).to.equal('canceled');
+          done();
+        });
+    });
+
+    it('should allow caterer update status to complete', (done) => {
+      request(app)
+        .put('/api/v1/orders/1')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .send({
+          status: 'complete',
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(200);
+          expect(resp.body.order.status).to.equal('complete');
           done();
         });
     });
