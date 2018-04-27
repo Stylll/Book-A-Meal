@@ -1,4 +1,5 @@
 import orders from '../db/orders';
+import OrderUtils from '../utils/orders/orderUtils';
 
 class OrderController {
   /**
@@ -25,6 +26,11 @@ class OrderController {
     return res.status(500).send({ message: 'Internal Server Error' });
   }
 
+  /**
+   * Static method to handle order put requests
+   * @param {*} req
+   * @param {*} res
+   */
   static put(req, res) {
     // get order object
     const order = { ...orders.get(parseInt(req.params.id, 10)) };
@@ -37,6 +43,33 @@ class OrderController {
       const newOrder = orders.update(order);
 
       return res.status(200).send({ order: newOrder });
+    }
+    return res.status(500).send({ message: 'Internal Server Error' });
+  }
+
+  /**
+   * Static method to handle order get requests
+   * @param {*} req
+   * @param {*} res
+   */
+  static get(req, res) {
+    if (req.decoded.user.accountType === 'caterer') {
+      /**
+       * get all orders from the db
+       * pass it through the builder to attach meal and user objects
+       * return the order array
+       */
+      const orderArray = OrderUtils.buildOrders(orders.getAll());
+      return res.status(200).send({ orders: orderArray });
+    }
+    if (req.decoded.user.accountType === 'customer') {
+      /**
+       * get orders by user id from the db
+       * pass it through the builder to attach meal and user objects
+       * return the order array
+       */
+      const orderArray = OrderUtils.buildOrders(orders.getByUserId(req.decoded.user.id));
+      return res.status(200).send({ orders: orderArray });
     }
     return res.status(500).send({ message: 'Internal Server Error' });
   }
