@@ -360,7 +360,7 @@ describe('Test Suite for Order Controller', () => {
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(403);
-          expect(resp.body.message).to.equal('Cannot change status to complete');
+          expect(resp.body.message).to.equal('Can only change status to canceled');
           done();
         });
     });
