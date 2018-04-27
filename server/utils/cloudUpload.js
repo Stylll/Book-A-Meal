@@ -31,7 +31,6 @@ class CloudUpload {
   static uploadImage(src) {
     if (!src || !src.trim()) return defaultImage;
     const result = this.uploadImageToCloud(src).then(res => res).catch(error => error);
-
     return result;
   }
 }
