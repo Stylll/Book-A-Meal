@@ -36,7 +36,7 @@ class OrderController {
 
       const newOrder = orders.update(order);
 
-      return newOrder;
+      return res.status(200).send({ order: newOrder });
     }
     return res.status(500).send({ message: 'Internal Server Error' });
   }

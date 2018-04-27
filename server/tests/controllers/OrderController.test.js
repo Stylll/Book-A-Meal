@@ -244,7 +244,7 @@ describe('Test Suite for Order Controller', () => {
       clearMeals();
       clearOrders();
       insertSeedMeal(existingMeal);
-      insertSeedOrder(existingOrder);
+      insertSeedOrder({ ...existingOrder, userId: 2 });
       insertSeedOrder({ ...validOrder1, userId: 3 });
     });
 
@@ -365,7 +365,7 @@ describe('Test Suite for Order Controller', () => {
         });
     });
 
-    it('should not allow customer change another users order', () => {
+    it('should not allow customer change another users order', (done) => {
       request(app)
         .put('/api/v1/orders/2')
         .set({
@@ -381,18 +381,18 @@ describe('Test Suite for Order Controller', () => {
         });
     });
 
-    it('should allow caterer change another users order', () => {
+    it('should allow caterer change another users order', (done) => {
       request(app)
         .put('/api/v1/orders/2')
         .set({
           'x-access-token': catererToken,
         })
         .send({
-          status: 'completed',
+          status: 'complete',
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(200);
-          expect(resp.body.order.status).to.equal('completed');
+          expect(resp.body.order.status).to.equal('complete');
           done();
         });
     });
