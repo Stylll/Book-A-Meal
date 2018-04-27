@@ -5,7 +5,7 @@ BAM has 2 categories of users. The customer and the caterer.
 
 ## Badges
 [![Build Status](https://travis-ci.org/Stylll/Book-A-Meal.svg?branch=feature-api-v1)](https://travis-ci.org/Stylll/Book-A-Meal)
-[![Coverage Status](https://coveralls.io/repos/github/Stylll/Book-A-Meal/badge.svg?branch=chore-coveralls-157108073)](https://coveralls.io/github/Stylll/Book-A-Meal?branch=chore-coveralls-157108073)
+[![Coverage Status](https://coveralls.io/repos/github/Stylll/Book-A-Meal/badge.svg?branch=feature-api-v1)](https://coveralls.io/github/Stylll/Book-A-Meal?branch=feature-api-v1)
 [![Maintainability](https://api.codeclimate.com/v1/badges/9037bcf71b13532947cd/maintainability)](https://codeclimate.com/github/Stylll/Book-A-Meal/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/9037bcf71b13532947cd/test_coverage)](https://codeclimate.com/github/Stylll/Book-A-Meal/test_coverage)
 
