@@ -24,6 +24,11 @@ const orders = (router) => {
     '/orders/:id', validateAccount.user, validateOrder.put,
     OrderController.put,
   );
+
+  /**
+   * order router to handle get requests
+   */
+  router.get('/orders', validateAccount.user, OrderController.get);
 };
 
 export default orders;
