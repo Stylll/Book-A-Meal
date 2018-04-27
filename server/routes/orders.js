@@ -16,6 +16,14 @@ const orders = (router) => {
     '/orders', validateAccount.user, validateAccount.customer,
     validateOrder.post, OrderController.post,
   );
+
+  /**
+   * order router to handle put requests
+   */
+  router.put(
+    '/orders/:id', validateAccount.user, validateOrder.put,
+    OrderController.put,
+  );
 };
 
 export default orders;

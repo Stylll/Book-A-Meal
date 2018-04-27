@@ -24,6 +24,22 @@ class OrderController {
     }
     return res.status(500).send({ message: 'Internal Server Error' });
   }
+
+  static put(req, res) {
+    // get order object
+    const order = { ...orders.get(parseInt(req.params.id, 10)) };
+
+    // if order exists
+    if (order && !order.err) {
+      // update order, save order and return new order
+      order.status = req.body.status;
+
+      const newOrder = orders.update(order);
+
+      return newOrder;
+    }
+    return res.status(500).send({ message: 'Internal Server Error' });
+  }
 }
 
 export default OrderController;
