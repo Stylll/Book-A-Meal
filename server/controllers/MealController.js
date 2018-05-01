@@ -24,7 +24,7 @@ class MealController {
 
     // add meal to db
     const meal = meals.add({
-      name: req.body.name,
+      name: req.body.name.trim(),
       price: req.body.price,
       image,
       userId: req.decoded.user.id,
@@ -58,7 +58,7 @@ class MealController {
       }
 
       // update oldMeal with new data if exists
-      oldMeal.name = req.body.name || oldMeal.name;
+      oldMeal.name = (req.body.name && req.body.name.trim()) ? req.body.name.trim() : oldMeal.name;
       oldMeal.price = req.body.price || oldMeal.price;
       oldMeal.image = image;
 
@@ -79,8 +79,12 @@ class MealController {
    * @param {*} res
    */
   static get(req, res) {
-    const mealArray = meals.getAll();
-    res.status(200).send({ meals: mealArray });
+    if (req.decoded.user.accountType === 'admin') {
+      const mealArray = meals.getAll();
+      return res.status(200).send({ meals: mealArray });
+    }
+    const mealArray = meals.getByUserId(req.decoded.user.id);
+    return res.status(200).send({ meals: mealArray });
   }
 
   /**
@@ -91,7 +95,7 @@ class MealController {
   static delete(req, res) {
     meals.delete(parseInt(req.params.id, 10));
 
-    res.status(204).send();
+    return res.status(200).send({ message: 'Meal deleted successfully' });
   }
 }
 

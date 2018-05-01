@@ -43,8 +43,13 @@ class ValidateMeal {
       return res.status(404).send({ message: 'Meal does not exist' });
     }
 
+    // check if meal name is provided
+    if (!req.body.name) {
+      return res.status(400).send({ message: 'Meal name is required' });
+    }
+
     // check if meal name exists
-    if (req.body.name.trim() && meals.getByName(req.body.name.trim())) {
+    if (req.body.name && req.body.name.trim() && meals.getByName(req.body.name.trim())) {
       return res.status(409).send({ message: 'Meal name already exists' });
     }
 
@@ -58,6 +63,12 @@ class ValidateMeal {
       return res.status(400).send({ message: 'Price must be greater than one' });
     }
 
+    // check if user is admin or the creator of the meal
+    if (req.decoded.user.accountType !== 'admin' &&
+        req.decoded.user.id !== meals.get(parseInt(req.params.id, 10)).userId) {
+      return res.status(403).send({ message: 'Unauthorized access' });
+    }
+
     return next();
   }
 
@@ -68,10 +79,15 @@ class ValidateMeal {
    */
   static delete(req, res, next) {
     // check if meal exists
-    if (meals.get(parseInt(req.params.id, 10))) {
-      return next();
+    if (!meals.get(parseInt(req.params.id, 10))) {
+      return res.status(404).send({ message: 'Meal does not exist' });
     }
-    return res.status(404).send({ message: 'Meal does not exist' });
+    // check if user is admin or the creator of the meal
+    if (req.decoded.user.accountType !== 'admin' &&
+        req.decoded.user.id !== meals.get(parseInt(req.params.id, 10)).userId) {
+      return res.status(403).send({ message: 'Unauthorized access' });
+    }
+    return next();
   }
 }
 

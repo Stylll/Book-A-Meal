@@ -130,7 +130,18 @@ class Meals {
    * get all meals in the meals table
    */
   static getAll() {
-    return MealStore;
+    return MealStore.filter(meal => meal != null);
+  }
+
+  /**
+   * get all meals using the user id
+   * @param {integer} userId
+   */
+  static getByUserId(userId) {
+    if (Number.isInteger(parseInt(userId, 10))) {
+      return MealStore.filter(meal => meal != null).filter(meal => meal.userId === userId);
+    }
+    return null;
   }
 
   /**
