@@ -1,6 +1,5 @@
 import { isEmpty } from 'lodash';
 import menus from '../db/menus';
-import menuMeals from '../db/menuMeals';
 import { getNormalDate } from '../utils/dateBeautifier';
 import menuUtils from '../utils/menu/menuUtils';
 
@@ -17,7 +16,9 @@ class MenuController {
    */
   static post(req, res) {
     const date = getNormalDate(new Date());
-    const newMenu = menus.add({ date, userId: req.decoded.user.id });
+    const uniqueIds = new Set(req.body.mealIds.sort());
+    const mealIds = [...uniqueIds];
+    const newMenu = menus.add({ date, mealIds, userId: req.decoded.user.id });
     if (newMenu && !newMenu.err) {
       return res.status(201).send({ menu: newMenu });
     }
@@ -26,26 +27,33 @@ class MenuController {
   }
 
   /**
-   * Static method to handle post meal requests
-   * adds meal to a menu
+   * Static method to handle put menu requests
+   * updates meals in a menu
    * returns meal object
    * @param {*} req
    * @param {*} res
    */
-  static postMeal(req, res) {
-    // create meal object
-    const meal = {
-      menuId: parseInt(req.params.id, 10),
-      mealId: parseInt(req.body.mealId, 10),
-    };
-
-    // save meal in the db
-    const newMeal = menuMeals.add(meal);
-
-    // return new meal if save was successful
-    if (newMeal && !newMeal.err) {
-      return res.status(201).send({ menuMeal: newMeal });
+  static put(req, res) {
+    const oldMenu = menus.get(parseInt(req.params.id, 10));
+    let ids = [...oldMenu, ...req.body.mealIds];
+    /**
+     * if the user is an admin, then he can remove and add meal options
+     * else, caterers can only add meal options
+     */
+    if (req.decoded.user.accountType === 'admin') {
+      ids = [...req.body.mealIds];
     }
+
+    const uniqueIds = new Set(ids.sort());
+    const mealIds = [...uniqueIds];
+    const newMenu = menus.update({ id: oldMenu.id, mealIds });
+
+    if (newMenu && !newMenu.err) {
+      return res.status(201).send({ menu: newMenu });
+    }
+
+    console.log('err:', newMenu);
+
     return res.status(500).send({ message: 'Internal Server Error' });
   }
 
@@ -64,7 +72,7 @@ class MenuController {
      * then we get all menus in the db
      * and return them as an array
      */
-    if (accountType === 'caterer') {
+    if (accountType === 'caterer' || accountType === 'admin') {
       const menuList = [...menus.getAll()];
       if (menuList.length > 0) {
         const properMenuList = menuUtils.buildMenus(menuList);

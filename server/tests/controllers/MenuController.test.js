@@ -3,11 +3,6 @@ import request from 'supertest';
 import app from '../../server';
 import Authenticate from '../../utils/authentication/authenticate';
 import { getNormalDate, beautifyDate } from '../../utils/dateBeautifier';
-import {
-  existingMenuMeal,
-  insertSeedMenuMeal,
-  clearMenuMeals,
-} from '../../utils/seeders/menuMealSeeder';
 
 import {
   existingMenu,
@@ -43,8 +38,12 @@ describe('Test Suite for Menu Controller', () => {
   describe('POST: Create Menu - /api/v1/menu', () => {
     // before each hook to clean and insert data to the db
     beforeEach(() => {
+      clearMeals();
       clearMenus();
       insertSeedMenu(existingMenu);
+      insertSeedMeal(existingMeal);
+      insertSeedMeal(validMeal1);
+      insertSeedMeal(validMeal2);
     });
 
     it('should require an authentication token', (done) => {
@@ -72,7 +71,7 @@ describe('Test Suite for Menu Controller', () => {
         });
     });
 
-    it('should require a caterer user account', (done) => {
+    it('should require a caterer / admin user account', (done) => {
       request(app)
         .post('/api/v1/menu')
         .set({
@@ -80,20 +79,20 @@ describe('Test Suite for Menu Controller', () => {
         })
         .send({})
         .end((err, resp) => {
-          expect(resp.status).to.equal(401);
+          expect(resp.status).to.equal(403);
           expect(resp.body.message).to.equal('Unauthorized Access');
           done();
         });
     });
 
-    it('should create menu with current date', (done) => {
+    it('should create menu with current date by default', (done) => {
       clearMenus();
       request(app)
         .post('/api/v1/menu')
         .set({
           'x-access-token': catererToken,
         })
-        .send({})
+        .send({ mealIds: [1, 2] })
         .end((err, resp) => {
           expect(resp.status).to.equal(201);
           expect(resp.body).to.haveOwnProperty('menu');
@@ -101,27 +100,115 @@ describe('Test Suite for Menu Controller', () => {
           expect(resp.body.menu.name).to.equal(`Menu For ${beautifyDate(new Date())}`);
           expect(resp.body.menu).to.haveOwnProperty('createdAt');
           expect(resp.body.menu).to.haveOwnProperty('updatedAt');
+          expect(resp.body.menu).to.haveOwnProperty('mealIds');
+          expect(resp.body.menu.mealIds).to.eql([1, 2]);
           expect(resp.body.menu.userId).to.equal(1);
+          done();
+        });
+    });
+
+    it('should not create multiple menus for the same day', (done) => {
+      insertSeedMenu(currentMenu);
+      request(app)
+        .post('/api/v1/menu')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .send({ mealIds: [1, 2] })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(400);
+          expect(resp.body.message).to.equal('Menu for the day already exists');
+          done();
+        });
+    });
+
+    it('should require meal ids', (done) => {
+      request(app)
+        .post('/api/v1/menu')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .send({
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(400);
+          expect(resp.body.message).to.equal('Array of meal ids is required');
+          done();
+        });
+    });
+
+    it('should require meal ids is an array', (done) => {
+      request(app)
+        .post('/api/v1/menu')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .send({
+          mealIds: { 1: 'a', 2: 'b', 3: 'c' },
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(400);
+          expect(resp.body.message).to.equal('Meal ids must be in an array');
+          done();
+        });
+    });
+
+    it('should save unique meal ids', (done) => {
+      request(app)
+        .post('/api/v1/menu')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .send({ mealIds: [1, 1, 2, 2] })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(201);
+          expect(resp.body.menu.mealIds[0]).to.equal(1);
+          expect(resp.body.menu.mealIds[1]).to.equal(2);
+          expect(resp.body.menu.mealIds).to.eql([1, 2]);
+          done();
+        });
+    });
+
+    it('should add only existing meals to menu', (done) => {
+      request(app)
+        .post('/api/v1/menu')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .send({
+          mealIds: [1, 2, 5, 7, 8],
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(201);
+          expect(resp.body.menu.mealIds[0]).to.equal(1);
+          expect(resp.body.menu.mealIds[1]).to.equal(2);
+          expect(resp.body.menu).to.haveOwnProperty('createdAt');
+          expect(resp.body.menu).to.haveOwnProperty('updatedAt');
+          expect(resp.body.menu).to.haveOwnProperty('id');
+          expect(resp.body.menu).to.haveOwnProperty('name');
+          expect(resp.body.menu).to.haveOwnProperty('date');
+          expect(resp.body.menu).to.haveOwnProperty('mealIds');
+          expect(resp.body.menu).to.haveOwnProperty('userId');
+          expect(resp.body.menu.mealIds).to.be.an('array');
           done();
         });
     });
   });
 
-  describe('POST: Create Menu Meal - /api/v1/menu/:id/meals', () => {
+  describe('PUT: Update Menu - /api/v1/menu/:id', () => {
     // before each hook to clean and insert data to the db
     beforeEach(() => {
-      clearMenus();
       clearMeals();
-      clearMenuMeals();
-      insertSeedMenu(existingMenu);
+      clearMenus();
       insertSeedMeal(existingMeal);
       insertSeedMeal(validMeal1);
-      insertSeedMenuMeal(existingMenuMeal);
+      insertSeedMeal(validMeal2);
+      insertSeedMenu(existingMenu);
     });
 
     it('should require an authentication token', (done) => {
       request(app)
-        .post('/api/v1/menu/1/meals')
+        .post('/api/v1/menu')
         .send({})
         .end((err, resp) => {
           expect(resp.status).to.equal(401);
@@ -132,7 +219,7 @@ describe('Test Suite for Menu Controller', () => {
 
     it('should require a valid authentication token', (done) => {
       request(app)
-        .post('/api/v1/menu/1/meals')
+        .post('/api/v1/menu')
         .set({
           'x-access-token': 'rkrri444443223sdkd.rererer.weewewe3434',
         })
@@ -144,41 +231,28 @@ describe('Test Suite for Menu Controller', () => {
         });
     });
 
-    it('should require a caterer user account', (done) => {
+    it('should require a caterer / admin user account', (done) => {
       request(app)
-        .post('/api/v1/menu/1/meals')
+        .post('/api/v1/menu')
         .set({
           'x-access-token': customerToken,
         })
         .send({})
         .end((err, resp) => {
-          expect(resp.status).to.equal(401);
+          expect(resp.status).to.equal(403);
           expect(resp.body.message).to.equal('Unauthorized Access');
           done();
         });
     });
 
-    it('should require existing menu id', (done) => {
+    it('should require a valid menu id', (done) => {
       request(app)
-        .post('/api/v1/menu/21/meals')
+        .put('/api/v1/menu/ab')
         .set({
           'x-access-token': catererToken,
         })
-        .send({})
-        .end((err, resp) => {
-          expect(resp.status).to.equal(404);
-          expect(resp.body.message).to.equal('Menu does not exist');
-          done();
-        });
-    });
-
-    it('should require valid menu id', (done) => {
-      request(app)
-        .post('/api/v1/menu/abc/meals')
-        .set({
-          'x-access-token': catererToken,
+        .send({
         })
-        .send({})
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
           expect(resp.body.message).to.equal('Menu id is invalid');
@@ -186,9 +260,9 @@ describe('Test Suite for Menu Controller', () => {
         });
     });
 
-    it('should require meal id', (done) => {
+    it('should require an existing menu id', (done) => {
       request(app)
-        .post('/api/v1/menu/1/meals')
+        .put('/api/v1/menu/99')
         .set({
           'x-access-token': catererToken,
         })
@@ -196,75 +270,79 @@ describe('Test Suite for Menu Controller', () => {
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Meal id is required');
+          expect(resp.body.message).to.equal('Menu does not exist');
           done();
         });
     });
 
-    it('should require existing meal', (done) => {
+    it('should require meal ids', (done) => {
       request(app)
-        .post('/api/v1/menu/1/meals')
+        .put('/api/v1/menu/1')
         .set({
           'x-access-token': catererToken,
         })
         .send({
-          mealId: 99,
-        })
-        .end((err, resp) => {
-          expect(resp.status).to.equal(404);
-          expect(resp.body.message).to.equal('Meal does not exist');
-          done();
-        });
-    });
-
-    it('should require valid meal id', (done) => {
-      request(app)
-        .post('/api/v1/menu/1/meals')
-        .set({
-          'x-access-token': catererToken,
-        })
-        .send({
-          mealId: 'avc',
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Meal id is invalid');
+          expect(resp.body.message).to.equal('Array of meal ids is required');
           done();
         });
     });
 
-    it('should require unique meal id', (done) => {
+    it('should require meal ids is an array', (done) => {
       request(app)
-        .post('/api/v1/menu/1/meals')
+        .put('/api/v1/menu/1')
         .set({
           'x-access-token': catererToken,
         })
         .send({
-          mealId: 1,
+          mealIds: { 1: 'a', 2: 'b', 3: 'c' },
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(409);
-          expect(resp.body.message).to.equal('Meal already exists');
+          expect(resp.status).to.equal(400);
+          expect(resp.body.message).to.equal('Meal ids must be in an array');
           done();
         });
     });
 
-    it('should add meal to menu', (done) => {
+    it('should save unique meal ids', (done) => {
       request(app)
-        .post('/api/v1/menu/1/meals')
+        .put('/api/v1/menu/1')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .send({ mealIds: [1, 1, 2, 2, 'a'] })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(201);
+          expect(resp.body.menu.mealIds[0]).to.equal(1);
+          expect(resp.body.menu.mealIds[1]).to.equal(2);
+          expect(resp.body.menu.mealIds).to.eql([1, 2]);
+          done();
+        });
+    });
+
+    it('should add only existing meals to menu', (done) => {
+      request(app)
+        .put('/api/v1/menu/1')
         .set({
           'x-access-token': catererToken,
         })
         .send({
-          mealId: 2,
+          mealIds: [1, 2, 5, 7, 8],
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(201);
-          expect(resp.body.menuMeal.menuId).to.equal(1);
-          expect(resp.body.menuMeal.mealId).to.equal(2);
-          expect(resp.body.menuMeal).to.haveOwnProperty('createdAt');
-          expect(resp.body.menuMeal).to.haveOwnProperty('updatedAt');
-          expect(resp.body.menuMeal).to.haveOwnProperty('id');
+          expect(resp.body.menu.mealIds[0]).to.equal(1);
+          expect(resp.body.menu.mealIds[1]).to.equal(2);
+          expect(resp.body.menu).to.haveOwnProperty('createdAt');
+          expect(resp.body.menu).to.haveOwnProperty('updatedAt');
+          expect(resp.body.menu).to.haveOwnProperty('id');
+          expect(resp.body.menu).to.haveOwnProperty('name');
+          expect(resp.body.menu).to.haveOwnProperty('date');
+          expect(resp.body.menu).to.haveOwnProperty('mealIds');
+          expect(resp.body.menu).to.haveOwnProperty('userId');
+          expect(resp.body.menu.mealIds).to.be.an('array');
           done();
         });
     });
@@ -275,15 +353,11 @@ describe('Test Suite for Menu Controller', () => {
     beforeEach((done) => {
       clearMenus();
       clearMeals();
-      clearMenuMeals();
-      insertSeedMenu(currentMenu);
-      insertSeedMenu(existingMenu);
       insertSeedMeal(existingMeal);
       insertSeedMeal(validMeal1);
       insertSeedMeal(validMeal2);
-      insertSeedMenuMeal(existingMenuMeal);
-      insertSeedMenuMeal({ menuId: 1, mealId: 2 });
-      insertSeedMenuMeal({ menuId: 1, mealId: 3 });
+      insertSeedMenu({ ...currentMenu, mealIds: [1, 2] });
+      insertSeedMenu(existingMenu);
       done();
     });
 

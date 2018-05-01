@@ -8,13 +8,16 @@ import {
   insertSeedMenu,
   clearMenus,
 } from '../../utils/seeders/menuSeeder';
+import { existingMeal, insertSeedMeal, clearMeals } from '../../utils/seeders/mealSeeder';
 
 /* eslint-disable no-undef */
 describe('Test Suite for Menu Model', () => {
   // before each hook to run before every test
   beforeEach(() => {
     clearMenus();
+    clearMeals();
     insertSeedMenu(existingMenu);
+    insertSeedMeal(existingMeal);
   });
 
   it('should require menu date', () => {
@@ -30,6 +33,24 @@ describe('Test Suite for Menu Model', () => {
   it('should require unique menu date', () => {
     const result = menus.add(existingMenu);
     expect(result.err.message).to.equal('Menu date already exists');
+  });
+
+  it('should require mealIds', () => {
+    const result = menus.add({ ...invalidMenu3, date: validMenu1.date, userId: validMenu1.userId });
+    expect(result.err.message).to.equal('Meal Ids are required');
+  });
+
+  it('should require mealIds in array format', () => {
+    const result = menus.add({ ...validMenu1, mealIds: { 1: 'a', 2: 'b' } });
+    expect(result.err.message).to.equal('Meal Ids should be in an array');
+  });
+
+  it('should only insert existing meal ids', () => {
+    const result = menus.add(validMenu1);
+    expect(result.name).to.equal(validMenu1.name);
+    expect(result.mealIds).to.be.an('array');
+    expect(result.mealIds.length).to.not.be.greaterThan(1);
+    expect(result.mealIds[0]).to.equal(1);
   });
 
   it('should add menu and autogenerate menu name', () => {
@@ -72,11 +93,34 @@ describe('Test Suite for Menu Model', () => {
     expect(result.err.message).to.equal('Menu date is invalid');
   });
 
+  it('should require mealIds before updating', () => {
+    const result = menus.update({
+      ...invalidMenu3, date: validMenu2.date, userId: existingMenu.userId, id: 1,
+    });
+    expect(result.err.message).to.equal('Meal Ids are required');
+  });
+
+  it('should require mealIds in array format before updating', () => {
+    const result = menus.update({
+      ...existingMenu, date: validMenu2.date, id: 1, mealIds: { 1: 'a', 2: 'b' },
+    });
+    expect(result.err.message).to.equal('Meal Ids should be in an array');
+  });
+
+  it('should only update existing meal ids', () => {
+    const result = menus.update({ ...validMenu1, id: 1 });
+    expect(result.name).to.equal(validMenu1.name);
+    expect(result.mealIds).to.be.an('array');
+    expect(result.mealIds.length).to.not.be.greaterThan(1);
+    expect(result.mealIds[0]).to.equal(1);
+  });
+
   it('should update menu date', () => {
-    const result = menus.add({
+    const result = menus.update({
       date: '2018-03-01',
       id: 1,
       userId: 1,
+      mealIds: [1, 2, 3],
     });
     expect(result.name).to.equal('Menu For Thursday, 1 March 2018');
   });

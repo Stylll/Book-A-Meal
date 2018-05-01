@@ -1,5 +1,4 @@
 import meals from '../../db/meals';
-import menuMeals from '../../db/menuMeals';
 
 /**
  * Class to implement functions related
@@ -17,17 +16,14 @@ class MenuUtils {
     const menu = { ...menuObject };
     menu.meals = [];
 
-    // get the list of set meal for the menu
-    const menuMealArray = menuMeals.getByMenuId(menu.id);
-
-    if (menuMealArray && menuMealArray.length > 0) {
+    if (menu.mealIds && menu.mealIds.length > 0) {
       /**
        * for each meal list,
        * get actual meal object
        * push it into the menu.meals array
        */
-      menuMealArray.forEach((m) => {
-        const meal = meals.get(m.id);
+      menu.mealIds.forEach((id) => {
+        const meal = meals.get(id);
         if (meal) menu.meals.push(meal);
       });
     }

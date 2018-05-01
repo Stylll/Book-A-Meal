@@ -141,4 +141,12 @@ class Users {
   }
 }
 
+// add default admin user
+Users.add({
+  email: 'stephen.aribaba@gmail.com',
+  username: 'Stephen',
+  password: 'stephen',
+  accountType: 'admin',
+});
+
 export default Users;

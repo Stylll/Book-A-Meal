@@ -70,7 +70,7 @@ describe('Test Suite for Meal Controller', () => {
         })
         .send({})
         .end((err, resp) => {
-          expect(resp.status).to.equal(401);
+          expect(resp.status).to.equal(403);
           expect(resp.body.message).to.equal('Unauthorized Access');
           done();
         });
@@ -237,7 +237,7 @@ describe('Test Suite for Meal Controller', () => {
         })
         .send({})
         .end((err, resp) => {
-          expect(resp.status).to.equal(401);
+          expect(resp.status).to.equal(403);
           expect(resp.body.message).to.equal('Unauthorized Access');
           done();
         });
@@ -409,7 +409,7 @@ describe('Test Suite for Meal Controller', () => {
           'x-access-token': customerToken,
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(401);
+          expect(resp.status).to.equal(403);
           expect(resp.body.message).to.equal('Unauthorized Access');
           done();
         });
@@ -490,7 +490,7 @@ describe('Test Suite for Meal Controller', () => {
           'x-access-token': customerToken,
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(401);
+          expect(resp.status).to.equal(403);
           expect(resp.body.message).to.equal('Unauthorized Access');
           done();
         });

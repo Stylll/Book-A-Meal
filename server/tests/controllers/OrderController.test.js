@@ -75,7 +75,7 @@ describe('Test Suite for Order Controller', () => {
         })
         .send({})
         .end((err, resp) => {
-          expect(resp.status).to.equal(401);
+          expect(resp.status).to.equal(403);
           expect(resp.body.message).to.equal('Unauthorized Access');
           done();
         });

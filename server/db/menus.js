@@ -1,5 +1,6 @@
 import generateId from '../utils/generateId';
 import { getNormalDate, beautifyDate } from '../utils/dateBeautifier';
+import MealUtils from '../utils/meals/mealUtils';
 
 // variable to store the menu records.
 const MenuStore = [];
@@ -28,8 +29,14 @@ class Menus {
     // check if user id is provided
     if (!menu.userId) return { err: new Error('User id is required') };
 
+    // check if mealIds are provided
+    if (!menu.mealIds) return { err: new Error('Meal Ids are required') };
+
+    // check if mealIds are in an array
+    if (!Array.isArray(menu.mealIds)) return { err: new Error('Meal Ids should be in an array') };
+
     // populate menu to be added
-    const newMenu = { ...menu };
+    const newMenu = { ...menu, mealIds: MealUtils.getRealMeals(menu.mealIds) };
     newMenu.id = generateId(MenuStore);
     newMenu.name = `Menu For ${beautifyDate(menu.date)}`;
     newMenu.userId = menu.userId;
@@ -63,20 +70,27 @@ class Menus {
     }
 
     // check if date is provided
-    if (!menu.date.trim()) return { err: new Error('Menu date is required') };
+    if (menu.date && !menu.date.trim()) return { err: new Error('Menu date is required') };
 
     // check if date is valid
-    if (!getNormalDate(menu.date.trim())) return { err: new Error('Menu date is invalid') };
+    if (menu.date && !getNormalDate(menu.date.trim())) return { err: new Error('Menu date is invalid') };
 
     // check if menu date exists
-    if (MenuStore.filter(x => x.date === menu.date.trim()).length > 0) {
+    if (menu.date && MenuStore.filter(x => x.date === menu.date.trim()).length > 0) {
       return { err: new Error('Menu date already exists') };
     }
 
+    // check if mealIds are provided
+    if (!menu.mealIds) return { err: new Error('Meal Ids are required') };
+
+    // check if mealIds are in an array
+    if (!Array.isArray(menu.mealIds)) return { err: new Error('Meal Ids should be in an array') };
+
     // populate menu to be updated with new data
     const updatedMenu = { ...MenuStore[menu.id - 1] };
-    updatedMenu.name = `Menu For ${beautifyDate(menu.date)}`;
-    updatedMenu.date = menu.date;
+    updatedMenu.name = (menu.date) ? `Menu For ${beautifyDate(menu.date)}` : updatedMenu.name;
+    updatedMenu.date = menu.date || updatedMenu.date;
+    updatedMenu.mealIds = MealUtils.getRealMeals(menu.mealIds);
     updatedMenu.updatedAt = new Date();
 
     // save menu in db

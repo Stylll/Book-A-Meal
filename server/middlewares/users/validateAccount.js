@@ -29,7 +29,7 @@ class ValidateAccount {
   }
 
   /**
-   * static method to verify if a user is a caterer,
+   * static method to verify if a user is a caterer or an admin,
    * using decoded object from the request object
    * @param {*} req
    * @param {*} res
@@ -37,10 +37,11 @@ class ValidateAccount {
    */
   static caterer(req, res, next) {
     const { decoded } = req;
-    if (decoded && decoded.user && decoded.user.accountType === 'caterer') {
+    if ((decoded && decoded.user && decoded.user.accountType === 'caterer') ||
+    (decoded && decoded.user && decoded.user.accountType === 'admin')) {
       return next();
     }
-    return res.status(401).send({ message: 'Unauthorized Access' });
+    return res.status(403).send({ message: 'Unauthorized Access' });
   }
 
   /**
@@ -55,7 +56,7 @@ class ValidateAccount {
     if (decoded && decoded.user && decoded.user.accountType === 'customer') {
       return next();
     }
-    return res.status(401).send({ message: 'Unauthorized Access' });
+    return res.status(403).send({ message: 'Unauthorized Access' });
   }
 }
 
