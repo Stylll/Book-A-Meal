@@ -26,6 +26,8 @@ class UserController {
         email: user.email,
         username: user.username,
         accountType: user.accountType,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
       };
 
       // get jwt for user

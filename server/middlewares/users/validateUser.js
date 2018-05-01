@@ -13,7 +13,7 @@ class validateUser {
    */
   static signup(req, res, next) {
     // check if email is provided
-    if (!req.body.email.trim()) {
+    if (!req.body.email || !req.body.email.trim()) {
       return res.status(400).send({ message: 'Email is required' });
     }
 
@@ -28,7 +28,7 @@ class validateUser {
     }
 
     // check if username is provided
-    if (!req.body.username.trim()) {
+    if (!req.body.username || !req.body.username.trim()) {
       return res.status(400).send({ message: 'Username is required' });
     }
 
@@ -38,7 +38,7 @@ class validateUser {
     }
 
     // check if password is provided
-    if (!req.body.password.trim()) {
+    if (!req.body.password || !req.body.password.trim()) {
       return res.status(400).send({ message: 'Password is required' });
     }
 
@@ -48,7 +48,7 @@ class validateUser {
     }
 
     // check if account type is provided
-    if (!req.body.accountType.trim()) {
+    if (!req.body.accountType || !req.body.accountType.trim()) {
       return res.status(400).send({ message: 'Account type is required' });
     }
 
@@ -69,7 +69,7 @@ class validateUser {
    */
   static signin(req, res, next) {
     // check if email is provided
-    if (!req.body.email.trim()) {
+    if (!req.body.email || !req.body.email.trim()) {
       return res.status(400).send({ message: 'Email is required' });
     }
 
@@ -79,7 +79,7 @@ class validateUser {
     }
 
     // check if password is provided
-    if (!req.body.password.trim()) {
+    if (!req.body.password || !req.body.password.trim()) {
       return res.status(400).send({ message: 'Password is required' });
     }
 
