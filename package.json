@@ -4,7 +4,7 @@
   "description": "An application where customers can make food orders and vendors can know what a customer wants to eat",
   "main": "index.js",
   "scripts": {
-    "test:server": "set NODE_ENV=test&& nyc --reporter=html --reporter=text --reporter=lcov mocha --compilers js:babel-core/register server/tests/**/*.test.js --timeout 5000 --exit",
+    "test:server": "set NODE_ENV=test&& nyc --reporter=html --reporter=text --reporter=lcov mocha --compilers js:babel-core/register server/tests/**/*.test.js --timeout 10000 --exit",
     "start": "babel-node ./server/server",
     "start:dev": "nodemon --exec babel-node ./server/server",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",

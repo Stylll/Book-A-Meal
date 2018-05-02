@@ -1,4 +1,5 @@
 import orders from '../db/orders';
+import meals from '../db/meals';
 import OrderUtils from '../utils/orders/orderUtils';
 
 class OrderController {
@@ -9,10 +10,13 @@ class OrderController {
    * @param {*} next
    */
   static post(req, res) {
+    // get price from meal object
+    const meal = meals.get(parseInt(req.body.mealId, 10));
+
     // create order object
     const order = {
       mealId: parseInt(req.body.mealId, 10),
-      price: parseFloat(req.body.price, 10),
+      price: meal.price,
       quantity: parseInt(req.body.quantity, 10),
       userId: req.decoded.user.id,
     };
@@ -38,7 +42,11 @@ class OrderController {
     // if order exists
     if (order && !order.err) {
       // update order, save order and return new order
-      order.status = req.body.status;
+      order.mealId = (req.body.mealId) ? parseInt(req.body.mealId, 10) : order.mealId;
+      order.quantity = (req.body.quantity) ? parseInt(req.body.quantity, 10) : order.quantity;
+      order.price = (req.body.mealId) ? meals.get(parseInt(req.body.mealId, 10)).price
+        : order.price;
+      order.status = req.body.status || order.status;
 
       const newOrder = orders.update(order);
 
@@ -53,13 +61,22 @@ class OrderController {
    * @param {*} res
    */
   static get(req, res) {
-    if (req.decoded.user.accountType === 'caterer') {
+    if (req.decoded.user.accountType === 'admin') {
       /**
        * get all orders from the db
        * pass it through the builder to attach meal and user objects
        * return the order array
        */
       const orderArray = OrderUtils.buildOrders(orders.getAll());
+      return res.status(200).send({ orders: orderArray });
+    }
+    if (req.decoded.user.accountType === 'caterer') {
+      /**
+       * get all orders from the db where meal was created by the caterer
+       * pass it through the builder to attach meal and user objects
+       * return the order array
+       */
+      const orderArray = OrderUtils.buildOrders(orders.getByCatererId(req.decoded.user.id));
       return res.status(200).send({ orders: orderArray });
     }
     if (req.decoded.user.accountType === 'customer') {

@@ -195,6 +195,17 @@ class Orders {
     return null;
   }
 
+  static getByCatererId(catererId) {
+    const id = parseInt(catererId, 10);
+    if (Number.isInteger(id)) {
+      const catererMeals = meals.getByUserId(id);
+      const mealIds = [];
+      catererMeals.forEach(meal => mealIds.push(meal.id));
+      return OrderStore.filter(order => (mealIds.indexOf(order.mealId) !== -1));
+    }
+    return null;
+  }
+
   /**
    * Static method to delete order by order id
    * @param {integer} id
