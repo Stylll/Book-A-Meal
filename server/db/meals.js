@@ -7,7 +7,7 @@ class Meals {
   /**
    * static method to add meal to the db
    * @param {object} meal
-   * @returns {object} newly added meal
+   * @returns {object} {added meal} | {err}
    */
   static add(meal) {
     // check if meal name is provided
@@ -47,7 +47,7 @@ class Meals {
 
   /**
    * static method to add bulk meals to the db
-   * @param {*} mealArray
+   * @param {array} mealArray
    */
   static addBulk(mealArray) {
     mealArray.forEach((meal) => {
@@ -57,8 +57,8 @@ class Meals {
 
   /**
    * static method to update meal
-   * @param {*} meal
-   * @return {object} updated meal
+   * @param {object} meal
+   * @return {object} {updated meal} | {err}
    */
   static update(meal) {
     // if meal does not exist using id
@@ -95,7 +95,7 @@ class Meals {
 
   /**
    * static method to delete meal from meals using id
-   * @param {*} id
+   * @param {integer} id
    */
   static delete(id) {
     delete MealStore[id - 1];
@@ -103,7 +103,7 @@ class Meals {
 
   /**
    * static method to get meal by meal id
-   * @param {*} id
+   * @param {integer} id
    * @returns {object|null} meal
    */
   static get(id) {
@@ -128,6 +128,7 @@ class Meals {
 
   /**
    * get all meals in the meals table
+   * @returns [array] meals
    */
   static getAll() {
     return MealStore.filter(meal => meal != null);
@@ -136,6 +137,7 @@ class Meals {
   /**
    * get all meals using the user id
    * @param {integer} userId
+   * @returns {array | null} [meals]
    */
   static getByUserId(userId) {
     if (Number.isInteger(parseInt(userId, 10))) {

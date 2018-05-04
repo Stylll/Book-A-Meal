@@ -10,7 +10,7 @@ class Users {
   /**
    * static method to add user to the db
    * @param {object} user
-   * @returns {object} newly added user
+   * @returns {object} newly added user | {err}
    */
   static add(user) {
     // if user email is not provided
@@ -62,7 +62,7 @@ class Users {
   /**
    * static method to update user using user id
    * @param {object} user
-   * @return {object} updated user
+   * @return {object} updated user | {err}
    */
   static update(user) {
     // if password is not provided
@@ -94,7 +94,7 @@ class Users {
   /**
    * static method to get user by user id
    * @param {Integer} id
-   * @returns {object} user
+   * @returns {object|undefined} user
    */
   static get(id) {
     return UserStore[id - 1];
@@ -128,6 +128,7 @@ class Users {
 
   /**
    * static method to get all users in the db
+   * @returns {array} users
    */
   static getAll() {
     return UserStore;

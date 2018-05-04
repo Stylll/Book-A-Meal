@@ -13,6 +13,7 @@ class Menus {
   /**
    * static method to add menu to the db
    * @param {object} menu
+   * @returns {object} {new menu} | {err}
    */
   static add(menu) {
     // check if date is provided
@@ -62,6 +63,7 @@ class Menus {
   /**
    * static method to update a menu
    * @param {object} menu
+   * @returns {object} {updated menu} | {err}
    */
   static update(menu) {
     // check if menu exists
@@ -111,6 +113,7 @@ class Menus {
   /**
    * Static method to get menu using menu id
    * @param {integer} id
+   * @returns {object | null} {menu}
    */
   static get(id) {
     if (Number.isInteger(id)) {
@@ -122,6 +125,7 @@ class Menus {
   /**
    * Static method to get menu using menu date
    * @param {date} date
+   * @returns {array} [menus] | {err}
    */
   static getByDate(date) {
     // check if date is valid
@@ -140,6 +144,7 @@ class Menus {
 
   /**
    * static method to get all menus in the db
+   * @returns {array} [menus]
    */
   static getAll() {
     return MenuStore;
