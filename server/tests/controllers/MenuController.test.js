@@ -116,7 +116,7 @@ describe('Test Suite for Menu Controller', () => {
         })
         .send({ mealIds: [1, 2] })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
+          expect(resp.status).to.equal(409);
           expect(resp.body.message).to.equal('Menu for the day already exists');
           done();
         });

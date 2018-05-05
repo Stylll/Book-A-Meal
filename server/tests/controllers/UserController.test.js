@@ -87,7 +87,7 @@ describe('Test suite for User Controller', () => {
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
           expect(resp.body).to.haveOwnProperty('message');
-          expect(resp.body.message).to.equal('Password must have atleast 5 characters');
+          expect(resp.body.message).to.equal('Password must have atleast 6 characters');
         });
 
       request(app)

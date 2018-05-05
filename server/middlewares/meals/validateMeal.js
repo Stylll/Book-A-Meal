@@ -1,92 +1,63 @@
-import meals from '../../db/meals';
+import meal from '../../utils/validators/vMeal';
 
 /**
  * Middleware class to validate Meal
  */
+/* eslint-disable no-plusplus */
 class ValidateMeal {
   /**
    * Static method to validate meal post request
-   * @param {*} req
-   * @param {*} res
-   * @param {*} next
+   * @param {object} request
+   * @param {object} response
+   * @param {function} next
+   * @throws {object} Error message and status code
+   * @returns {function} next
    */
-  static post(req, res, next) {
-    // check if meal name is provided
-    if (!req.body || (!req.body.name || !req.body.name.trim())) return res.status(400).send({ message: 'Meal name is required' });
-
-    // check if meal name exists
-    if (meals.getByName(req.body.name.trim())) return res.status(409).send({ message: 'Meal name already exists' });
-
-    // check if price is provided
-    if (!req.body.price) return res.status(400).send({ message: 'Price is required' });
-
-    // check if price is valid
-    if (/[^0-9.]/gi.test(req.body.price) === true) {
-      return res.status(400).send({ message: 'Price is invalid' });
-    }
-
-    // check if price is above one
-    if (req.body.price <= 1) return res.status(400).send({ message: 'Price must be greater than one' });
+  static post(request, response, next) {
+    // validate meal name is provided
+    meal.validateName(request);
+    // validate meal name is unique
+    meal.nameExists(request);
+    // validate price is valid
+    meal.priceValid(request);
 
     return next();
   }
 
   /**
    * Static method to validate meal put requests
-   * @param {*} req
-   * @param {*} res
-   * @param {*} next
+   * @param {object} request
+   * @param {object} response
+   * @param {function} next
+   * @throws {object} Error message and status code
+   * @returns {function} next
    */
-  static put(req, res, next) {
-    // check if meal id exists
-    if (!meals.get(parseInt(req.params.id, 10))) {
-      return res.status(404).send({ message: 'Meal does not exist' });
-    }
-
-    // check if meal name is provided
-    if (!req.body.name) {
-      return res.status(400).send({ message: 'Meal name is required' });
-    }
-
+  static put(request, response, next) {
+    // check if id exists already
+    meal.idExists(request);
     // check if meal name exists
-    if (req.body.name && req.body.name.trim() && meals.getByName(req.body.name.trim())) {
-      return res.status(409).send({ message: 'Meal name already exists' });
-    }
-
-    // check if price is valid
-    if (req.body.price && /[^0-9.]/gi.test(req.body.price) === true) {
-      return res.status(400).send({ message: 'Price is invalid' });
-    }
-
-    // check if price is above one
-    if (req.body.price && req.body.price <= 1) {
-      return res.status(400).send({ message: 'Price must be greater than one' });
-    }
-
-    // check if user is admin or the creator of the meal
-    if (req.decoded.user.accountType !== 'admin' &&
-        req.decoded.user.id !== meals.get(parseInt(req.params.id, 10)).userId) {
-      return res.status(403).send({ message: 'Unauthorized access' });
-    }
+    meal.nameExists(request);
+    // check if price is valid if provided
+    if (request.body.price) meal.priceValid(request);
+    // validate crud access
+    meal.validateAccess(request);
 
     return next();
   }
 
   /**
    * Static method to validate meal delete requests
-   * @param {*} req
-   * @param {*} res
+   * @param {object} request
+   * @param {object} response
+   * @param {function} next
+   * @throws {object} Error message and status code
+   * @returns {function} next
    */
-  static delete(req, res, next) {
+  static delete(request, response, next) {
     // check if meal exists
-    if (!meals.get(parseInt(req.params.id, 10))) {
-      return res.status(404).send({ message: 'Meal does not exist' });
-    }
+    meal.idExists(request);
     // check if user is admin or the creator of the meal
-    if (req.decoded.user.accountType !== 'admin' &&
-        req.decoded.user.id !== meals.get(parseInt(req.params.id, 10)).userId) {
-      return res.status(403).send({ message: 'Unauthorized access' });
-    }
+    meal.validateAccess(request);
     return next();
   }
 }

@@ -1,4 +1,4 @@
-import Authenticate from '../../utils/authentication/authenticate';
+import account from '../../utils/validators/vAccount';
 /**
  * Middleware Class to validate user account.
  * Validates general user
@@ -9,54 +9,44 @@ import Authenticate from '../../utils/authentication/authenticate';
 
 class ValidateAccount {
   /**
-   * static method to get token from request header
-   * verify access token
-   * and decoded token to request object
-   * @param {*} req
-   * @param {*} res
+   * static method to verify and authenticate user
+   * @param {object} request
+   * @param {object} response
+   * @param {object} next
+   * @throws {object} Error message and status code
+   * @returns {function} next
    */
-  static user(req, res, next) {
-    const token = req.body.token || req.query.token || req.headers['x-access-token'];
-    if (token) {
-      const decoded = Authenticate.verifyToken(token);
-      if (decoded) {
-        req.decoded = decoded;
-        return next();
-      }
-      return res.status(401).send({ message: 'Token is invalid or has expired' });
-    }
-    return res.status(401).send({ message: 'Authentication failed. No token provided' });
+  static user(request, response, next) {
+    // validate user
+    account.tokenValid(request);
+    return next();
   }
 
   /**
-   * static method to verify if a user is a caterer or an admin,
-   * using decoded object from the request object
-   * @param {*} req
-   * @param {*} res
-   * @param {*} next
+   * static method to verify if a user is a caterer or an admin
+   * @param {object} request
+   * @param {object} response
+   * @param {object} next
+   * @throws {object} Error message and status code
+   * @returns {function} next
    */
-  static caterer(req, res, next) {
-    const { decoded } = req;
-    if ((decoded && decoded.user && decoded.user.accountType === 'caterer') ||
-    (decoded && decoded.user && decoded.user.accountType === 'admin')) {
-      return next();
-    }
-    return res.status(403).send({ message: 'Unauthorized Access' });
+  static caterer(request, response, next) {
+    // validate caterer / admin account
+    account.catererAdminValid(request);
+    return next();
   }
 
   /**
-   * static method to verify if a user is a customer,
-   * using decoded object from the request object
-   * @param {*} req
-   * @param {*} res
-   * @param {*} next
+   * static method to verify if a user is a customer
+   * @param {object} request
+   * @param {object} response
+   * @param {object} next
+   * @throws {object} Error message and status code
+   * @returns {function} next
    */
-  static customer(req, res, next) {
-    const { decoded } = req;
-    if (decoded && decoded.user && decoded.user.accountType === 'customer') {
-      return next();
-    }
-    return res.status(403).send({ message: 'Unauthorized Access' });
+  static customer(request, response, next) {
+    account.customerValid(request);
+    return next();
   }
 }
 

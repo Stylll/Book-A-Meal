@@ -251,7 +251,7 @@ describe('Test Suite for Meal Controller', () => {
         })
         .send({})
         .end((err, resp) => {
-          expect(resp.status).to.equal(404);
+          expect(resp.status).to.equal(400);
           expect(resp.body.message).to.equal('Meal does not exist');
           done();
         });
@@ -503,7 +503,7 @@ describe('Test Suite for Meal Controller', () => {
           'x-access-token': catererToken,
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(404);
+          expect(resp.status).to.equal(400);
           expect(resp.body.message).to.equal('Meal does not exist');
           done();
         });
