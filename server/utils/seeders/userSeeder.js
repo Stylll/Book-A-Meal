@@ -1,5 +1,8 @@
 import users from '../../db/users';
 
+/**
+ * template data store for users
+ */
 
 const validUser1 = {
   email: 'matthew@yahoo.com',
@@ -38,6 +41,7 @@ const invalidUser = {
 
 /**
  * inserts seed users into database for testing
+ * @param {object} user
  */
 const insertSeedUsers = (user) => {
   users.add(user);

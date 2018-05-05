@@ -4,8 +4,8 @@ import validateMenu from '../middlewares/menus/validateMenu';
 
 /**
  * Router to handle menu requests
- * @param {*} router router object from express
- * @returns {} response object
+ * @param {object} router router object from express
+ * @returns {object} menus router object
  */
 
 const menus = (router) => {

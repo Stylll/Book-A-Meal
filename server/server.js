@@ -6,7 +6,8 @@ import open from 'open';
 import routes from './routes';
 import trimmer from './utils/trimmer';
 
-/* eslint-disable no-console */
+/* eslint-disable no-console no-unused-vars */
+/* eslint-disable no-unused-vars */
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -36,7 +37,7 @@ app.use((err, req, res, next) => {
 // Listen at designated port
 app.listen(port, (err) => {
   if (err) {
-    console.log(err);
+    // log to file
   } else {
     open(address);
   }

@@ -4,8 +4,8 @@ import validateAccount from '../middlewares/users/validateAccount';
 
 /**
  * Router to handle order requests
- * @param {*} router router object from express
- * @returns {} response object
+ * @param {object} router router object from express
+ * @returns {object} orders router object
  */
 
 const orders = (router) => {

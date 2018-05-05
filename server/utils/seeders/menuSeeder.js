@@ -38,10 +38,17 @@ const currentMenu = {
   mealIds: [1, 2],
 };
 
+/**
+ * insert menu into menu table
+ * @param {object} menu
+ */
 const insertSeedMenu = (menu) => {
   Menus.add(menu);
 };
 
+/**
+ * truncate menus table
+ */
 const clearMenus = () => {
   Menus.truncate();
 };

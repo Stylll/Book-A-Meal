@@ -3,8 +3,8 @@ import validateUser from '../middlewares/users/validateUser';
 
 /**
  * Router to handle user requests
- * @param {*} router router object from express
- * @returns {} response object
+ * @param {object} router router object from express
+ * @returns {object} users router object
  */
 
 const users = (router) => {

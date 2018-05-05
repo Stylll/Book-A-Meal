@@ -19,8 +19,8 @@ const upload = multer({ storage });
 
 /**
  * Router to handle meal requests
- * @param {*} router router object from express
- * @returns {} response object
+ * @param {object} router router object from express
+ * @returns {object} meals router object
  */
 
 const meals = (router) => {

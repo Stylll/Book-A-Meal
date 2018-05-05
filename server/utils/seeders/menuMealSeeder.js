@@ -23,10 +23,17 @@ const existingMenuMeal = {
   mealId: 1,
 };
 
+/**
+ * insert menumeal into menumeal table
+ * @param {object} menuMeal
+ */
 const insertSeedMenuMeal = (menuMeal) => {
   MenuMeals.add(menuMeal);
 };
 
+/**
+ * truncate menumeals table
+ */
 const clearMenuMeals = () => {
   MenuMeals.truncate();
 };

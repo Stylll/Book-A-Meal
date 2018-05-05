@@ -48,10 +48,17 @@ const existingOrder = {
   userId: 1,
 };
 
+/**
+ * Inserts order into orders table
+ * @param {object} order
+ */
 const insertSeedOrder = (order) => {
   orders.add(order);
 };
 
+/**
+ * truncate table orders
+ */
 const clearOrders = () => {
   orders.truncate();
 };
