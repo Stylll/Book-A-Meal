@@ -8,12 +8,12 @@ dotenv.config();
 class CloudUpload {
   /**
    * Method to upload image file to cloudinary
-   * @param {*} src
+   * @param {string|file} source
    * @returns {Promise} promise
    */
-  static uploadImageToCloud(src) {
+  static uploadImageToCloud(source) {
     const resp = new Promise(async (resolve, reject) => {
-      await cloudinary.v2.uploader.upload(src, (err, res) => {
+      await cloudinary.v2.uploader.upload(source, (err, res) => {
         if (!err) {
           resolve(res.secure_url);
         }
@@ -25,12 +25,12 @@ class CloudUpload {
 
   /**
    * Method to validate image link and upload image
-   * @param {*} src
+   * @param {string|file} source
    * @returns {Promise}
    */
-  static uploadImage(src) {
-    if (!src || !src.trim()) return defaultImage;
-    const result = this.uploadImageToCloud(src).then(res => res).catch(error => error);
+  static uploadImage(source) {
+    if (!source || !source.trim()) return defaultImage;
+    const result = this.uploadImageToCloud(source).then(res => res).catch(error => error);
     return result;
   }
 }

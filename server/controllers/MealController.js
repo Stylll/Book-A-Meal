@@ -9,14 +9,15 @@ class MealController {
   /**
    * static method to handle meal post request.
    * creates meal.
-   * @param {*} req
-   * @param {*} res
+   * @param {object} request
+   * @param {object} response
+   * @returns {object} {meal, message} | {message}
    */
-  static async post(req, res) {
+  static async post(request, response) {
     let image = defaultImage;
     // upload image to cloudinary and get image link if image was passed
-    if (req.file && req.file.path) {
-      const result = await CloudUpload.uploadImage(req.file.path);
+    if (request.file && request.file.path) {
+      const result = await CloudUpload.uploadImage(request.file.path);
       if (result) {
         image = result;
       }
@@ -24,74 +25,82 @@ class MealController {
 
     // add meal to db
     const meal = meals.add({
-      name: req.body.name,
-      price: req.body.price,
+      name: request.body.name.trim(),
+      price: request.body.price,
       image,
-      userId: req.decoded.user.id,
+      userId: request.decoded.user.id,
     });
     // if meal exists and there's no error object in it
     if (meal && !meal.err) {
       // return new meal if save was successful
-      return res.status(201).send({ meal });
+      return response.status(201).send({ meal, message: 'Created successfully' });
     }
-    return res.status(500).send({ message: 'Internal Server Error' });
+    return response.status(500).send({ message: 'Internal Server Error' });
   }
 
   /**
    * Static method to handle meal put requests
    * updates meal using meal id
-   * @param {*} req
-   * @param {*} res
+   * @param {object} request
+   * @param {object} response
+   * @returns {object} {meal, message} | {message}
    */
-  static async put(req, res) {
+  static async put(request, response) {
     // get meal from the db
-    const oldMeal = { ...meals.get(parseInt(req.params.id, 10)) };
+    const oldMeal = { ...meals.get(parseInt(request.params.id, 10)) };
     if (oldMeal) {
       let { image } = oldMeal;
 
       // upload image to cloudinary and get image link if image was passed
-      if (req.file && req.file.path) {
-        const result = await CloudUpload.uploadImage(req.file.path);
+      if (request.file && request.file.path) {
+        const result = await CloudUpload.uploadImage(request.file.path);
         if (result) {
           image = result;
         }
       }
 
       // update oldMeal with new data if exists
-      oldMeal.name = req.body.name || oldMeal.name;
-      oldMeal.price = req.body.price || oldMeal.price;
+      oldMeal.name = (request.body.name && request.body.name.trim())
+        ? request.body.name.trim() : null;
+      oldMeal.price = request.body.price || oldMeal.price;
       oldMeal.image = image;
 
       // save updated data
       const updatedMeal = meals.update(oldMeal);
 
       if (updatedMeal && !updatedMeal.err) {
-        return res.status(200).send({ meal: updatedMeal });
+        return response.status(200).send({ meal: updatedMeal, message: 'Updated successfully' });
       }
-      return res.status(500).send({ message: 'Internal Server Error' });
+      return response.status(500).send({ message: 'Internal Server Error' });
     }
-    return res.status(404).send({ message: 'Meal does not exist' });
+    return response.status(404).send({ message: 'Meal does not exist' });
   }
 
   /**
    * static method to handle meal get request
-   * @param {*} req
-   * @param {*} res
+   * @param {object} request
+   * @param {object} response
+   * @returns {object} {meals} | {message}
    */
-  static get(req, res) {
-    const mealArray = meals.getAll();
-    res.status(200).send({ meals: mealArray });
+  static get(request, response) {
+    if (request.decoded.user.accountType === 'admin') {
+      const mealArray = meals.getAll();
+      return response.status(200).send({ meals: mealArray });
+    }
+    const mealArray = meals.getByUserId(request.decoded.user.id);
+    return response.status(200).send({ meals: mealArray });
   }
 
   /**
    * static method to handle meal delete request
-   * @param {*} req
-   * @param {*} res
+   * @param {object} request
+   * @param {object} response
+   * @returns {object} {message}
    */
-  static delete(req, res) {
-    meals.delete(parseInt(req.params.id, 10));
+  static delete(request, response) {
+    meals.delete(parseInt(request.params.id, 10));
 
-    res.status(204).send();
+    return response.status(200).send({ message: 'Meal deleted successfully' });
   }
 }
 

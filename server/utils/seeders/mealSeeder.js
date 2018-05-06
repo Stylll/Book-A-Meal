@@ -1,10 +1,14 @@
 import Meals from '../../db/meals';
 
+/**
+ * template data store for meals
+ */
+
 const defaultImage = 'https://res.cloudinary.com/styll/image/upload/v1524560568/foods.jpg';
 
 const validMeal1 = {
   name: 'Rice and Stew',
-  price: 1500,
+  price: 3500,
   image: 'https://res.cloudinary.com/styll/image/upload/v1524560568/foods.jpg',
   userId: 1,
 };
@@ -31,6 +35,7 @@ const existingMeal = {
 
 /**
  * inserts seed meal into database for testing
+ * @param {object} meal
  */
 const insertSeedMeal = (meal) => {
   Meals.add(meal);

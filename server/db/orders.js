@@ -6,13 +6,13 @@ const OrderStore = [];
 
 /**
  * Menu model class
- * Performs CRUD operations on a order
+ * Performs CRUD operations on an order
  */
 class Orders {
   /**
    * Static method to add an order to the db
    * @param {object} order
-   * @returns {object} createdOrder
+   * @returns {object} {order} | {err}
    */
   static add(order) {
     // check if meal id is provided
@@ -79,7 +79,7 @@ class Orders {
   /**
    * Static method to update an order
    * @param {object} order
-   * @returns {object} updatedOrder
+   * @returns {object|null} updatedOrder | {err}
    */
   static update(order) {
     // check if order id is provided
@@ -160,7 +160,7 @@ class Orders {
   /**
    * Static method to return orders using meal id
    * @param {integer} id
-   * @returns {array|null} orders | null
+   * @returns {array|null} orders
    */
   static getByMealId(mealId) {
     const id = parseInt(mealId, 10);
@@ -191,6 +191,22 @@ class Orders {
     const id = parseInt(userId, 10);
     if (Number.isInteger(id)) {
       return OrderStore.filter(order => order.userId === id);
+    }
+    return null;
+  }
+
+  /**
+   * static method to get orders using caterer id
+   * @param {integer} catererId
+   * @return {array|null} orders
+   */
+  static getByCatererId(catererId) {
+    const id = parseInt(catererId, 10);
+    if (Number.isInteger(id)) {
+      const catererMeals = meals.getByUserId(id);
+      const mealIds = [];
+      catererMeals.forEach(meal => mealIds.push(meal.id));
+      return OrderStore.filter(order => (mealIds.indexOf(order.mealId) !== -1));
     }
     return null;
   }

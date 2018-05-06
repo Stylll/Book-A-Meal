@@ -7,16 +7,17 @@ import Authenticate from '../utils/authentication/authenticate';
 class UserController {
   /**
    * static method to handle user signup
-   * @param {*} req
-   * @param {*} res
+   * @param {object} request
+   * @param {object} response
+   * @returns {object} {user, token, message} | {message}
    */
-  static signup(req, res) {
+  static signup(request, response) {
     // add user to db
     const user = users.add({
-      email: req.body.email,
-      username: req.body.username,
-      password: req.body.password,
-      accountType: req.body.accountType,
+      email: request.body.email,
+      username: request.body.username,
+      password: request.body.password,
+      accountType: request.body.accountType,
     });
     // check if it was successful
     if (user) {
@@ -26,27 +27,30 @@ class UserController {
         email: user.email,
         username: user.username,
         accountType: user.accountType,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
       };
 
       // get jwt for user
       const token = Authenticate.authenticateUser(newUser);
 
-      return res.status(201).send({ user: newUser, token });
+      return response.status(201).send({ user: newUser, token, message: 'Created successfully' });
     }
-    return res.status(500).send({ message: 'Internal Server Error' });
+    return response.status(500).send({ message: 'Internal Server Error' });
   }
 
   /**
    * Static method to handle signin requests
-   * @param {*} req
-   * @param {*} res
+   * @param {object} request
+   * @param {object} response
+   * @returns {object} {user, token, message} | {message}
    */
-  static signin(req, res) {
+  static signin(request, response) {
     // get user by email
-    const user = users.getByEmail(req.body.email);
+    const user = users.getByEmail(request.body.email);
     if (user) {
       // if user exists, then compare the passwords
-      if (bcrypt.compareSync(req.body.password, user.password)) {
+      if (bcrypt.compareSync(request.body.password, user.password)) {
         // if password is correct, create the user instance to return without the password value
         const properUser = {
           id: user.id,
@@ -58,11 +62,11 @@ class UserController {
         // get authentication token for user
         const token = Authenticate.authenticateUser(properUser);
 
-        return res.status(200).send({ user: properUser, token });
+        return response.status(200).send({ user: properUser, token, message: 'Login successful' });
       }
-      return res.status(401).send({ message: 'Email or Password is incorrect' });
+      return response.status(401).send({ message: 'Email or Password is incorrect' });
     }
-    return res.status(401).send({ message: 'Email or Password is incorrect' });
+    return response.status(401).send({ message: 'Email or Password is incorrect' });
   }
 }
 

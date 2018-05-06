@@ -4,18 +4,18 @@ import validateMenu from '../middlewares/menus/validateMenu';
 
 /**
  * Router to handle menu requests
- * @param {*} router router object from express
- * @returns {} response object
+ * @param {object} router router object from express
+ * @returns {object} menus router object
  */
 
 const menus = (router) => {
   // router to handle menu post request
-  router.post('/menu', validateAccount.user, validateAccount.caterer, MenuController.post);
+  router.post('/menu', validateAccount.user, validateAccount.caterer, validateMenu.post, MenuController.post);
 
   // router to handle meal post request
-  router.post(
-    '/menu/:id/meals', validateAccount.user,
-    validateAccount.caterer, validateMenu.postMeal, MenuController.postMeal,
+  router.put(
+    '/menu/:id', validateAccount.user,
+    validateAccount.caterer, validateMenu.put, MenuController.put,
   );
 
   // router to handle menu get request

@@ -15,6 +15,8 @@ import {
   existingUser,
   insertSeedUsers,
   validUser1,
+  validUser2,
+  adminUser,
 } from '../../utils/seeders/userSeeder';
 
 
@@ -23,10 +25,13 @@ describe('Test Suite for Meal Controller', () => {
   // create existing users
   insertSeedUsers(existingUser);
   insertSeedUsers(validUser1);
+  insertSeedUsers(validUser2);
+  insertSeedUsers(adminUser);
 
   // generate access token for users
   const catererToken = Authenticate.authenticateUser({ id: 1, ...existingUser });
   const customerToken = Authenticate.authenticateUser({ id: 2, ...validUser1 });
+  const adminToken = Authenticate.authenticateUser({ id: 4, ...adminUser });
 
   describe('POST: Create Meal - /api/v1/meals', () => {
     // before each hook to clean and insert data to the db
@@ -68,7 +73,7 @@ describe('Test Suite for Meal Controller', () => {
         })
         .send({})
         .end((err, resp) => {
-          expect(resp.status).to.equal(401);
+          expect(resp.status).to.equal(403);
           expect(resp.body.message).to.equal('Unauthorized Access');
           done();
         });
@@ -190,6 +195,7 @@ describe('Test Suite for Meal Controller', () => {
           expect(resp.body.meal.image).to.equal(defaultImage);
           expect(resp.body.meal).to.haveOwnProperty('userId');
           expect(resp.body.meal.userId).to.not.equal(null);
+          expect(resp.body.meal.userId).to.equal(1);
           done();
         });
     });
@@ -235,7 +241,7 @@ describe('Test Suite for Meal Controller', () => {
         })
         .send({})
         .end((err, resp) => {
-          expect(resp.status).to.equal(401);
+          expect(resp.status).to.equal(403);
           expect(resp.body.message).to.equal('Unauthorized Access');
           done();
         });
@@ -249,7 +255,7 @@ describe('Test Suite for Meal Controller', () => {
         })
         .send({})
         .end((err, resp) => {
-          expect(resp.status).to.equal(404);
+          expect(resp.status).to.equal(400);
           expect(resp.body.message).to.equal('Meal does not exist');
           done();
         });
@@ -343,18 +349,39 @@ describe('Test Suite for Meal Controller', () => {
           expect(resp.body.meal.image).to.equal(defaultImage);
           expect(resp.body.meal).to.haveOwnProperty('userId');
           expect(resp.body.meal.userId).to.not.equal(null);
+          expect(resp.body.meal.userId).to.equal(1);
+          done();
+        });
+    });
+
+    it('should not update if caterer is not the creator of the meal', (done) => {
+      insertSeedMeal({ ...validMeal2, userId: 3 });
+      validMeal2.name = 'Jollof rice';
+      validMeal2.price = 4030;
+      request(app)
+        .put('/api/v1/meals/2')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .send({
+          name: validMeal1.name,
+          price: validMeal2.price,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(403);
+          expect(resp.body.message).to.equal('Unauthorized access');
           done();
         });
     });
   });
 
-  describe('GET: Get Meals = /api/v1/meals', () => {
+  describe('GET: Get Meals - /api/v1/meals', () => {
     // before each hook to clean and insert data to the db
     beforeEach(() => {
       clearMeals();
       insertSeedMeal(existingMeal);
       insertSeedMeal(validMeal1);
-      insertSeedMeal(validMeal2);
+      insertSeedMeal({ ...validMeal2, userId: 3 });
     });
 
     it('should require an authentication token', (done) => {
@@ -387,13 +414,13 @@ describe('Test Suite for Meal Controller', () => {
           'x-access-token': customerToken,
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(401);
+          expect(resp.status).to.equal(403);
           expect(resp.body.message).to.equal('Unauthorized Access');
           done();
         });
     });
 
-    it('should return an array of meals', (done) => {
+    it('should return an array of meals created by the logged in user', (done) => {
       request(app)
         .get('/api/v1/meals')
         .set({
@@ -404,8 +431,50 @@ describe('Test Suite for Meal Controller', () => {
           expect(resp.body.meals).to.be.an('array');
           expect(resp.body.meals[0])
             .to.have.all.deep.keys('id', 'name', 'price', 'image', 'userId', 'createdAt', 'updatedAt');
-          expect(resp.body.meals.length).to.be.greaterThan(1);
-          expect(resp.body.meals[0].id).to.equal(1);
+          expect(resp.body.meals.length).to.equal(2);
+          expect(resp.body.meals[0].name).to.equal(existingMeal.name);
+          expect(resp.body.meals[1].name).to.equal(validMeal1.name);
+          expect(resp.body.meals[1].userId).to.equal(1);
+          expect(resp.body.meals[1].price).to.equal(validMeal1.price);
+          done();
+        });
+    });
+
+    it('should return all meals for an admin user', (done) => {
+      request(app)
+        .get('/api/v1/meals')
+        .set({
+          'x-access-token': adminToken,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(200);
+          expect(resp.body.meals).to.be.an('array');
+          expect(resp.body.meals[0])
+            .to.have.all.deep.keys('id', 'name', 'price', 'image', 'userId', 'createdAt', 'updatedAt');
+          expect(resp.body.meals.length).to.equal(3);
+          expect(resp.body.meals[0].name).to.equal(existingMeal.name);
+          expect(resp.body.meals[1].name).to.equal(validMeal1.name);
+          expect(resp.body.meals[2].name).to.equal(validMeal2.name);
+          expect(resp.body.meals[0].price).to.equal(existingMeal.price);
+          expect(resp.body.meals[1].price).to.equal(validMeal1.price);
+          expect(resp.body.meals[2].price).to.equal(validMeal2.price);
+          done();
+        });
+    });
+
+    it('should not return null objects', (done) => {
+      meals.delete(1);
+      request(app)
+        .get('/api/v1/meals')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(200);
+          expect(resp.body.meals).to.be.an('array');
+          expect(resp.body.meals[0]).to.not.equal(null);
+          expect(resp.body.meals.length).to.equal(1);
+          expect(resp.body.meals[0].id).to.equal(2);
           done();
         });
     });
@@ -417,7 +486,7 @@ describe('Test Suite for Meal Controller', () => {
       clearMeals();
       insertSeedMeal(existingMeal);
       insertSeedMeal(validMeal1);
-      insertSeedMeal(validMeal2);
+      insertSeedMeal({ ...validMeal2, userId: 3 });
     });
 
     it('should require an authentication token', (done) => {
@@ -450,7 +519,7 @@ describe('Test Suite for Meal Controller', () => {
           'x-access-token': customerToken,
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(401);
+          expect(resp.status).to.equal(403);
           expect(resp.body.message).to.equal('Unauthorized Access');
           done();
         });
@@ -463,7 +532,7 @@ describe('Test Suite for Meal Controller', () => {
           'x-access-token': catererToken,
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(404);
+          expect(resp.status).to.equal(400);
           expect(resp.body.message).to.equal('Meal does not exist');
           done();
         });
@@ -476,8 +545,22 @@ describe('Test Suite for Meal Controller', () => {
           'x-access-token': catererToken,
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(204);
+          expect(resp.status).to.equal(200);
+          expect(resp.body.message).to.equal('Meal deleted successfully');
           expect(meals.getByName(existingMeal.name)).to.equal(null);
+          done();
+        });
+    });
+
+    it('should not delete meal if the caterer is not the creator of the meal', (done) => {
+      request(app)
+        .delete('/api/v1/meals/3')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(403);
+          expect(resp.body.message).to.equal('Unauthorized access');
           done();
         });
     });

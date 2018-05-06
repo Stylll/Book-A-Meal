@@ -7,7 +7,7 @@ class Meals {
   /**
    * static method to add meal to the db
    * @param {object} meal
-   * @returns {object} newly added meal
+   * @returns {object} {added meal} | {err}
    */
   static add(meal) {
     // check if meal name is provided
@@ -47,7 +47,7 @@ class Meals {
 
   /**
    * static method to add bulk meals to the db
-   * @param {*} mealArray
+   * @param {array} mealArray
    */
   static addBulk(mealArray) {
     mealArray.forEach((meal) => {
@@ -57,8 +57,8 @@ class Meals {
 
   /**
    * static method to update meal
-   * @param {*} meal
-   * @return {object} updated meal
+   * @param {object} meal
+   * @return {object} {updated meal} | {err}
    */
   static update(meal) {
     // if meal does not exist using id
@@ -67,7 +67,8 @@ class Meals {
     }
 
     // check if meal name exists
-    if (meal.name.trim() && MealStore.filter(x => x.name === meal.name.trim()).length > 0) {
+    if (meal.name && meal.name.trim() &&
+    MealStore.filter(x => x.name === meal.name.trim()).length > 0) {
       return { err: new Error('Meal name already exists') };
     }
 
@@ -95,7 +96,7 @@ class Meals {
 
   /**
    * static method to delete meal from meals using id
-   * @param {*} id
+   * @param {integer} id
    */
   static delete(id) {
     delete MealStore[id - 1];
@@ -103,7 +104,7 @@ class Meals {
 
   /**
    * static method to get meal by meal id
-   * @param {*} id
+   * @param {integer} id
    * @returns {object|null} meal
    */
   static get(id) {
@@ -128,9 +129,22 @@ class Meals {
 
   /**
    * get all meals in the meals table
+   * @returns [array] meals
    */
   static getAll() {
-    return MealStore;
+    return MealStore.filter(meal => meal != null);
+  }
+
+  /**
+   * get all meals using the user id
+   * @param {integer} userId
+   * @returns {array | null} [meals]
+   */
+  static getByUserId(userId) {
+    if (Number.isInteger(parseInt(userId, 10))) {
+      return MealStore.filter(meal => meal != null).filter(meal => meal.userId === userId);
+    }
+    return null;
   }
 
   /**

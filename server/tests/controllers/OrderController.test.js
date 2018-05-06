@@ -7,12 +7,19 @@ import {
   insertSeedUsers,
   validUser1,
   validUser2,
+  adminUser,
 } from '../../utils/seeders/userSeeder';
 import {
   existingMeal,
   clearMeals,
   insertSeedMeal,
+  validMeal1,
+  validMeal2,
 } from '../../utils/seeders/mealSeeder';
+import {
+  insertSeedMenu,
+  currentMenu,
+} from '../../utils/seeders/menuSeeder';
 import {
   existingOrder,
   clearOrders,
@@ -28,10 +35,13 @@ describe('Test Suite for Order Controller', () => {
   insertSeedUsers(existingUser);
   insertSeedUsers(validUser1);
   insertSeedUsers(validUser2);
+  insertSeedUsers(adminUser);
 
   // generate access token for users
   const catererToken = Authenticate.authenticateUser({ id: 1, ...existingUser });
   const customerToken = Authenticate.authenticateUser({ id: 2, ...validUser1 });
+  const catererToken2 = Authenticate.authenticateUser({ id: 3, ...validUser2 });
+  const adminToken = Authenticate.authenticateUser({ id: 4, ...adminUser });
 
   describe('POST: Create Order - /api/orders', () => {
     // before each hook to clean and insert data to the db
@@ -39,6 +49,9 @@ describe('Test Suite for Order Controller', () => {
       clearMeals();
       clearOrders();
       insertSeedMeal(existingMeal);
+      insertSeedMenu(currentMenu);
+      insertSeedMeal(validMeal1);
+      insertSeedMeal(validMeal2);
       insertSeedOrder(existingOrder);
     });
 
@@ -75,7 +88,7 @@ describe('Test Suite for Order Controller', () => {
         })
         .send({})
         .end((err, resp) => {
-          expect(resp.status).to.equal(401);
+          expect(resp.status).to.equal(403);
           expect(resp.body.message).to.equal('Unauthorized Access');
           done();
         });
@@ -107,59 +120,24 @@ describe('Test Suite for Order Controller', () => {
           mealId: 99,
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(404);
+          expect(resp.status).to.equal(400);
           expect(resp.body.message).to.equal('Meal does not exist');
           done();
         });
     });
 
-    it('should require price', (done) => {
+    it('should check if meal exists in the days menu', (done) => {
       request(app)
         .post('/api/v1/orders')
         .set({
           'x-access-token': customerToken,
         })
         .send({
-          mealId: 1,
-          price: 0,
+          mealId: 3,
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Price is required');
-          done();
-        });
-    });
-
-    it('should require a valid price', (done) => {
-      request(app)
-        .post('/api/v1/orders')
-        .set({
-          'x-access-token': customerToken,
-        })
-        .send({
-          mealId: validOrder1.mealId,
-          price: 'abc',
-        })
-        .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Price is invalid');
-          done();
-        });
-    });
-
-    it('should require a price above one', (done) => {
-      request(app)
-        .post('/api/v1/orders')
-        .set({
-          'x-access-token': customerToken,
-        })
-        .send({
-          mealId: validOrder1.mealId,
-          price: 1,
-        })
-        .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Price must be greater than one');
+          expect(resp.body.message).to.equal('Meal does not exist in menu');
           done();
         });
     });
@@ -172,7 +150,6 @@ describe('Test Suite for Order Controller', () => {
         })
         .send({
           mealId: validOrder1.mealId,
-          price: validOrder1.price,
           quantity: 0,
         })
         .end((err, resp) => {
@@ -190,7 +167,6 @@ describe('Test Suite for Order Controller', () => {
         })
         .send({
           mealId: validOrder1.mealId,
-          price: validOrder1.price,
           quantity: 'abc',
         })
         .end((err, resp) => {
@@ -211,6 +187,10 @@ describe('Test Suite for Order Controller', () => {
           expect(resp.status).to.equal(201);
           expect(resp.body.order).to.be.an('object');
           expect(resp.body.order.status).to.equal('pending');
+          expect(resp.body.order.mealId).to.equal(validOrder1.mealId);
+          expect(resp.body.order.price).to.equal(existingMeal.price);
+          expect(resp.body.order.quantity).to.equal(validOrder1.quantity);
+          expect(resp.body.order.cost).to.equal(existingMeal.price * validOrder1.quantity);
           done();
         });
     });
@@ -227,11 +207,11 @@ describe('Test Suite for Order Controller', () => {
           expect(resp.body.order).to.be.an('object');
           expect(resp.body.order.id).to.equal(2);
           expect(resp.body.order.mealId).to.equal(validOrder1.mealId);
-          expect(resp.body.order.price).to.equal(validOrder1.price);
+          expect(resp.body.order.price).to.equal(existingMeal.price);
           expect(resp.body.order.quantity).to.equal(validOrder1.quantity);
           expect(resp.body.order.status).to.equal('pending');
           expect(resp.body.order.userId).to.equal(2);
-          expect(resp.body.order.cost).to.equal(validOrder1.price * validOrder1.quantity);
+          expect(resp.body.order.cost).to.equal(existingMeal.price * validOrder1.quantity);
           expect(resp.body.order).to.haveOwnProperty('createdAt');
           expect(resp.body.order).to.haveOwnProperty('updatedAt');
           done();
@@ -245,6 +225,9 @@ describe('Test Suite for Order Controller', () => {
       clearMeals();
       clearOrders();
       insertSeedMeal(existingMeal);
+      insertSeedMeal(validMeal1);
+      insertSeedMenu(currentMenu);
+      insertSeedMeal(validMeal2);
       insertSeedOrder({ ...existingOrder, userId: 2 });
       insertSeedOrder({ ...validOrder1, userId: 3 });
     });
@@ -296,8 +279,24 @@ describe('Test Suite for Order Controller', () => {
         })
         .send({})
         .end((err, resp) => {
-          expect(resp.status).to.equal(404);
+          expect(resp.status).to.equal(400);
           expect(resp.body.message).to.equal('Order does not exist');
+          done();
+        });
+    });
+
+    it('should check if meal exists in the days menu', (done) => {
+      request(app)
+        .put('/api/v1/orders/1')
+        .set({
+          'x-access-token': customerToken,
+        })
+        .send({
+          mealId: 3,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(400);
+          expect(resp.body.message).to.equal('Meal does not exist in menu');
           done();
         });
     });
@@ -361,7 +360,7 @@ describe('Test Suite for Order Controller', () => {
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(403);
-          expect(resp.body.message).to.equal('Can only change status to canceled');
+          expect(resp.body.message).to.equal('Can only update status with canceled or pending');
           done();
         });
     });
@@ -382,7 +381,7 @@ describe('Test Suite for Order Controller', () => {
         });
     });
 
-    it('should allow caterer change another users order', (done) => {
+    it('should allow caterer change another users order if the status is complete', (done) => {
       request(app)
         .put('/api/v1/orders/2')
         .set({
@@ -414,7 +413,7 @@ describe('Test Suite for Order Controller', () => {
         });
     });
 
-    it('should allow caterer updated status to canceled', (done) => {
+    it('should allow caterer who created the meal in the order update status to canceled', (done) => {
       request(app)
         .put('/api/v1/orders/1')
         .set({
@@ -430,7 +429,39 @@ describe('Test Suite for Order Controller', () => {
         });
     });
 
-    it('should allow caterer update status to complete', (done) => {
+    it('should not allow caterer who did not created the meal in the order update status to canceled', (done) => {
+      request(app)
+        .put('/api/v1/orders/1')
+        .set({
+          'x-access-token': catererToken2,
+        })
+        .send({
+          status: 'canceled',
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(403);
+          expect(resp.body.message).to.equal('Unauthorized access');
+          done();
+        });
+    });
+
+    it('should allow admin update status to canceled', (done) => {
+      request(app)
+        .put('/api/v1/orders/1')
+        .set({
+          'x-access-token': adminToken,
+        })
+        .send({
+          status: 'canceled',
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(200);
+          expect(resp.body.order.status).to.equal('canceled');
+          done();
+        });
+    });
+
+    it('should allow caterer who created the meal in the order update status to complete', (done) => {
       request(app)
         .put('/api/v1/orders/1')
         .set({
@@ -442,6 +473,164 @@ describe('Test Suite for Order Controller', () => {
         .end((err, resp) => {
           expect(resp.status).to.equal(200);
           expect(resp.body.order.status).to.equal('complete');
+          done();
+        });
+    });
+
+    it('should not allow caterer who did not created the meal in the order update status to complete', (done) => {
+      request(app)
+        .put('/api/v1/orders/1')
+        .set({
+          'x-access-token': catererToken2,
+        })
+        .send({
+          status: 'complete',
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(403);
+          expect(resp.body.message).to.equal('Unauthorized access');
+          done();
+        });
+    });
+
+    it('should allow admin update status to complete', (done) => {
+      request(app)
+        .put('/api/v1/orders/1')
+        .set({
+          'x-access-token': adminToken,
+        })
+        .send({
+          status: 'complete',
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(200);
+          expect(resp.body.order.status).to.equal('complete');
+          done();
+        });
+    });
+
+    it('should allow customer update meal id and quantity', (done) => {
+      request(app)
+        .put('/api/v1/orders/1')
+        .set({
+          'x-access-token': customerToken,
+        })
+        .send({
+          mealId: 2,
+          quantity: 5,
+          status: 'canceled',
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(200);
+          expect(resp.body.order.mealId).to.equal(2);
+          expect(resp.body.order.quantity).to.equal(5);
+          expect(resp.body.order.status).to.equal('canceled');
+          expect(resp.body.order.cost).to.equal(validMeal1.price * 5);
+          done();
+        });
+    });
+
+    it('should not update meal id and quantity for caterer', (done) => {
+      request(app)
+        .put('/api/v1/orders/1')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .send({
+          mealId: 2,
+          quantity: 5,
+          status: 'pending',
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(403);
+          expect(resp.body.message).to.equal('Only customers are allowed to change meal option or quantity');
+          done();
+        });
+    });
+
+    it('should not update meal id and quantity for admin', (done) => {
+      request(app)
+        .put('/api/v1/orders/1')
+        .set({
+          'x-access-token': adminToken,
+        })
+        .send({
+          mealId: 2,
+          quantity: 5,
+          status: 'pending',
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(403);
+          expect(resp.body.message).to.equal('Only customers are allowed to change meal option or quantity');
+          done();
+        });
+    });
+
+    it('should require a valid meal id if provided', (done) => {
+      request(app)
+        .put('/api/v1/orders/1')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .send({
+          mealId: 'abc',
+          quantity: 5,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(400);
+          expect(resp.body.message).to.equal('Meal id is invalid');
+          done();
+        });
+    });
+
+    it('should require an existing meal id if provided', (done) => {
+      request(app)
+        .put('/api/v1/orders/1')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .send({
+          mealId: 99,
+          quantity: 5,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(400);
+          expect(resp.body.message).to.equal('Meal does not exist');
+          done();
+        });
+    });
+
+    it('should require a valid quantity if provided', (done) => {
+      request(app)
+        .put('/api/v1/orders/1')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .send({
+          mealId: 1,
+          quantity: 'abc',
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(400);
+          expect(resp.body.message).to.equal('Quantity is invalid');
+          done();
+        });
+    });
+
+    it('should require a quantity above zero if provided', (done) => {
+      request(app)
+        .put('/api/v1/orders/1')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .send({
+          mealId: 1,
+          quantity: -3,
+          status: 'pending',
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(400);
+          expect(resp.body.message).to.equal('Quantity should be greater than zero');
           done();
         });
     });
@@ -505,7 +694,29 @@ describe('Test Suite for Order Controller', () => {
         });
     });
 
-    it('should return an array of all orders to the caterer', (done) => {
+    it('should return an array of all orders to the admin', (done) => {
+      request(app)
+        .get('/api/v1/orders')
+        .set({
+          'x-access-token': adminToken,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(200);
+          expect(resp.body.orders).to.be.an('array');
+          expect(resp.body.orders.length).to.equal(4);
+          expect(resp.body.orders[3].id).to.equal(4);
+          expect(resp.body.orders[3].mealId).to.equal(1);
+          expect(resp.body.orders[3].meal.name).to.equal('Curry Rice');
+          expect(resp.body.orders[3].status).to.equal('pending');
+          expect(resp.body.orders[3].image).to.not.equal(null);
+          expect(resp.body.orders[3].cost).to.equal(4500);
+          expect(resp.body.orders[3]).to.haveOwnProperty('createdAt');
+          expect(resp.body.orders[3]).to.haveOwnProperty('updatedAt');
+          done();
+        });
+    });
+
+    it('should return an array of all orders with meals created by the caterer', (done) => {
       request(app)
         .get('/api/v1/orders')
         .set({
@@ -523,6 +734,20 @@ describe('Test Suite for Order Controller', () => {
           expect(resp.body.orders[3].cost).to.equal(4500);
           expect(resp.body.orders[3]).to.haveOwnProperty('createdAt');
           expect(resp.body.orders[3]).to.haveOwnProperty('updatedAt');
+          done();
+        });
+    });
+
+    it('should not return any record if meal in orders was not created by caterer', (done) => {
+      request(app)
+        .get('/api/v1/orders')
+        .set({
+          'x-access-token': catererToken2,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(200);
+          expect(resp.body.orders).to.be.an('array');
+          expect(resp.body.orders.length).to.equal(0);
           done();
         });
     });

@@ -1,6 +1,5 @@
 import { isEmpty } from 'lodash';
 import menus from '../db/menus';
-import menuMeals from '../db/menuMeals';
 import { getNormalDate } from '../utils/dateBeautifier';
 import menuUtils from '../utils/menu/menuUtils';
 
@@ -12,66 +11,78 @@ class MenuController {
    * static method to handle menu post requests
    * creates new menu
    * returns menu
-   * @param {*} req
-   * @param {*} res
+   * @param {object} request
+   * @param {object} response
+   * @returns {object} {menu, message} | {message}
    */
-  static post(req, res) {
+  static post(request, response) {
     const date = getNormalDate(new Date());
-    const newMenu = menus.add({ date, userId: req.decoded.user.id });
+    const uniqueIds = new Set(request.body.mealIds.sort());
+    const mealIds = [...uniqueIds];
+    const newMenu = menus.add({ date, mealIds, userId: request.decoded.user.id });
     if (newMenu && !newMenu.err) {
-      return res.status(201).send({ menu: newMenu });
+      return response.status(201).send({ menu: newMenu, message: 'Created successfully' });
     }
 
-    return res.status(500).send({ message: 'Internal Server Error' });
+    return response.status(500).send({ message: 'Internal Server Error' });
   }
 
   /**
-   * Static method to handle post meal requests
-   * adds meal to a menu
-   * returns meal object
-   * @param {*} req
-   * @param {*} res
+   * Static method to handle put menu requests
+   * updates meals in a menu
+   * returns menu object
+   * @param {object} request
+   * @param {object} response
+   * @returns {object} {menu, message} | {message}
    */
-  static postMeal(req, res) {
-    // create meal object
-    const meal = {
-      menuId: parseInt(req.params.id, 10),
-      mealId: parseInt(req.body.mealId, 10),
-    };
-
-    // save meal in the db
-    const newMeal = menuMeals.add(meal);
-
-    // return new meal if save was successful
-    if (newMeal && !newMeal.err) {
-      return res.status(201).send({ menuMeal: newMeal });
+  static put(request, response) {
+    const oldMenu = menus.get(parseInt(request.params.id, 10));
+    let ids = [...oldMenu, ...request.body.mealIds];
+    /**
+     * if the user is an admin, then he can remove and add meal options
+     * else, caterers can only add meal options
+     */
+    if (request.decoded.user.accountType === 'admin') {
+      ids = [...request.body.mealIds];
     }
-    return res.status(500).send({ message: 'Internal Server Error' });
+
+    const uniqueIds = new Set(ids.sort());
+    const mealIds = [...uniqueIds];
+    const newMenu = menus.update({ id: oldMenu.id, mealIds });
+
+    if (newMenu && !newMenu.err) {
+      return response.status(201).send({ menu: newMenu, message: 'Updated successfully' });
+    }
+
+    return response.status(500).send({ message: 'Internal Server Error' });
   }
 
   /**
    * Static method to handle get menu requests
    * returns an array of menus for caterer
    * returns an object of current day's menu for customer
-   * @param {*} req
-   * @param {*} res
+   * @param {object} request
+   * @param {object} response
+   * @returns {object} {menus} | {message}
    */
-  static get(req, res) {
-    const { accountType } = req.decoded.user;
+  static get(request, response) {
+    const { accountType } = request.decoded.user;
 
     /**
      * if accounttype is caterer,
      * then we get all menus in the db
      * and return them as an array
      */
-    if (accountType === 'caterer') {
+    if (accountType === 'caterer' || accountType === 'admin') {
       const menuList = [...menus.getAll()];
       if (menuList.length > 0) {
-        const properMenuList = menuUtils.buildMenus(menuList);
-        return res.status(200).send({ menus: properMenuList });
+        const properMenuList = (accountType === 'caterer') ?
+          menuUtils.buildMenus(menuList, request.decoded.user.id) : menuUtils.buildMenus(menuList);
+        return response.status(200).send({ menus: properMenuList });
       }
-      return res.status(200).send({ menus: [] });
+      return response.status(200).send({ menus: [] });
     }
+
     /**
      * accounttype is customer,
      * we get the menu for current date
@@ -81,12 +92,12 @@ class MenuController {
       const menuObject = { ...menus.getByDate(new Date()) };
       if (!isEmpty(menuObject)) {
         const properMenuObject = menuUtils.buildMenu(menuObject);
-        return res.status(200).send({ menu: properMenuObject });
+        return response.status(200).send({ menu: properMenuObject });
       }
-      return res.status(404).send({ message: 'Menu for the day not set' });
+      return response.status(404).send({ message: 'Menu for the day not set' });
     }
 
-    return res.status(500).send({ message: 'Internal Server Error' });
+    return response.status(500).send({ message: 'Internal Server Error' });
   }
 }
 
