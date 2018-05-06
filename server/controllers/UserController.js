@@ -11,9 +11,11 @@ class UserController {
    * @param {object} response
    * @returns {object} {user, token, message} | {message}
    */
-  static signup(request, response) {
+  static async signup(request, response) {
     // add user to db
-    const user = users.add({
+
+    console.log('entering controller');
+    const user = await users.add({
       email: request.body.email,
       username: request.body.username,
       password: request.body.password,
@@ -45,9 +47,9 @@ class UserController {
    * @param {object} response
    * @returns {object} {user, token, message} | {message}
    */
-  static signin(request, response) {
+  static async signin(request, response) {
     // get user by email
-    const user = users.getByEmail(request.body.email);
+    const user = await users.getByEmail(request.body.email);
     if (user) {
       // if user exists, then compare the passwords
       if (bcrypt.compareSync(request.body.password, user.password)) {

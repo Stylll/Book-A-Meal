@@ -19,6 +19,10 @@ export default {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      accountType: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       resetPasswordToken: {
         type: Sequelize.STRING,
         allowNull: true,

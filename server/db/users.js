@@ -1,10 +1,5 @@
-import bcrypt from 'bcrypt';
-import validator from 'validator';
-import generateId from '../utils/generateId';
-
-
-// variable to store the user records.
-const UserStore = [];
+import { isEmpty } from 'lodash';
+import { Users as UserModel } from '../models';
 
 class Users {
   /**
@@ -12,40 +7,15 @@ class Users {
    * @param {object} user
    * @returns {object} newly added user | {err}
    */
-  static add(user) {
-    // if user email is not provided
-    if (!user.email.trim()) return { err: new Error('Email is required') };
-
-    // if user email is not valid
-    if (!validator.isEmail(user.email.trim())) return { err: new Error('Email is invalid') };
-
-    // if user email exists
-    if (UserStore.filter(x => x.email === user.email.trim()).length > 0) return { err: new Error('Email exists') };
-
-    // if username is not provided
-    if (!user.username.trim()) return { err: new Error('Username is required') };
-
-    // if username exists
-    if (UserStore.filter(x => x.username === user.username.trim()).length > 0) {
-      return { err: new Error('Username exists') };
-    }
-
-    // if password is not provided
-    if (!user.password.trim()) return { err: new Error('Password is required') };
-
-    // if password is invalid
-    if (user.password.trim().length <= 5) return { err: new Error('Password must have atleast 5 characters') };
-
-    // add the user to the db
-    const newUser = { ...user };
-    newUser.password = bcrypt.hashSync(newUser.password, 10); // hash user password
-    newUser.id = generateId(UserStore);
-    newUser.createdAt = new Date();
-    newUser.updatedAt = new Date();
-    newUser.accountType = newUser.accountType || 'customer';
-    UserStore.push(newUser);
-
-    return newUser;
+  static async add(user) {
+    return UserModel.create(user)
+      .then((newUser) => {
+        if (newUser) {
+          return newUser.dataValues;
+        }
+        return null;
+      })
+      .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
 
   /**
@@ -65,22 +35,20 @@ class Users {
    * @return {object} updated user | {err}
    */
   static update(user) {
-    // if password is not provided
-    if (!user.password.trim()) return { err: new Error('Password is required') };
-
-    // if password is invalid
-    if (user.password.trim().length <= 5) return { err: new Error('Password must have atleast 5 characters') };
-
-    // if user exists in the db
-    if (UserStore[user.id - 1]) {
-      const updateUser = UserStore[user.id - 1];
-      updateUser.password = bcrypt.hashSync(updateUser.password, 10); // hash user password
-      updateUser.updatedAt = new Date();
-      UserStore[updateUser.id - 1] = updateUser;
-      return updateUser;
-    }
-    // else return null
-    return { err: new Error('User does not exist') };
+    return UserModel.findById(user.id)
+      .then((returnedUser) => {
+        if (isEmpty(returnedUser)) {
+          return { err: new Error('User does not exist') };
+        }
+        return returnedUser.update(user)
+          .then((updatedUser) => {
+            if (updatedUser) {
+              return updatedUser.dataValues;
+            }
+            return null;
+          })
+          .catch(error => ({ err: new Error(error.errors[0].message) }));
+      });
   }
 
   /**
@@ -88,7 +56,15 @@ class Users {
    * @param {Integer} id
    */
   static delete(id) {
-    delete UserStore[id - 1];
+    return UserModel.findById(id)
+      .then((returnedUser) => {
+        if (isEmpty(returnedUser)) {
+          return { err: new Error('User does not exist') };
+        }
+        return returnedUser.destroy()
+          .then(() => null)
+          .catch(error => ({ err: new Error(error.errors[0].message) }));
+      });
   }
 
   /**
@@ -97,7 +73,14 @@ class Users {
    * @returns {object|undefined} user
    */
   static get(id) {
-    return UserStore[id - 1];
+    return UserModel.findById(id)
+      .then((returnedUser) => {
+        if (isEmpty(returnedUser)) {
+          return undefined;
+        }
+        return returnedUser.dataValues;
+      })
+      .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
 
   /**
@@ -106,11 +89,20 @@ class Users {
    * @returns {object|null} user
    */
   static getByEmail(email) {
-    const result = UserStore.filter(x => x.email === email);
-    if (result.length > 0) {
-      return result[0];
-    }
-    return null;
+    return UserModel.findAll({
+      where: {
+        email: {
+          $ilike: `%${email}%`,
+        },
+      },
+    })
+      .then((returnedUser) => {
+        if (isEmpty(returnedUser)) {
+          return null;
+        }
+        return returnedUser[0].dataValues;
+      })
+      .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
 
   /**
@@ -119,11 +111,18 @@ class Users {
    * @return {object|null} user
    */
   static getByUsername(username) {
-    const result = UserStore.filter(x => x.username === username);
-    if (result.length > 0) {
-      return result[0];
-    }
-    return null;
+    return UserModel.findAll({
+      where: {
+        username,
+      },
+    })
+      .then((returnedUser) => {
+        if (isEmpty(returnedUser)) {
+          return null;
+        }
+        return returnedUser[0].dataValues;
+      })
+      .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
 
   /**
@@ -131,14 +130,22 @@ class Users {
    * @returns {array} users
    */
   static getAll() {
-    return UserStore;
+    return UserModel.findAll()
+      .then((returnedUser) => {
+        if (isEmpty(returnedUser)) {
+          return null;
+        }
+        return returnedUser;
+      })
+      .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
 
   /**
    * truncate data in UserStore array.
    */
   static truncate() {
-    UserStore.length = 0;
+    return UserModel.sync({ force: true })
+      .then(() => null);
   }
 }
 

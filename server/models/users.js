@@ -10,13 +10,13 @@ export default (sequelize, DataTypes) => {
         msg: 'Email exists',
       },
       validate: {
-        isEmail: {
-          args: true,
-          msg: 'Email is invalid',
-        },
         notEmpty: {
           args: true,
           msg: 'Email is required',
+        },
+        isEmail: {
+          args: true,
+          msg: 'Email is invalid',
         },
       },
     },
@@ -42,11 +42,15 @@ export default (sequelize, DataTypes) => {
           args: true,
           msg: 'Password is required',
         },
-        min: {
-          args: 5,
-          msg: 'Password must have atleast 5 characters',
+        len: {
+          args: [6, 100],
+          msg: 'Password must have atleast 6 characters',
         },
       },
+    },
+    accountType: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     resetPasswordToken: {
       type: DataTypes.STRING,
@@ -82,6 +86,10 @@ export default (sequelize, DataTypes) => {
   });
   Users.associate = (models) => {
     // associations can be defined here
+    Users.hasMany(models.Meals, {
+      foreignKey: 'userId',
+      as: 'Meals',
+    });
   };
 
   // Instance Method

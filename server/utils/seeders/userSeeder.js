@@ -43,15 +43,15 @@ const invalidUser = {
  * inserts seed users into database for testing
  * @param {object} user
  */
-const insertSeedUsers = (user) => {
-  users.add(user);
+const insertSeedUsers = async (user) => {
+  await users.add(user);
 };
 
 /**
  * truncates the data in users table
  */
-const clearUsers = () => {
-  users.truncate();
+const clearUsers = async () => {
+  await users.truncate();
 };
 
 export {
