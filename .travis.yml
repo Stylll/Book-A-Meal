@@ -1,0 +1,23 @@
+language: node_js
+node_js:
+  - "node"
+  - "8"
+
+addons:
+  chrome: stable
+
+env:
+  - NODE_ENV=test
+
+before_script:
+  - chmod 0777 ./node_modules/.bin/mocha
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
+script: 
+  - npm run test:server 
+
+after_success:
+  - npm run coveralls
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
