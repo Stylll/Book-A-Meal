@@ -62,7 +62,7 @@ class UserController {
         // get authentication token for user
         const token = Authenticate.authenticateUser(properUser);
 
-        return response.status(200).send({ user: properUser, token, message: 'Updated successfully' });
+        return response.status(200).send({ user: properUser, token, message: 'Login successful' });
       }
       return response.status(401).send({ message: 'Email or Password is incorrect' });
     }

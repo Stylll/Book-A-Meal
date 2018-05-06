@@ -61,7 +61,7 @@ class MealController {
 
       // update oldMeal with new data if exists
       oldMeal.name = (request.body.name && request.body.name.trim())
-        ? request.body.name.trim() : oldMeal.name;
+        ? request.body.name.trim() : null;
       oldMeal.price = request.body.price || oldMeal.price;
       oldMeal.image = image;
 

@@ -16,6 +16,8 @@ class ValidateMenu {
     menu.existsForDay();
     // check if meal id array is provided and valid
     menu.mealsValid(request);
+    // check if caterer is the owner of the meal being added
+    menu.validateMealOwner(request);
 
     return next();
   }

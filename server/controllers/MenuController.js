@@ -76,11 +76,13 @@ class MenuController {
     if (accountType === 'caterer' || accountType === 'admin') {
       const menuList = [...menus.getAll()];
       if (menuList.length > 0) {
-        const properMenuList = menuUtils.buildMenus(menuList);
+        const properMenuList = (accountType === 'caterer') ?
+          menuUtils.buildMenus(menuList, request.decoded.user.id) : menuUtils.buildMenus(menuList);
         return response.status(200).send({ menus: properMenuList });
       }
       return response.status(200).send({ menus: [] });
     }
+
     /**
      * accounttype is customer,
      * we get the menu for current date

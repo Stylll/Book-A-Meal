@@ -23,17 +23,25 @@ import {
   validUser1,
   existingUser,
   insertSeedUsers,
+  validUser2,
+  adminUser,
+  clearUsers,
 } from '../../utils/seeders/userSeeder';
 
 /* eslint-disable no-undef */
 describe('Test Suite for Menu Controller', () => {
   // create existing users
+  clearUsers();
   insertSeedUsers(existingUser);
   insertSeedUsers(validUser1);
+  insertSeedUsers(validUser2);
+  insertSeedUsers(adminUser);
 
   // generate access token for users
   const catererToken = Authenticate.authenticateUser({ id: 1, ...existingUser });
   const customerToken = Authenticate.authenticateUser({ id: 2, ...validUser1 });
+  const caterer2Token = Authenticate.authenticateUser({ id: 3, ...validUser2 });
+  const adminToken = Authenticate.authenticateUser({ id: 4, ...adminUser });
 
   describe('POST: Create Menu - /api/v1/menu', () => {
     // before each hook to clean and insert data to the db
@@ -177,6 +185,47 @@ describe('Test Suite for Menu Controller', () => {
         })
         .send({
           mealIds: [1, 2, 5, 7, 8],
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(201);
+          expect(resp.body.menu.mealIds[0]).to.equal(1);
+          expect(resp.body.menu.mealIds[1]).to.equal(2);
+          expect(resp.body.menu).to.haveOwnProperty('createdAt');
+          expect(resp.body.menu).to.haveOwnProperty('updatedAt');
+          expect(resp.body.menu).to.haveOwnProperty('id');
+          expect(resp.body.menu).to.haveOwnProperty('name');
+          expect(resp.body.menu).to.haveOwnProperty('date');
+          expect(resp.body.menu).to.haveOwnProperty('mealIds');
+          expect(resp.body.menu).to.haveOwnProperty('userId');
+          expect(resp.body.menu.mealIds).to.be.an('array');
+          done();
+        });
+    });
+
+    it('should not allow caterer add another caterers meal', (done) => {
+      request(app)
+        .post('/api/v1/menu')
+        .set({
+          'x-access-token': caterer2Token,
+        })
+        .send({
+          mealIds: [1, 2],
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(403);
+          expect(resp.body.message).to.equal('Cannot add another caterers meal');
+          done();
+        });
+    });
+
+    it('should allow admin add any caterers meal', (done) => {
+      request(app)
+        .post('/api/v1/menu')
+        .set({
+          'x-access-token': adminToken,
+        })
+        .send({
+          mealIds: [1, 2],
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(201);

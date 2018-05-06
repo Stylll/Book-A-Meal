@@ -28,6 +28,9 @@ describe('Test suite for User Controller', () => {
         .send(validUser1)
         .end((err, resp) => {
           expect(resp.status).to.equal(201);
+          expect(resp.body.user.email).to.equal(validUser1.email);
+          expect(resp.body.user.username).to.equal(validUser1.username);
+          expect(resp.body.user.accountType).to.equal(validUser1.accountType);
           done();
         });
     });
@@ -245,6 +248,9 @@ describe('Test suite for User Controller', () => {
           expect(resp.body.user).to.haveOwnProperty('username');
           expect(resp.body.user).to.haveOwnProperty('accountType');
           expect(resp.body).to.haveOwnProperty('token');
+          expect(resp.body.user.email).to.equal(existingUser.email);
+          expect(resp.body.user.username).to.equal(existingUser.username);
+          expect(resp.body.user.accountType).to.equal(existingUser.accountType);
           expect(jwt.verify(resp.body.token, process.env.SECRET)).to.not.equal(null);
           done();
         });

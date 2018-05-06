@@ -187,6 +187,10 @@ describe('Test Suite for Order Controller', () => {
           expect(resp.status).to.equal(201);
           expect(resp.body.order).to.be.an('object');
           expect(resp.body.order.status).to.equal('pending');
+          expect(resp.body.order.mealId).to.equal(validOrder1.mealId);
+          expect(resp.body.order.price).to.equal(existingMeal.price);
+          expect(resp.body.order.quantity).to.equal(validOrder1.quantity);
+          expect(resp.body.order.cost).to.equal(existingMeal.price * validOrder1.quantity);
           done();
         });
     });
@@ -520,6 +524,7 @@ describe('Test Suite for Order Controller', () => {
           expect(resp.status).to.equal(200);
           expect(resp.body.order.mealId).to.equal(2);
           expect(resp.body.order.quantity).to.equal(5);
+          expect(resp.body.order.status).to.equal('canceled');
           expect(resp.body.order.cost).to.equal(validMeal1.price * 5);
           done();
         });

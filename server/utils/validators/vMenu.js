@@ -1,4 +1,5 @@
 import menus from '../../db/menus';
+import meals from '../../db/meals';
 import BaseValidator from './baseValidator';
 
 /**
@@ -51,6 +52,17 @@ class menu extends BaseValidator {
 
     if (!Array.isArray(request.body.mealIds)) {
       this.throwError('Meal ids must be in an array', 400);
+    }
+  }
+
+  static validateMealOwner(request) {
+    const { decoded } = request;
+    if (decoded.user.accountType !== 'admin') {
+      request.body.mealIds.forEach((id) => {
+        if (meals.get(id) && decoded.user.id !== meals.get(id).userId) {
+          this.throwError('Cannot add another caterers meal', 403);
+        }
+      });
     }
   }
 }

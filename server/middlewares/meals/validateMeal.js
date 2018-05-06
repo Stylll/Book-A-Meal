@@ -35,12 +35,12 @@ class ValidateMeal {
   static put(request, response, next) {
     // check if id exists already
     meal.idExists(request);
+    // validate crud access
+    meal.validateAccess(request);
     // check if meal name exists
     meal.nameExists(request);
     // check if price is valid if provided
     if (request.body.price) meal.priceValid(request);
-    // validate crud access
-    meal.validateAccess(request);
 
     return next();
   }

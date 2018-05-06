@@ -67,7 +67,8 @@ class Meals {
     }
 
     // check if meal name exists
-    if (meal.name.trim() && MealStore.filter(x => x.name === meal.name.trim()).length > 0) {
+    if (meal.name && meal.name.trim() &&
+    MealStore.filter(x => x.name === meal.name.trim()).length > 0) {
       return { err: new Error('Meal name already exists') };
     }
 
