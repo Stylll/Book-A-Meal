@@ -24,7 +24,7 @@ class MealController {
     }
 
     // add meal to db
-    const meal = meals.add({
+    const meal = await meals.add({
       name: request.body.name.trim(),
       price: request.body.price,
       image,
@@ -47,7 +47,7 @@ class MealController {
    */
   static async put(request, response) {
     // get meal from the db
-    const oldMeal = { ...meals.get(parseInt(request.params.id, 10)) };
+    const oldMeal = await meals.get(parseInt(request.params.id, 10));
     if (oldMeal) {
       let { image } = oldMeal;
 
@@ -66,7 +66,7 @@ class MealController {
       oldMeal.image = image;
 
       // save updated data
-      const updatedMeal = meals.update(oldMeal);
+      const updatedMeal = await meals.update(oldMeal);
 
       if (updatedMeal && !updatedMeal.err) {
         return response.status(200).send({ meal: updatedMeal, message: 'Updated successfully' });
@@ -82,12 +82,12 @@ class MealController {
    * @param {object} response
    * @returns {object} {meals} | {message}
    */
-  static get(request, response) {
+  static async get(request, response) {
     if (request.decoded.user.accountType === 'admin') {
-      const mealArray = meals.getAll();
+      const mealArray = await meals.getAll();
       return response.status(200).send({ meals: mealArray });
     }
-    const mealArray = meals.getByUserId(request.decoded.user.id);
+    const mealArray = await meals.getByUserId(request.decoded.user.id);
     return response.status(200).send({ meals: mealArray });
   }
 
@@ -97,8 +97,8 @@ class MealController {
    * @param {object} response
    * @returns {object} {message}
    */
-  static delete(request, response) {
-    meals.delete(parseInt(request.params.id, 10));
+  static async delete(request, response) {
+    await meals.delete(parseInt(request.params.id, 10));
 
     return response.status(200).send({ message: 'Meal deleted successfully' });
   }

@@ -1,6 +1,7 @@
-import generateId from '../utils/generateId';
+import { isEmpty } from 'lodash';
 import { getNormalDate, beautifyDate } from '../utils/dateBeautifier';
 import MealUtils from '../utils/meals/mealUtils';
+import { menus as MenuModel } from '../models/menus';
 
 // variable to store the menu records.
 const MenuStore = [];
@@ -15,7 +16,7 @@ class Menus {
    * @param {object} menu
    * @returns {object} {new menu} | {err}
    */
-  static add(menu) {
+  static async add(menu) {
     // check if date is provided
     if (!menu.date.trim()) return { err: new Error('Menu date is required') };
 
@@ -36,18 +37,23 @@ class Menus {
     // check if mealIds are in an array
     if (!Array.isArray(menu.mealIds)) return { err: new Error('Meal Ids should be in an array') };
 
+    // get list of real meals
+    const realMeals = await MealUtils.getRealMeals(menu.mealIds);
+
     // populate menu to be added
-    const newMenu = { ...menu, mealIds: MealUtils.getRealMeals(menu.mealIds) };
-    newMenu.id = generateId(MenuStore);
+    const newMenu = { ...menu, mealIds: realMeals };
     newMenu.name = `Menu For ${beautifyDate(menu.date)}`;
     newMenu.userId = menu.userId;
-    newMenu.createdAt = new Date();
-    newMenu.updatedAt = new Date();
 
     // add the menu
-    MenuStore.push(newMenu);
-
-    return newMenu;
+    return MenuModel.create(newMenu)
+      .then((savedMenu) => {
+        if (savedMenu) {
+          return savedMenu.dataValues;
+        }
+        return null;
+      })
+      .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
 
   /**
@@ -77,11 +83,6 @@ class Menus {
     // check if date is valid
     if (menu.date && !getNormalDate(menu.date.trim())) return { err: new Error('Menu date is invalid') };
 
-    // check if menu date exists
-    if (menu.date && MenuStore.filter(x => x.date === menu.date.trim()).length > 0) {
-      return { err: new Error('Menu date already exists') };
-    }
-
     // check if mealIds are provided
     if (!menu.mealIds) return { err: new Error('Meal Ids are required') };
 
@@ -95,8 +96,21 @@ class Menus {
     updatedMenu.mealIds = MealUtils.getRealMeals(menu.mealIds);
     updatedMenu.updatedAt = new Date();
 
-    // save menu in db
-    MenuStore[menu.id - 1] = updatedMenu;
+    // get menu record and update it
+    return MenuModel.findById(menu.id)
+      .then((returnedMenu) => {
+        if (isEmpty(returnedMenu)) {
+          return { err: new Error('Menu does not exist') };
+        }
+        return returnedMenu.update(menu)
+          .then((updateMenu) => {
+            if (updateMenu) {
+              return updateMenu.dataValues;
+            }
+            return null;
+          })
+          .catch(error => ({ err: new Error(error.errors[0].message) }));
+      });
 
     // return updated menu
     return updatedMenu;
@@ -107,7 +121,15 @@ class Menus {
    * @param {integer} id
    */
   static delete(id) {
-    delete MenuStore[id - 1];
+    return MenuModel.findById(id)
+      .then((updateMenu) => {
+        if (isEmpty(updateMenu)) {
+          return { err: new Error('Menu does not exist') };
+        }
+        return updateMenu.destroy()
+          .then(() => null)
+          .catch(error => ({ err: new Error(error.errors[0].message) }));
+      });
   }
 
   /**
@@ -116,10 +138,14 @@ class Menus {
    * @returns {object | null} {menu}
    */
   static get(id) {
-    if (Number.isInteger(id)) {
-      return MenuStore[id - 1];
-    }
-    return null;
+    return MenuModel.findById(id)
+      .then((returnedMenu) => {
+        if (isEmpty(returnedMenu)) {
+          return undefined;
+        }
+        return returnedMenu.dataValues;
+      })
+      .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
 
   /**

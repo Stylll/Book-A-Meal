@@ -8,9 +8,9 @@
     "migrate:db-dev": "sequelize db:migrate:undo:all --env=development && sequelize db:migrate --env=development",
     "migrate:db": "sequelize db:migrate:undo:all --env=test && sequelize db:migrate --env=test",
     "pretest": "npm run migrate:db",
-    "test:server": "npm run pretest && set NODE_ENV=test&& nyc --reporter=html --reporter=text --reporter=lcov mocha --compilers js:babel-core/register server/tests/controllers/UserController.test.js --timeout 10000 --exit",
+    "test:server": "npm run pretest && set NODE_ENV=test&& nyc --reporter=html --reporter=text --reporter=lcov mocha --compilers js:babel-core/register server/tests/db/menus.test.js --timeout 10000 --exit",
     "start": "babel-node ./server/server",
-    "start:dev": "nodemon --exec babel-node ./server/server",
+    "start:dev": "nodemon --exec babel-node ./server/server --trace-warnings",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint \"server/**/*.js\" app.js --fix",
     "heroku:server": "babel-node ./server/server.js"

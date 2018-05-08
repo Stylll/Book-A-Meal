@@ -34,6 +34,11 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).send({ message: err.message || 'Error' });
 });
 
+// UnhandledPromiseRejection Handler
+process.on('unhandledRejection', (error) => {
+  console.log('unhandledRejection here: ', error);
+});
+
 // Listen at designated port
 app.listen(port, (err) => {
   if (err) {

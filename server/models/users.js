@@ -90,6 +90,10 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'userId',
       as: 'Meals',
     });
+    Users.hasMany(models.Menus, {
+      foreignKey: 'userId',
+      as: 'Menus',
+    });
   };
 
   // Instance Method

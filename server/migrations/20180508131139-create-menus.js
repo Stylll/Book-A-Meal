@@ -1,6 +1,6 @@
 export default {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Meals', {
+    return queryInterface.createTable('Menus', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -9,15 +9,14 @@ export default {
       },
       name: {
         type: Sequelize.STRING,
-        allowNull: false,
       },
-      image: {
+      date: {
+        allowNull: false,
         type: Sequelize.STRING,
-        allowNull: false,
       },
-      price: {
-        type: Sequelize.FLOAT,
+      mealIds: {
         allowNull: false,
+        type: Sequelize.ARRAY(Sequelize.TEXT),
       },
       userId: {
         type: Sequelize.INTEGER,
@@ -33,5 +32,5 @@ export default {
       },
     });
   },
-  down: queryInterface => queryInterface.dropTable('Meals'),
+  down: (queryInterface, Sequelize) => queryInterface.dropTable('Menus'),
 };

@@ -1,7 +1,6 @@
-import generateId from '../utils/generateId';
+import { isEmpty } from 'lodash';
+import { Meals as MealModel } from '../models';
 
-// variable to store meal records
-const MealStore = [];
 
 class Meals {
   /**
@@ -12,11 +11,6 @@ class Meals {
   static add(meal) {
     // check if meal name is provided
     if (!meal.name.trim()) return { err: new Error('Meal name is required') };
-
-    // check if meal name is exists
-    if (MealStore.filter(x => x.name === meal.name.trim()).length > 0) {
-      return { err: new Error('Meal name already exists') };
-    }
 
     // check if price exists
     if (!meal.price) return { err: new Error('Price is required') };
@@ -36,13 +30,14 @@ class Meals {
     if (!meal.userId) return { err: new Error('User id is required') };
 
     // add meal to db
-    const newMeal = { ...meal };
-    newMeal.id = generateId(MealStore); // generate meal id
-    newMeal.createdAt = new Date();
-    newMeal.updatedAt = new Date();
-    MealStore.push(newMeal);
-
-    return newMeal;
+    return MealModel.create(meal)
+      .then((newMeal) => {
+        if (newMeal) {
+          return newMeal.dataValues;
+        }
+        return null;
+      })
+      .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
 
   /**
@@ -61,17 +56,6 @@ class Meals {
    * @return {object} {updated meal} | {err}
    */
   static update(meal) {
-    // if meal does not exist using id
-    if (!MealStore[meal.id - 1]) {
-      return { err: new Error('Meal does not exist') };
-    }
-
-    // check if meal name exists
-    if (meal.name && meal.name.trim() &&
-    MealStore.filter(x => x.name === meal.name.trim()).length > 0) {
-      return { err: new Error('Meal name already exists') };
-    }
-
     // check if price is a number
     if (meal.price && /[^0-9.]/gi.test(meal.price) === true) {
       return { err: new Error('Price is invalid') };
@@ -81,17 +65,20 @@ class Meals {
     if (meal.price && meal.price <= 1) return { err: new Error('Price must be greater than 1') };
 
     // get meal record and update it
-    const updateMeal = MealStore[meal.id - 1];
-    updateMeal.name = meal.name || updateMeal.name;
-    updateMeal.price = meal.price || updateMeal.price;
-    updateMeal.image = meal.image || updateMeal.image;
-    updateMeal.updatedAt = new Date();
-
-    // save meal in db
-    MealStore[meal.id - 1] = updateMeal;
-
-    // return updated meal
-    return updateMeal;
+    return MealModel.findById(meal.id)
+      .then((returnedMeal) => {
+        if (isEmpty(returnedMeal)) {
+          return { err: new Error('Meal does not exist') };
+        }
+        return returnedMeal.update(meal)
+          .then((updatedMeal) => {
+            if (updatedMeal) {
+              return updatedMeal.dataValues;
+            }
+            return null;
+          })
+          .catch(error => ({ err: new Error(error.errors[0].message) }));
+      });
   }
 
   /**
@@ -99,7 +86,15 @@ class Meals {
    * @param {integer} id
    */
   static delete(id) {
-    delete MealStore[id - 1];
+    return MealModel.findById(id)
+      .then((returnedMeal) => {
+        if (isEmpty(returnedMeal)) {
+          return { err: new Error('Meal does not exist') };
+        }
+        return returnedMeal.destroy()
+          .then(() => null)
+          .catch(error => ({ err: new Error(error.errors[0].message) }));
+      });
   }
 
   /**
@@ -108,10 +103,14 @@ class Meals {
    * @returns {object|null} meal
    */
   static get(id) {
-    if (Number.isInteger(id)) {
-      return MealStore[id - 1];
-    }
-    return null;
+    return MealModel.findById(id)
+      .then((returnedMeal) => {
+        if (isEmpty(returnedMeal)) {
+          return undefined;
+        }
+        return returnedMeal.dataValues;
+      })
+      .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
 
   /**
@@ -120,11 +119,18 @@ class Meals {
    * @returns {object|null} meal | null
    */
   static getByName(name) {
-    const result = MealStore.filter(x => x.name === name);
-    if (result.length > 0) {
-      return result[0];
-    }
-    return null;
+    return MealModel.findAll({
+      where: {
+        name,
+      },
+    })
+      .then((returnedMeal) => {
+        if (isEmpty(returnedMeal)) {
+          return null;
+        }
+        return returnedMeal[0].dataValues;
+      })
+      .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
 
   /**
@@ -132,7 +138,14 @@ class Meals {
    * @returns [array] meals
    */
   static getAll() {
-    return MealStore.filter(meal => meal != null);
+    return MealModel.findAll()
+      .then((returnedMeal) => {
+        if (isEmpty(returnedMeal)) {
+          return [];
+        }
+        return returnedMeal;
+      })
+      .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
 
   /**
@@ -141,17 +154,26 @@ class Meals {
    * @returns {array | null} [meals]
    */
   static getByUserId(userId) {
-    if (Number.isInteger(parseInt(userId, 10))) {
-      return MealStore.filter(meal => meal != null).filter(meal => meal.userId === userId);
-    }
-    return null;
+    return MealModel.findAll({
+      where: {
+        userId,
+      },
+    })
+      .then((returnedMeal) => {
+        if (isEmpty(returnedMeal)) {
+          return [];
+        }
+        return returnedMeal;
+      })
+      .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
 
   /**
    * truncate the meals table
    */
   static truncate() {
-    MealStore.length = 0;
+    return MealModel.sync({ force: true })
+      .then(() => null);
   }
 }
 

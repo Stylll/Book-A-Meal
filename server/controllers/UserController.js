@@ -14,7 +14,6 @@ class UserController {
   static async signup(request, response) {
     // add user to db
 
-    console.log('entering controller');
     const user = await users.add({
       email: request.body.email,
       username: request.body.username,

@@ -72,7 +72,6 @@ class user extends BaseValidator {
       }
       // check if password is valid
       if (checkLength && request.body.password.trim().length <= 5) {
-        console.log('password:', request.body.password);
         this.throwError('Password must have atleast 6 characters', 400);
       }
     } catch (e) {
@@ -88,7 +87,6 @@ class user extends BaseValidator {
    * @throws {object} Error message and status code
    */
   static accountValid(request) {
-    console.log('account type, getting here');
     try {
       // check if account type is provided
       if (!request.body.accountType || !request.body.accountType.trim()) {
@@ -96,11 +94,9 @@ class user extends BaseValidator {
       }
       // check if account type is valid
       if (request.body.accountType.trim() !== 'customer' && request.body.accountType.trim() !== 'caterer') {
-        console.log('account type:', request.body.accountType);
         this.throwError('Account type is invalid', 400);
       }
     } catch (e) {
-      console.log('error caught', e);
       throw e;
     }
   }

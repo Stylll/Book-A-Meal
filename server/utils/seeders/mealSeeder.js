@@ -37,15 +37,15 @@ const existingMeal = {
  * inserts seed meal into database for testing
  * @param {object} meal
  */
-const insertSeedMeal = (meal) => {
-  Meals.add(meal);
+const insertSeedMeal = async (meal) => {
+  await Meals.add(meal);
 };
 
 /**
  * truncates the data in meals table
  */
-const clearMeals = () => {
-  Meals.truncate();
+const clearMeals = async () => {
+  await Meals.truncate();
 };
 
 export {
