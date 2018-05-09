@@ -1,10 +1,7 @@
 import { isEmpty } from 'lodash';
-import { getNormalDate, beautifyDate } from '../utils/dateBeautifier';
+import { getNormalDate } from '../utils/dateBeautifier';
 import MealUtils from '../utils/meals/mealUtils';
-import { menus as MenuModel } from '../models/menus';
-
-// variable to store the menu records.
-const MenuStore = [];
+import { Menus as MenuModel } from '../models';
 
 /**
  * Menu model class
@@ -24,9 +21,6 @@ class Menus {
     if (!getNormalDate(menu.date.trim())) return { err: new Error('Menu date is invalid') };
 
     // check if menu date exists
-    if (MenuStore.filter(x => x.date === menu.date.trim()).length > 0) {
-      return { err: new Error('Menu date already exists') };
-    }
 
     // check if user id is provided
     if (!menu.userId) return { err: new Error('User id is required') };
@@ -42,7 +36,7 @@ class Menus {
 
     // populate menu to be added
     const newMenu = { ...menu, mealIds: realMeals };
-    newMenu.name = `Menu For ${beautifyDate(menu.date)}`;
+    // newMenu.name = `Menu For ${beautifyDate(menu.date)}`;
     newMenu.userId = menu.userId;
 
     // add the menu
@@ -57,25 +51,12 @@ class Menus {
   }
 
   /**
-   * Static method to add multiple menu to the db
-   * @param {array} menuArray
-   */
-  static addBulk(menuArray) {
-    menuArray.forEach((menu) => {
-      this.add(menu);
-    });
-  }
-
-  /**
    * static method to update a menu
    * @param {object} menu
    * @returns {object} {updated menu} | {err}
    */
-  static update(menu) {
+  static async update(menu) {
     // check if menu exists
-    if (!MenuStore[menu.id - 1]) {
-      return { err: new Error('Menu does not exist') };
-    }
 
     // check if date is provided
     if (menu.date && !menu.date.trim()) return { err: new Error('Menu date is required') };
@@ -90,19 +71,18 @@ class Menus {
     if (!Array.isArray(menu.mealIds)) return { err: new Error('Meal Ids should be in an array') };
 
     // populate menu to be updated with new data
-    const updatedMenu = { ...MenuStore[menu.id - 1] };
-    updatedMenu.name = (menu.date) ? `Menu For ${beautifyDate(menu.date)}` : updatedMenu.name;
-    updatedMenu.date = menu.date || updatedMenu.date;
-    updatedMenu.mealIds = MealUtils.getRealMeals(menu.mealIds);
-    updatedMenu.updatedAt = new Date();
+
+    // get real meals in the db
+    const pendingMenu = { ...menu };
+    pendingMenu.mealIds = await MealUtils.getRealMeals(menu.mealIds);
 
     // get menu record and update it
-    return MenuModel.findById(menu.id)
+    return MenuModel.findById(pendingMenu.id)
       .then((returnedMenu) => {
         if (isEmpty(returnedMenu)) {
           return { err: new Error('Menu does not exist') };
         }
-        return returnedMenu.update(menu)
+        return returnedMenu.update(pendingMenu)
           .then((updateMenu) => {
             if (updateMenu) {
               return updateMenu.dataValues;
@@ -111,9 +91,6 @@ class Menus {
           })
           .catch(error => ({ err: new Error(error.errors[0].message) }));
       });
-
-    // return updated menu
-    return updatedMenu;
   }
 
   /**
@@ -138,12 +115,14 @@ class Menus {
    * @returns {object | null} {menu}
    */
   static get(id) {
-    return MenuModel.findById(id)
+    return MenuModel.findById(id, {
+      raw: true,
+    })
       .then((returnedMenu) => {
         if (isEmpty(returnedMenu)) {
           return undefined;
         }
-        return returnedMenu.dataValues;
+        return returnedMenu;
       })
       .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
@@ -154,18 +133,26 @@ class Menus {
    * @returns {array} [menus] | {err}
    */
   static getByDate(date) {
-    // check if date is valid
-    if (!getNormalDate(date)) return { err: new Error('Menu date is invalid') };
-
     // get normal date format from date passed
     const normalDate = getNormalDate(date);
 
+    // check if date is valid
+    if (!normalDate) return { err: new Error('Menu date is invalid') };
+
     // filter for result by normalDate
-    const result = MenuStore.filter(x => x.date === normalDate);
-    if (result.length > 0) {
-      return result[0];
-    }
-    return null;
+    return MenuModel.findAll({
+      where: {
+        date: normalDate,
+      },
+      raw: true,
+    })
+      .then((returnedMenu) => {
+        if (isEmpty(returnedMenu)) {
+          return null;
+        }
+        return returnedMenu[0];
+      })
+      .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
 
   /**
@@ -173,14 +160,24 @@ class Menus {
    * @returns {array} [menus]
    */
   static getAll() {
-    return MenuStore;
+    return MenuModel.findAll({
+      raw: true,
+    })
+      .then((returnedMenu) => {
+        if (isEmpty(returnedMenu)) {
+          return [];
+        }
+        return returnedMenu;
+      })
+      .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
 
   /**
    * Static method to delete all from Menu db
    */
   static truncate() {
-    MenuStore.length = 0;
+    return MenuModel.sync({ force: true })
+      .then(() => null);
   }
 }
 

@@ -13,7 +13,7 @@ class MenuUtils {
    * @param {object} menuObject
    * @returns {object} complete menu
    */
-  static buildMenu(menuObject, catererId = null) {
+  static async buildMenu(menuObject, catererId = null) {
     const menu = { ...menuObject };
     const mealIds = [];
     menu.meals = [];
@@ -24,8 +24,9 @@ class MenuUtils {
        * get actual meal object
        * push it into the menu.meals array
        */
-      menu.mealIds.forEach((id) => {
-        const meal = meals.get(id);
+      for (let i = 0; i < menu.mealIds.length; i++) {
+        const id = menu.mealIds[i];
+        const meal = await meals.get(parseInt(id, 10));
 
         /**
          * if caterer id is provided,
@@ -39,8 +40,9 @@ class MenuUtils {
           menu.meals.push(meal);
           mealIds.push(meal.id);
         }
-      });
+      }
     }
+
 
     // update mealIds with the id of meals displayed
     menu.mealIds = [...mealIds];
@@ -56,9 +58,9 @@ class MenuUtils {
    * @param {integer} catererId
    * @returns {array} completeMenuArray
    */
-  static buildMenus(menuArray, catererId = null) {
+  static async buildMenus(menuArray, catererId = null) {
     let menuList = [...menuArray];
-    menuList = menuList.map(menu => this.buildMenu(menu, catererId));
+    menuList = await Promise.all(menuList.map(async menu => this.buildMenu(menu, catererId)));
     return menuList;
   }
 }

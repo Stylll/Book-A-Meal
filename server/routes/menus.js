@@ -1,6 +1,6 @@
 import MenuController from '../controllers/MenuController';
 import validateAccount from '../middlewares/users/validateAccount';
-import validateMenu from '../middlewares/menus/validateMenu';
+import ValidateMenu from '../middlewares/menus/ValidateMenu';
 
 /**
  * Router to handle menu requests
@@ -10,12 +10,17 @@ import validateMenu from '../middlewares/menus/validateMenu';
 
 const menus = (router) => {
   // router to handle menu post request
-  router.post('/menu', validateAccount.user, validateAccount.caterer, validateMenu.post, MenuController.post);
+  router.post(
+    '/menu', validateAccount.user, validateAccount.caterer,
+    ValidateMenu.existsForDay, ValidateMenu.mealsValid,
+    ValidateMenu.validateMealOwner, MenuController.post,
+  );
 
   // router to handle meal post request
   router.put(
     '/menu/:id', validateAccount.user,
-    validateAccount.caterer, validateMenu.put, MenuController.put,
+    validateAccount.caterer, ValidateMenu.menuValid, ValidateMenu.idExists,
+    ValidateMenu.mealsValid, MenuController.put,
   );
 
   // router to handle menu get request

@@ -4,7 +4,6 @@ export default (sequelize, DataTypes) => {
   const Menus = sequelize.define('Menus', {
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     date: {
       type: DataTypes.STRING,
@@ -15,7 +14,7 @@ export default (sequelize, DataTypes) => {
       },
     },
     mealIds: {
-      type: DataTypes.ARRAY(DataTypes.TEXT),
+      type: DataTypes.ARRAY(DataTypes.INTEGER),
       allowNull: {
         args: false,
         msg: 'Meal Ids are required',

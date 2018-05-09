@@ -1,4 +1,5 @@
 import meals from '../../db/meals';
+import menus from '../../db/menus';
 
 /**
  * Meal Middleware validators
@@ -11,6 +12,7 @@ class ValidateMeal {
    * @throws {object} Error message and status code
    */
   static async idExists(request, response, next) {
+    const test = await menus.truncate();
     const result = await meals.get(parseInt(request.params.id, 10));
     if (!result) {
       return response.status(400).send({

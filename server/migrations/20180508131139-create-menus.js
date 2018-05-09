@@ -16,7 +16,7 @@ export default {
       },
       mealIds: {
         allowNull: false,
-        type: Sequelize.ARRAY(Sequelize.TEXT),
+        type: Sequelize.ARRAY(Sequelize.INTEGER),
       },
       userId: {
         type: Sequelize.INTEGER,

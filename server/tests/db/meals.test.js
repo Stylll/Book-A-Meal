@@ -11,15 +11,19 @@ import {
 import {
   existingUser,
   insertSeedUsers,
+  clearUsers,
 } from '../../utils/seeders/userSeeder';
 import meals from '../../db/meals';
 
 
-insertSeedUsers(existingUser);
-
 /* eslint-disable no-undef */
 describe('Test suite for meals model', () => {
   // insert a default user
+  before(async () => {
+    await clearUsers();
+    await insertSeedUsers(existingUser);
+  });
+
   beforeEach(async () => {
     await clearMeals();
     await insertSeedMeal(existingMeal);
@@ -120,7 +124,7 @@ describe('Test suite for meals model', () => {
   });
 
   it('should get all meals', async () => {
-    const insMeal = await meals.add(validMeal1);
+    await meals.add(validMeal1);
     const result = await meals.getAll();
     expect(result.length).to.equal(2);
   });

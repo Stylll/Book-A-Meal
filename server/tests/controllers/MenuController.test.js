@@ -30,12 +30,14 @@ import {
 
 /* eslint-disable no-undef */
 describe('Test Suite for Menu Controller', () => {
-  // create existing users
-  clearUsers();
-  insertSeedUsers(existingUser);
-  insertSeedUsers(validUser1);
-  insertSeedUsers(validUser2);
-  insertSeedUsers(adminUser);
+  before(async () => {
+    // create existing users
+    await clearUsers();
+    await insertSeedUsers(existingUser);
+    await insertSeedUsers(validUser1);
+    await insertSeedUsers(validUser2);
+    await insertSeedUsers(adminUser);
+  });
 
   // generate access token for users
   const catererToken = Authenticate.authenticateUser({ id: 1, ...existingUser });
@@ -45,13 +47,13 @@ describe('Test Suite for Menu Controller', () => {
 
   describe('POST: Create Menu - /api/v1/menu', () => {
     // before each hook to clean and insert data to the db
-    beforeEach(() => {
-      clearMeals();
-      clearMenus();
-      insertSeedMenu(existingMenu);
-      insertSeedMeal(existingMeal);
-      insertSeedMeal(validMeal1);
-      insertSeedMeal(validMeal2);
+    beforeEach(async () => {
+      await clearMeals();
+      await clearMenus();
+      await insertSeedMenu(existingMenu);
+      await insertSeedMeal(existingMeal);
+      await insertSeedMeal(validMeal1);
+      await insertSeedMeal(validMeal2);
     });
 
     it('should require an authentication token', (done) => {
@@ -93,8 +95,8 @@ describe('Test Suite for Menu Controller', () => {
         });
     });
 
-    it('should create menu with current date by default', (done) => {
-      clearMenus();
+    it('should create menu with current date by default', async () => {
+      await clearMenus();
       request(app)
         .post('/api/v1/menu')
         .set({
@@ -111,12 +113,11 @@ describe('Test Suite for Menu Controller', () => {
           expect(resp.body.menu).to.haveOwnProperty('mealIds');
           expect(resp.body.menu.mealIds).to.eql([1, 2]);
           expect(resp.body.menu.userId).to.equal(1);
-          done();
         });
     });
 
-    it('should not create multiple menus for the same day', (done) => {
-      insertSeedMenu(currentMenu);
+    it('should not create multiple menus for the same day', async () => {
+      await insertSeedMenu(currentMenu);
       request(app)
         .post('/api/v1/menu')
         .set({
@@ -126,7 +127,6 @@ describe('Test Suite for Menu Controller', () => {
         .end((err, resp) => {
           expect(resp.status).to.equal(409);
           expect(resp.body.message).to.equal('Menu for the day already exists');
-          done();
         });
     });
 
@@ -246,13 +246,13 @@ describe('Test Suite for Menu Controller', () => {
 
   describe('PUT: Update Menu - /api/v1/menu/:id', () => {
     // before each hook to clean and insert data to the db
-    beforeEach(() => {
-      clearMeals();
-      clearMenus();
-      insertSeedMeal(existingMeal);
-      insertSeedMeal(validMeal1);
-      insertSeedMeal(validMeal2);
-      insertSeedMenu(existingMenu);
+    beforeEach(async () => {
+      await clearMeals();
+      await clearMenus();
+      await insertSeedMeal(existingMeal);
+      await insertSeedMeal(validMeal1);
+      await insertSeedMeal(validMeal2);
+      await insertSeedMenu(existingMenu);
     });
 
     it('should require an authentication token', (done) => {
@@ -355,7 +355,7 @@ describe('Test Suite for Menu Controller', () => {
         });
     });
 
-    it('should save unique meal ids', (done) => {
+    it('should save unique meal ids', () => {
       request(app)
         .put('/api/v1/menu/1')
         .set({
@@ -367,7 +367,6 @@ describe('Test Suite for Menu Controller', () => {
           expect(resp.body.menu.mealIds[0]).to.equal(1);
           expect(resp.body.menu.mealIds[1]).to.equal(2);
           expect(resp.body.menu.mealIds).to.eql([1, 2]);
-          done();
         });
     });
 
@@ -399,15 +398,14 @@ describe('Test Suite for Menu Controller', () => {
 
   describe('GET: Get Menu - /api/v1/menu', () => {
     // before each hook to clean and insert data to the db
-    beforeEach((done) => {
-      clearMenus();
-      clearMeals();
-      insertSeedMeal(existingMeal);
-      insertSeedMeal(validMeal1);
-      insertSeedMeal(validMeal2);
-      insertSeedMenu({ ...currentMenu, mealIds: [1, 2] });
-      insertSeedMenu(existingMenu);
-      done();
+    beforeEach(async () => {
+      await clearMenus();
+      await clearMeals();
+      await insertSeedMeal(existingMeal);
+      await insertSeedMeal(validMeal1);
+      await insertSeedMeal(validMeal2);
+      await insertSeedMenu({ ...currentMenu, mealIds: [1, 2] });
+      await insertSeedMenu(existingMenu);
     });
 
     it('should require an authentication token', (done) => {
@@ -467,8 +465,8 @@ describe('Test Suite for Menu Controller', () => {
         });
     });
 
-    it('should return empty array if no menu exists when caterer requests', (done) => {
-      clearMenus();
+    it('should return empty array if no menu exists when caterer requests', async () => {
+      await clearMenus();
       request(app)
         .get('/api/v1/menu')
         .set({
@@ -478,12 +476,11 @@ describe('Test Suite for Menu Controller', () => {
           expect(resp.status).to.equal(200);
           expect(resp.body.menus).to.be.an('array');
           expect(resp.body.menus.length).to.equal(0);
-          done();
         });
     });
 
-    it('should show error message if no menu exists when customer requests', (done) => {
-      clearMenus();
+    it('should show error message if no menu exists when customer requests', async () => {
+      await clearMenus();
       request(app)
         .get('/api/v1/menu')
         .set({
@@ -492,7 +489,6 @@ describe('Test Suite for Menu Controller', () => {
         .end((err, resp) => {
           expect(resp.status).to.equal(404);
           expect(resp.body.message).to.equal('Menu for the day not set');
-          done();
         });
     });
 

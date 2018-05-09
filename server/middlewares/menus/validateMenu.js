@@ -1,42 +1,76 @@
-import menu from '../../utils/validators/vMenu';
+import menus from '../../db/menus';
+import meals from '../../db/meals';
+
 /**
- * Middleware class to validate Meal
+ * Menu Middleware validators
  */
+
 class ValidateMenu {
   /**
-   * static middleware method to validate menu post requests
+   * static method to check if a menu id exists
    * @param {object} request
-   * @param {object} response
-   * @param {object} next
    * @throws {object} Error message and status code
-   * @returns {function} next
    */
-  static post(request, response, next) {
-    // check if date already exists
-    menu.existsForDay();
-    // check if meal id array is provided and valid
-    menu.mealsValid(request);
-    // check if caterer is the owner of the meal being added
-    menu.validateMealOwner(request);
-
+  static async idExists(request, response, next) {
+    const result = await menus.get(parseInt(request.params.id, 10));
+    if (!result) {
+      return response.status(400).json({ message: 'Menu does not exist' });
+    }
     return next();
   }
 
   /**
-   * static middleware method to validate menu put requests
+   * static method to check if the menu id is valid
    * @param {object} request
-   * @param {object} response
-   * @param {object} next
    * @throws {object} Error message and status code
-   * @returns {function} next
    */
-  static put(request, response, next) {
-    // check if menu id is valid
-    menu.menuValid(request);
-    // check if menu id exists
-    menu.idExists(request);
-    // check if meal id array is provided and valid
-    menu.mealsValid(request);
+  static menuValid(request, response, next) {
+    if (!Number.isInteger(parseInt(request.params.id, 10))) {
+      return response.status(400).json({ message: 'Menu id is invalid' });
+    }
+    return next();
+  }
+
+  /**
+   * static method to check if menu for the day already exists
+   * @param {object} request
+   * @throws {object} Error message and status code
+   */
+  static async existsForDay(request, response, next) {
+    const result = await menus.getByDate(new Date());
+    if (result) {
+      return response.status(409).json({ message: 'Menu for the day already exists' });
+    }
+    return next();
+  }
+
+  /**
+   * static method to check if meal options are valid
+   * @param {*} request
+   * @throws {object} Error message and status code
+   */
+  static mealsValid(request, response, next) {
+    if (!request.body.mealIds) {
+      return response.status(400).json({ message: 'Array of meal ids is required' });
+    }
+
+    if (!Array.isArray(request.body.mealIds)) {
+      return response.status(400).json({ message: 'Meal ids must be in an array' });
+    }
+    return next();
+  }
+
+  static async validateMealOwner(request, response, next) {
+    const { decoded } = request;
+    if (decoded.user.accountType !== 'admin') {
+      request.body.mealIds.forEach(async (id) => {
+        const result = await meals.get(id);
+        if (result && decoded.user.id !== result.userId) {
+          return response.status(403).json({ message: 'Cannot add another caterers meal' });
+        }
+      });
+      return next();
+    }
 
     return next();
   }
