@@ -1,8 +1,11 @@
 /* eslint-disable no-unused-vars */
+import dotenv from 'dotenv';
 import moment from 'moment';
 import orders from '../db/orders';
 import meals from '../db/meals';
 import OrderUtils from '../utils/orders/orderUtils';
+
+dotenv.config();
 
 class OrderController {
   /**
@@ -46,7 +49,7 @@ class OrderController {
     if (order && !order.err) {
       // check if user is a customer and the create time has passed 2 hours
       if (request.decoded.user.accountType === 'customer') {
-        if (OrderUtils.getHourDiff(order) >= 2) {
+        if (OrderUtils.getHourDiff(order) >= process.env.ORDERTIMEOUT) {
           return response.status(403).json({
             message: 'Sorry. You no longer have the permission to make changes to this order.',
           });

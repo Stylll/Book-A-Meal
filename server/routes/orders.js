@@ -13,7 +13,7 @@ const orders = (router) => {
    * order router to handle post requests
    */
   router.post(
-    '/orders', validateOrder.isOpen, validateAccount.user, validateAccount.customer,
+    '/orders', validateAccount.user, validateAccount.customer, validateOrder.isOpen,
     validateOrder.mealValid, validateOrder.mealInMenu, validateOrder.quantityValid,
     OrderController.post,
   );

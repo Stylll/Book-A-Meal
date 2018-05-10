@@ -1,7 +1,10 @@
+import dotenv from 'dotenv';
 import moment from 'moment';
 import menus from '../../db/menus';
 import meals from '../../db/meals';
 import orders from '../../db/orders';
+
+dotenv.config();
 
 /**
  * Order Middleware validators
@@ -51,8 +54,8 @@ class order {
   }
 
   /**
-   * Static method to check if the shop is opened
-   * Opening time is between 7:00AM and 5:00PM
+   * Static method to check if the shop is opened.
+   * Opening time is between 7:00AM and 5:00PM.
    * @param {object} request
    * @param {object} response
    * @param {function} next
@@ -60,8 +63,8 @@ class order {
    */
   static isOpen(request, response, next) {
     const currentHour = moment.duration(new Date().getTime()).hours();
-    if (currentHour > 17 || currentHour < 7) {
-      return response.status(200).json({ message: 'Sorry. We are closed for the day. Please come back between 7:00AM and 5:00PM.' });
+    if (currentHour > process.env.CLOSINGHOUR || currentHour < process.env.OPENINGHOUR) {
+      return response.status(403).json({ message: 'Sorry. We are closed for the day. Please come back between 7:00AM and 5:00PM.' });
     }
     return next();
   }
