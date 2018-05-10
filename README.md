@@ -85,7 +85,7 @@ To view the template design, follow the link below:
 https://stylll.github.io/Book-A-Meal/UI/index.html
 
 ## API Endpoints
-Api Endpoints are still in development. Please check again later.
+https://bookamealapp.herokuapp.com/api/v1
 
 ## Frontend
 Frontend application is still in development. Please check again later.
