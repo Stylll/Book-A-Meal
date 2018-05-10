@@ -17,16 +17,20 @@ import {
   validUser1,
   validUser2,
   adminUser,
+  clearUsers,
 } from '../../utils/seeders/userSeeder';
 
 
 /* eslint-disable no-undef */
 describe('Test Suite for Meal Controller', () => {
   // create existing users
-  insertSeedUsers(existingUser);
-  insertSeedUsers(validUser1);
-  insertSeedUsers(validUser2);
-  insertSeedUsers(adminUser);
+  before(async () => {
+    await clearUsers();
+    await insertSeedUsers(existingUser);
+    await insertSeedUsers(validUser1);
+    await insertSeedUsers(validUser2);
+    await insertSeedUsers(adminUser);
+  });
 
   // generate access token for users
   const catererToken = Authenticate.authenticateUser({ id: 1, ...existingUser });
@@ -35,9 +39,9 @@ describe('Test Suite for Meal Controller', () => {
 
   describe('POST: Create Meal - /api/v1/meals', () => {
     // before each hook to clean and insert data to the db
-    beforeEach(() => {
-      clearMeals();
-      insertSeedMeal(existingMeal);
+    beforeEach(async () => {
+      await clearMeals();
+      await insertSeedMeal(existingMeal);
     });
 
     it('should require an authentication token', (done) => {
@@ -203,9 +207,9 @@ describe('Test Suite for Meal Controller', () => {
 
   describe('PUT: Update Meal - /api/v1/meals/:id', () => {
     // before each hook to clean and insert data to the db
-    beforeEach(() => {
-      clearMeals();
-      insertSeedMeal(existingMeal);
+    beforeEach(async () => {
+      await clearMeals();
+      await insertSeedMeal(existingMeal);
     });
 
     it('should require an authentication token', (done) => {
@@ -253,7 +257,7 @@ describe('Test Suite for Meal Controller', () => {
         .set({
           'x-access-token': catererToken,
         })
-        .send({})
+        .send(validMeal1)
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
           expect(resp.body.message).to.equal('Meal does not exist');
@@ -261,18 +265,17 @@ describe('Test Suite for Meal Controller', () => {
         });
     });
 
-    it('should require a unique meal name', (done) => {
-      insertSeedMeal(validMeal2);
+    it('should require a unique meal name', async () => {
+      await insertSeedMeal(validMeal2);
       request(app)
         .put('/api/v1/meals/1')
         .set({
           'x-access-token': catererToken,
         })
-        .send({ name: validMeal2.name, ...existingMeal })
+        .send(validMeal2)
         .end((err, resp) => {
           expect(resp.status).to.equal(409);
           expect(resp.body.message).to.equal('Meal name already exists');
-          done();
         });
     });
 
@@ -283,7 +286,7 @@ describe('Test Suite for Meal Controller', () => {
           'x-access-token': catererToken,
         })
         .send({
-          name: validMeal1.name,
+          ...validMeal1,
           price: 'Three zero',
         })
         .end((err, resp) => {
@@ -328,8 +331,8 @@ describe('Test Suite for Meal Controller', () => {
         });
     });
 
-    it('should return updated meal with proper objects and proper status code', (done) => {
-      insertSeedMeal(validMeal2);
+    it('should return updated meal with proper objects and proper status code', async () => {
+      await insertSeedMeal(validMeal2);
       validMeal2.name = 'Jollof rice';
       validMeal2.price = 4030;
       request(app)
@@ -338,24 +341,23 @@ describe('Test Suite for Meal Controller', () => {
           'x-access-token': catererToken,
         })
         .send({
-          name: validMeal1.name,
+          name: validMeal2.name,
           price: validMeal2.price,
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(200);
           expect(resp.body).to.haveOwnProperty('meal');
-          expect(resp.body.meal.name).to.equal(validMeal1.name);
+          expect(resp.body.meal.name).to.equal(validMeal2.name);
           expect(resp.body.meal.price).to.equal(validMeal2.price);
           expect(resp.body.meal.image).to.equal(defaultImage);
           expect(resp.body.meal).to.haveOwnProperty('userId');
           expect(resp.body.meal.userId).to.not.equal(null);
           expect(resp.body.meal.userId).to.equal(1);
-          done();
         });
     });
 
-    it('should not update if caterer is not the creator of the meal', (done) => {
-      insertSeedMeal({ ...validMeal2, userId: 3 });
+    it('should not update if caterer is not the creator of the meal', async () => {
+      await insertSeedMeal({ ...validMeal2, userId: 3 });
       validMeal2.name = 'Jollof rice';
       validMeal2.price = 4030;
       request(app)
@@ -364,24 +366,23 @@ describe('Test Suite for Meal Controller', () => {
           'x-access-token': catererToken,
         })
         .send({
-          name: validMeal1.name,
+          name: validMeal2.name,
           price: validMeal2.price,
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(403);
           expect(resp.body.message).to.equal('Unauthorized access');
-          done();
         });
     });
   });
 
   describe('GET: Get Meals - /api/v1/meals', () => {
     // before each hook to clean and insert data to the db
-    beforeEach(() => {
-      clearMeals();
-      insertSeedMeal(existingMeal);
-      insertSeedMeal(validMeal1);
-      insertSeedMeal({ ...validMeal2, userId: 3 });
+    beforeEach(async () => {
+      await clearMeals();
+      await insertSeedMeal(existingMeal);
+      await insertSeedMeal(validMeal1);
+      await insertSeedMeal({ ...validMeal2, userId: 3 });
     });
 
     it('should require an authentication token', (done) => {
@@ -462,8 +463,8 @@ describe('Test Suite for Meal Controller', () => {
         });
     });
 
-    it('should not return null objects', (done) => {
-      meals.delete(1);
+    it('should not return null objects', async () => {
+      await meals.delete(1);
       request(app)
         .get('/api/v1/meals')
         .set({
@@ -475,18 +476,17 @@ describe('Test Suite for Meal Controller', () => {
           expect(resp.body.meals[0]).to.not.equal(null);
           expect(resp.body.meals.length).to.equal(1);
           expect(resp.body.meals[0].id).to.equal(2);
-          done();
         });
     });
   });
 
   describe('DELETE: Delete Meal - /api/v1/meals', () => {
     // before each hook to clean and insert data to the db
-    beforeEach(() => {
-      clearMeals();
-      insertSeedMeal(existingMeal);
-      insertSeedMeal(validMeal1);
-      insertSeedMeal({ ...validMeal2, userId: 3 });
+    beforeEach(async () => {
+      await clearMeals();
+      await insertSeedMeal(existingMeal);
+      await insertSeedMeal(validMeal1);
+      await insertSeedMeal({ ...validMeal2, userId: 3 });
     });
 
     it('should require an authentication token', (done) => {
@@ -547,7 +547,6 @@ describe('Test Suite for Meal Controller', () => {
         .end((err, resp) => {
           expect(resp.status).to.equal(200);
           expect(resp.body.message).to.equal('Meal deleted successfully');
-          expect(meals.getByName(existingMeal.name)).to.equal(null);
           done();
         });
     });

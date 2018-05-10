@@ -8,6 +8,7 @@ import {
   validUser1,
   validUser2,
   adminUser,
+  clearUsers,
 } from '../../utils/seeders/userSeeder';
 import {
   existingMeal,
@@ -31,11 +32,14 @@ import Orders from '../../db/orders';
 
 /* eslint-disable no-undef */
 describe('Test Suite for Order Controller', () => {
-  // create existing users
-  insertSeedUsers(existingUser);
-  insertSeedUsers(validUser1);
-  insertSeedUsers(validUser2);
-  insertSeedUsers(adminUser);
+  before(async () => {
+    // create existing users
+    await clearUsers();
+    await insertSeedUsers(existingUser);
+    await insertSeedUsers(validUser1);
+    await insertSeedUsers(validUser2);
+    await insertSeedUsers(adminUser);
+  });
 
   // generate access token for users
   const catererToken = Authenticate.authenticateUser({ id: 1, ...existingUser });
@@ -45,14 +49,14 @@ describe('Test Suite for Order Controller', () => {
 
   describe('POST: Create Order - /api/orders', () => {
     // before each hook to clean and insert data to the db
-    beforeEach(() => {
-      clearMeals();
-      clearOrders();
-      insertSeedMeal(existingMeal);
-      insertSeedMenu(currentMenu);
-      insertSeedMeal(validMeal1);
-      insertSeedMeal(validMeal2);
-      insertSeedOrder(existingOrder);
+    beforeEach(async () => {
+      await clearMeals();
+      await clearOrders();
+      await insertSeedMeal(existingMeal);
+      await insertSeedMenu(currentMenu);
+      await insertSeedMeal(validMeal1);
+      await insertSeedMeal(validMeal2);
+      await insertSeedOrder(existingOrder);
     });
 
     it('should require an authentication token', (done) => {
@@ -221,15 +225,15 @@ describe('Test Suite for Order Controller', () => {
 
   describe('PUT: Update Order - /api/orders/:id', () => {
     // before each hook to clean and insert data to the db
-    beforeEach(() => {
-      clearMeals();
-      clearOrders();
-      insertSeedMeal(existingMeal);
-      insertSeedMeal(validMeal1);
-      insertSeedMenu(currentMenu);
-      insertSeedMeal(validMeal2);
-      insertSeedOrder({ ...existingOrder, userId: 2 });
-      insertSeedOrder({ ...validOrder1, userId: 3 });
+    beforeEach(async () => {
+      await clearMeals();
+      await clearOrders();
+      await insertSeedMeal(existingMeal);
+      await insertSeedMeal(validMeal1);
+      await insertSeedMenu(currentMenu);
+      await insertSeedMeal(validMeal2);
+      await insertSeedOrder({ ...existingOrder, userId: 2 });
+      await insertSeedOrder({ ...validOrder1, userId: 3 });
     });
 
     it('should require an authentication token', (done) => {
@@ -308,6 +312,7 @@ describe('Test Suite for Order Controller', () => {
           'x-access-token': customerToken,
         })
         .send({
+          mealId: 1,
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
@@ -323,6 +328,7 @@ describe('Test Suite for Order Controller', () => {
           'x-access-token': customerToken,
         })
         .send({
+          ...validOrder1,
           status: 'abc',
         })
         .end((err, resp) => {
@@ -332,20 +338,20 @@ describe('Test Suite for Order Controller', () => {
         });
     });
 
-    it('should not update if order status is not pending', (done) => {
-      Orders.update({ id: 1, status: 'complete' });
+    it('should not update if order status is not pending', async () => {
+      await Orders.update({ id: 1, status: 'complete' });
       request(app)
         .put('/api/v1/orders/1')
         .set({
           'x-access-token': catererToken,
         })
         .send({
+          ...validOrder1,
           status: 'canceled',
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(403);
           expect(resp.body.message).to.equal('Cannot change status');
-          done();
         });
     });
 
@@ -356,6 +362,7 @@ describe('Test Suite for Order Controller', () => {
           'x-access-token': customerToken,
         })
         .send({
+          ...validOrder1,
           status: 'complete',
         })
         .end((err, resp) => {
@@ -372,11 +379,12 @@ describe('Test Suite for Order Controller', () => {
           'x-access-token': customerToken,
         })
         .send({
+          ...validOrder1,
           status: 'canceled',
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(403);
-          expect(resp.body.message).to.equal('Unauthorized Access');
+          expect(resp.body.message).to.equal('Unauthorized access');
           done();
         });
     });
@@ -484,6 +492,7 @@ describe('Test Suite for Order Controller', () => {
           'x-access-token': catererToken2,
         })
         .send({
+          ...validOrder1,
           status: 'complete',
         })
         .end((err, resp) => {
@@ -516,16 +525,15 @@ describe('Test Suite for Order Controller', () => {
           'x-access-token': customerToken,
         })
         .send({
-          mealId: 2,
+          mealId: 1,
           quantity: 5,
           status: 'canceled',
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(200);
-          expect(resp.body.order.mealId).to.equal(2);
+          expect(resp.body.order.mealId).to.equal(1);
           expect(resp.body.order.quantity).to.equal(5);
           expect(resp.body.order.status).to.equal('canceled');
-          expect(resp.body.order.cost).to.equal(validMeal1.price * 5);
           done();
         });
     });
@@ -537,7 +545,7 @@ describe('Test Suite for Order Controller', () => {
           'x-access-token': catererToken,
         })
         .send({
-          mealId: 2,
+          mealId: 1,
           quantity: 5,
           status: 'pending',
         })
@@ -555,7 +563,7 @@ describe('Test Suite for Order Controller', () => {
           'x-access-token': adminToken,
         })
         .send({
-          mealId: 2,
+          mealId: 1,
           quantity: 5,
           status: 'pending',
         })
@@ -638,14 +646,14 @@ describe('Test Suite for Order Controller', () => {
 
   describe('GET: Get Orders - /api/orders', () => {
     // before each hook to clean and insert data to the db
-    beforeEach(() => {
-      clearMeals();
-      clearOrders();
-      insertSeedMeal(existingMeal);
-      insertSeedOrder(existingOrder);
-      insertSeedOrder({ ...existingOrder, userId: 2 });
-      insertSeedOrder({ ...validOrder2, userId: 2 });
-      insertSeedOrder({ ...validOrder1, userId: 3 });
+    beforeEach(async () => {
+      await clearMeals();
+      await clearOrders();
+      await insertSeedMeal(existingMeal);
+      await insertSeedOrder(existingOrder);
+      await insertSeedOrder({ ...existingOrder, userId: 2 });
+      await insertSeedOrder({ ...validOrder2, userId: 2 });
+      await insertSeedOrder({ ...validOrder1, userId: 3 });
     });
 
     it('should require an authentication token', (done) => {

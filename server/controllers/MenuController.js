@@ -15,16 +15,16 @@ class MenuController {
    * @param {object} response
    * @returns {object} {menu, message} | {message}
    */
-  static post(request, response) {
+  static async post(request, response) {
     const date = getNormalDate(new Date());
     const uniqueIds = new Set(request.body.mealIds.sort());
     const mealIds = [...uniqueIds];
-    const newMenu = menus.add({ date, mealIds, userId: request.decoded.user.id });
+    const newMenu = await menus.add({ date, mealIds, userId: request.decoded.user.id });
     if (newMenu && !newMenu.err) {
-      return response.status(201).send({ menu: newMenu, message: 'Created successfully' });
+      return response.status(201).json({ menu: newMenu, message: 'Created successfully' });
     }
 
-    return response.status(500).send({ message: 'Internal Server Error' });
+    return response.status(500).json({ message: 'Internal Server Error' });
   }
 
   /**
@@ -35,8 +35,8 @@ class MenuController {
    * @param {object} response
    * @returns {object} {menu, message} | {message}
    */
-  static put(request, response) {
-    const oldMenu = menus.get(parseInt(request.params.id, 10));
+  static async put(request, response) {
+    const oldMenu = await menus.get(parseInt(request.params.id, 10));
     let ids = [...oldMenu, ...request.body.mealIds];
     /**
      * if the user is an admin, then he can remove and add meal options
@@ -48,13 +48,13 @@ class MenuController {
 
     const uniqueIds = new Set(ids.sort());
     const mealIds = [...uniqueIds];
-    const newMenu = menus.update({ id: oldMenu.id, mealIds });
+    const newMenu = await menus.update({ id: oldMenu.id, mealIds });
 
     if (newMenu && !newMenu.err) {
-      return response.status(201).send({ menu: newMenu, message: 'Updated successfully' });
+      return response.status(201).json({ menu: newMenu, message: 'Updated successfully' });
     }
 
-    return response.status(500).send({ message: 'Internal Server Error' });
+    return response.status(500).json({ message: 'Internal Server Error' });
   }
 
   /**
@@ -65,7 +65,7 @@ class MenuController {
    * @param {object} response
    * @returns {object} {menus} | {message}
    */
-  static get(request, response) {
+  static async get(request, response) {
     const { accountType } = request.decoded.user;
 
     /**
@@ -74,13 +74,14 @@ class MenuController {
      * and return them as an array
      */
     if (accountType === 'caterer' || accountType === 'admin') {
-      const menuList = [...menus.getAll()];
+      const menuList = await menus.getAll();
       if (menuList.length > 0) {
         const properMenuList = (accountType === 'caterer') ?
-          menuUtils.buildMenus(menuList, request.decoded.user.id) : menuUtils.buildMenus(menuList);
-        return response.status(200).send({ menus: properMenuList });
+          await menuUtils.buildMenus(menuList, request.decoded.user.id) :
+          await menuUtils.buildMenus(menuList);
+        return response.status(200).json({ menus: properMenuList });
       }
-      return response.status(200).send({ menus: [] });
+      return response.status(200).json({ menus: [] });
     }
 
     /**
@@ -89,15 +90,15 @@ class MenuController {
      * and return it as an object
      */
     if (accountType === 'customer') {
-      const menuObject = { ...menus.getByDate(new Date()) };
+      const menuObject = await menus.getByDate(new Date());
       if (!isEmpty(menuObject)) {
-        const properMenuObject = menuUtils.buildMenu(menuObject);
-        return response.status(200).send({ menu: properMenuObject });
+        const properMenuObject = await menuUtils.buildMenu(menuObject);
+        return response.status(200).json({ menu: properMenuObject });
       }
-      return response.status(404).send({ message: 'Menu for the day not set' });
+      return response.status(404).json({ message: 'Menu for the day not set' });
     }
 
-    return response.status(500).send({ message: 'Internal Server Error' });
+    return response.status(500).json({ message: 'Internal Server Error' });
   }
 }
 

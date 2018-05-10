@@ -42,15 +42,15 @@ const currentMenu = {
  * insert menu into menu table
  * @param {object} menu
  */
-const insertSeedMenu = (menu) => {
-  Menus.add(menu);
+const insertSeedMenu = async (menu) => {
+  await Menus.add(menu);
 };
 
 /**
  * truncate menus table
  */
-const clearMenus = () => {
-  Menus.truncate();
+const clearMenus = async () => {
+  await Menus.truncate();
 };
 
 export {

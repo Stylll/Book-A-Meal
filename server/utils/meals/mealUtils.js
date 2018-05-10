@@ -1,4 +1,4 @@
-import meals from '../../db/meals';
+import Meals from '../../db/meals';
 
 /**
  * Class to implement functions related
@@ -12,8 +12,14 @@ class MealUtils {
    * @param {array} mealArray
    * @returns {array} existingMeals
    */
-  static getRealMeals(mealArray) {
-    const newArr = mealArray.filter(mealId => (meals.get(mealId)));
+  /* eslint-disable no-plusplus */
+  static async getRealMeals(mealArray) {
+    const newArr = [];
+    for (let i = 0; i < mealArray.length; i++) {
+      /* eslint-disable no-await-in-loop */
+      const meal = await Meals.get(mealArray[i]);
+      if (meal) newArr.push(meal.id);
+    }
     return newArr;
   }
 }

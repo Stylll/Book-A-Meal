@@ -16,9 +16,9 @@ dotenv.config();
 
 /* eslint-disable no-undef */
 describe('Test suite for User Controller', () => {
-  beforeEach(() => {
-    clearUsers();
-    insertSeedUsers(existingUser);
+  beforeEach(async () => {
+    await clearUsers();
+    await insertSeedUsers(existingUser);
   });
 
   describe('POST: Signup User - /api/v1/users/signup', () => {
@@ -38,20 +38,19 @@ describe('Test suite for User Controller', () => {
     it('should require a valid email', (done) => {
       request(app)
         .post('/api/v1/users/signup')
-        .send(invalidUser)
+        .send({ ...validUser1, email: 'email' })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
           expect(resp.body).to.haveOwnProperty('message');
           expect(resp.body.message).to.equal('Email is invalid');
         });
-
       request(app)
         .post('/api/v1/users/signup')
         .send({
           email: '  ',
-          username: invalidUser.username,
-          password: invalidUser.password,
-          accountType: invalidUser.accountType,
+          username: validUser1.username,
+          password: validUser1.password,
+          accountType: validUser1.accountType,
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
@@ -67,8 +66,8 @@ describe('Test suite for User Controller', () => {
         .send({
           email: validUser1.email,
           username: '  ',
-          password: invalidUser.password,
-          accountType: invalidUser.accountType,
+          password: validUser1.password,
+          accountType: validUser1.accountType,
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
@@ -143,7 +142,7 @@ describe('Test suite for User Controller', () => {
     it('should not create account with existing email', (done) => {
       request(app)
         .post('/api/v1/users/signup')
-        .send(existingUser)
+        .send({ ...validUser1, email: existingUser.email })
         .end((err, resp) => {
           expect(resp.status).to.equal(409);
           expect(resp.body).to.haveOwnProperty('message');
@@ -203,7 +202,7 @@ describe('Test suite for User Controller', () => {
     it('should require an email', (done) => {
       request(app)
         .post('/api/v1/users/signin')
-        .send({ email: '   ' })
+        .send({ ...validUser1, email: '   ' })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
           expect(resp.body).to.haveOwnProperty('message');
@@ -215,7 +214,7 @@ describe('Test suite for User Controller', () => {
     it('should require a valid email', (done) => {
       request(app)
         .post('/api/v1/users/signin')
-        .send({ email: invalidUser.email })
+        .send({ ...validUser1, email: invalidUser.email })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
           expect(resp.body).to.haveOwnProperty('message');

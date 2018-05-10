@@ -13,16 +13,13 @@ class validateUser {
    * @returns {function} next
    */
   static signup(request, response, next) {
-    // validate email address
-    user.emailValid(request);
-    // validate username
-    user.usernameValid(request);
-    // validate password
-    user.passwordValid(request);
-    // validate account type
-    user.accountValid(request);
-    // all checks passes, then call the next function
-    return next();
+    /**
+     * This uses a promise all to run all validation.
+     * It catches any invalid data and returns it.
+     */
+    return Promise.all([user.emailValid(request), user.usernameValid(request),
+      user.passwordValid(request)], user.accountValid(request)).then(() => next())
+      .catch(err => response.status(err.status).send({ message: err.message }));
   }
 
   /**
@@ -35,10 +32,14 @@ class validateUser {
    */
   static signin(request, response, next) {
     // validate email
-    user.emailValid(request, false);
+    return Promise.all([user.emailValid(request, false),
+      user.passwordValid(request, false)]).then(() => next())
+      .catch(err => response.status(err.status).send({ message: err.message }));
+
+    // user.emailValid(request, false);
     // validate password
-    user.passwordValid(request, false);
-    return next();
+    // user.passwordValid(request, false);
+    // return next();
   }
 }
 
