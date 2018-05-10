@@ -1,6 +1,6 @@
 import MenuController from '../controllers/MenuController';
 import validateAccount from '../middlewares/users/validateAccount';
-import ValidateMenu from '../middlewares/menus/ValidateMenu';
+import ValidateMenu from '../middlewares/menus/validateMenu';
 
 /**
  * Router to handle menu requests

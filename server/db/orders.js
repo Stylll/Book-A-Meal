@@ -1,8 +1,7 @@
-import generateId from '../utils/generateId';
+import { isEmpty } from 'lodash';
+import { Op } from 'sequelize';
 import meals from './meals';
-
-// variable to store the order records.
-const OrderStore = [];
+import { Orders as OrderModel } from '../models';
 
 /**
  * Menu model class
@@ -14,7 +13,7 @@ class Orders {
    * @param {object} order
    * @returns {object} {order} | {err}
    */
-  static add(order) {
+  static async add(order) {
     // check if meal id is provided
     if (!order.mealId) return { err: new Error('Meal id is required') };
 
@@ -22,7 +21,8 @@ class Orders {
     if (!Number.isInteger(order.mealId)) return { err: new Error('Meal id is invalid') };
 
     // check if meal id exists
-    if (!meals.get(order.mealId)) return { err: new Error('Meal does not exist') };
+    const existingMeal = await meals.get(order.mealId);
+    if (!existingMeal) return { err: new Error('Meal does not exist') };
 
     // check if price is provided
     if (!order.price) return { err: new Error('Price is required') };
@@ -49,31 +49,23 @@ class Orders {
 
     // create and populate new order object
     const newOrder = {
-      id: generateId(OrderStore),
       mealId: parseInt(order.mealId, 10),
       price: parseFloat(order.price, 10),
       quantity: parseInt(order.quantity, 10),
       status: 'pending',
       userId: parseInt(order.userId, 10),
       cost: parseFloat(order.price, 10) * parseInt(order.quantity, 10),
-      createdAt: new Date(),
-      updatedAt: new Date(),
     };
 
     // add new order to the db
-    OrderStore.push(newOrder);
-
-    return newOrder;
-  }
-
-  /**
-   * Static method to add bulk orders
-   * @param {array} orderArray
-   */
-  static addBulk(orderArray) {
-    orderArray.forEach((order) => {
-      this.add(order);
-    });
+    return OrderModel.create(newOrder)
+      .then((savedOrder) => {
+        if (savedOrder) {
+          return savedOrder.dataValues;
+        }
+        return null;
+      })
+      .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
 
   /**
@@ -81,23 +73,19 @@ class Orders {
    * @param {object} order
    * @returns {object|null} updatedOrder | {err}
    */
-  static update(order) {
+  static async update(order) {
     // check if order id is provided
     if (!order.id) return { err: new Error('Order id is required') };
 
     // check if order id is valid
     if (!Number.isInteger(order.id)) return { err: new Error('Order id is invalid') };
 
-    // check if order id exists
-    if (!OrderStore[parseInt(order.id, 10) - 1]) {
-      return { err: new Error('Order does not exist') };
-    }
-
     // check if meal id is valid if provided
     if (order.mealId && !Number.isInteger(order.mealId)) return { err: new Error('Meal id is invalid') };
 
     // check if meal id exists if provided
-    if (order.mealId && !meals.get(order.mealId)) return { err: new Error('Meal does not exist') };
+    const existingMeal = await meals.get(order.mealId);
+    if (order.mealId && !existingMeal) return { err: new Error('Meal does not exist') };
 
     // check if price is a number if provided
     if (order.price && /[^0-9.]/gi.test(order.price) === true) {
@@ -116,24 +104,21 @@ class Orders {
         return { err: new Error('Status is invalid') };
       }
     }
-
-    // create update object
-    const oldOrder = OrderStore[order.id - 1];
-    if (oldOrder) {
-      // populate oldOrder with new details if it exists
-      oldOrder.mealId = parseInt(order.mealId, 10) || oldOrder.mealId;
-      oldOrder.price = parseFloat(order.price, 10) || oldOrder.price;
-      oldOrder.quantity = parseInt(order.quantity, 10) || oldOrder.quantity;
-      oldOrder.cost = oldOrder.price * oldOrder.quantity;
-      oldOrder.status = order.status || oldOrder.status;
-      oldOrder.updatedAt = new Date();
-
-      // save updated order
-      OrderStore[order.id - 1] = oldOrder;
-
-      return oldOrder;
-    }
-    return null;
+    // save updated order
+    return OrderModel.findById(order.id)
+      .then((returnedOrder) => {
+        if (isEmpty(returnedOrder)) {
+          return { err: new Error('Order does not exist') };
+        }
+        return returnedOrder.update(order)
+          .then((updateOrder) => {
+            if (updateOrder) {
+              return updateOrder.dataValues;
+            }
+            return null;
+          })
+          .catch(error => ({ err: new Error(error.errors[0].message) }));
+      });
   }
 
   /**
@@ -143,10 +128,17 @@ class Orders {
    */
   static get(orderId) {
     const id = parseInt(orderId, 10);
-    if (Number.isInteger(id)) {
-      return OrderStore[id - 1];
-    }
-    return null;
+    if (!Number.isInteger(id)) return null;
+    return OrderModel.findById(id, {
+      raw: true,
+    })
+      .then((returnedOrder) => {
+        if (isEmpty(returnedOrder)) {
+          return undefined;
+        }
+        return returnedOrder;
+      })
+      .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
 
   /**
@@ -154,7 +146,16 @@ class Orders {
    * @returns {array} Orders
    */
   static getAll() {
-    return OrderStore;
+    return OrderModel.findAll({
+      raw: true,
+    })
+      .then((returnedOrder) => {
+        if (isEmpty(returnedOrder)) {
+          return [];
+        }
+        return returnedOrder;
+      })
+      .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
 
   /**
@@ -165,7 +166,19 @@ class Orders {
   static getByMealId(mealId) {
     const id = parseInt(mealId, 10);
     if (Number.isInteger(id)) {
-      return OrderStore.filter(order => order.mealId === id);
+      return OrderModel.findAll({
+        where: {
+          mealId,
+        },
+        raw: true,
+      })
+        .then((returnedOrder) => {
+          if (isEmpty(returnedOrder)) {
+            return [];
+          }
+          return returnedOrder;
+        })
+        .catch(error => ({ err: new Error(error.errors[0].message) }));
     }
     return null;
   }
@@ -176,10 +189,20 @@ class Orders {
    * @returns {array|null} orders
    */
   static getByStatus(status) {
-    if (status) {
-      return OrderStore.filter(order => order.status === status);
-    }
-    return null;
+    if (!status) return null;
+    return OrderModel.findAll({
+      where: {
+        status,
+      },
+      raw: true,
+    })
+      .then((returnedOrder) => {
+        if (isEmpty(returnedOrder)) {
+          return [];
+        }
+        return returnedOrder;
+      })
+      .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
 
   /**
@@ -189,10 +212,20 @@ class Orders {
    */
   static getByUserId(userId) {
     const id = parseInt(userId, 10);
-    if (Number.isInteger(id)) {
-      return OrderStore.filter(order => order.userId === id);
-    }
-    return null;
+    if (!Number.isInteger(id)) return null;
+    return OrderModel.findAll({
+      where: {
+        userId,
+      },
+      raw: true,
+    })
+      .then((returnedOrder) => {
+        if (isEmpty(returnedOrder)) {
+          return [];
+        }
+        return returnedOrder;
+      })
+      .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
 
   /**
@@ -200,15 +233,29 @@ class Orders {
    * @param {integer} catererId
    * @return {array|null} orders
    */
-  static getByCatererId(catererId) {
+  static async getByCatererId(catererId) {
     const id = parseInt(catererId, 10);
-    if (Number.isInteger(id)) {
-      const catererMeals = meals.getByUserId(id);
-      const mealIds = [];
-      catererMeals.forEach(meal => mealIds.push(meal.id));
-      return OrderStore.filter(order => (mealIds.indexOf(order.mealId) !== -1));
-    }
-    return null;
+    if (!Number.isInteger(id)) return null;
+    const catererMeals = await meals.getByUserId(id);
+    const mealIds = [];
+    if (isEmpty(catererMeals)) return [];
+    catererMeals.forEach(meal => mealIds.push(meal.id));
+
+    return OrderModel.findAll({
+      where: {
+        mealId: {
+          [Op.in]: mealIds,
+        },
+      },
+      raw: true,
+    })
+      .then((returnedOrder) => {
+        if (isEmpty(returnedOrder)) {
+          return [];
+        }
+        return returnedOrder;
+      })
+      .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
 
   /**
@@ -216,14 +263,23 @@ class Orders {
    * @param {integer} id
    */
   static delete(id) {
-    delete OrderStore[id - 1];
+    return OrderModel.findById(id)
+      .then((returnedOrder) => {
+        if (isEmpty(returnedOrder)) {
+          return { err: new Error('Order does not exist') };
+        }
+        return returnedOrder.destroy()
+          .then(() => null)
+          .catch(error => ({ err: new Error(error.errors[0].message) }));
+      });
   }
 
   /**
    * static method to truncate records in the db
    */
   static truncate() {
-    OrderStore.length = 0;
+    return OrderModel.sync({ force: true })
+      .then(() => null);
   }
 }
 

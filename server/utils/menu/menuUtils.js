@@ -24,8 +24,10 @@ class MenuUtils {
        * get actual meal object
        * push it into the menu.meals array
        */
+      /* eslint-disable no-plusplus */
       for (let i = 0; i < menu.mealIds.length; i++) {
         const id = menu.mealIds[i];
+        /* eslint-disable no-await-in-loop */
         const meal = await meals.get(parseInt(id, 10));
 
         /**

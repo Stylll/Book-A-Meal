@@ -29,14 +29,11 @@ class meal {
    */
   static async nameExists(request) {
     try {
-      console.log('name check starts');
       const result = await meals.getByName(request.body.name.trim());
-      console.log('name result:', result);
       if (request.body.name && result) {
         this.throwError('Meal name already exists', 409);
       }
     } catch (error) {
-      console.log('name exists:', error);
       throw error;
     }
   }

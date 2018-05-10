@@ -12,9 +12,11 @@ class MealUtils {
    * @param {array} mealArray
    * @returns {array} existingMeals
    */
+  /* eslint-disable no-plusplus */
   static async getRealMeals(mealArray) {
     const newArr = [];
     for (let i = 0; i < mealArray.length; i++) {
+      /* eslint-disable no-await-in-loop */
       const meal = await Meals.get(mealArray[i]);
       if (meal) newArr.push(meal.id);
     }

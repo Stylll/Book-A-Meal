@@ -3,7 +3,7 @@ import 'babel-polyfill';
 
 import MealController from '../controllers/MealController';
 import validateAccount from '../middlewares/users/validateAccount';
-import ValidateMeal from '../middlewares/meals/ValidateMeal';
+import ValidateMeal from '../middlewares/meals/validateMeal';
 
 /**
  * Storage location for multer middleware

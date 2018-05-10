@@ -19,17 +19,6 @@ class Users {
   }
 
   /**
-   * static method to add bulk users to the db
-   * @param {array} userArray
-   *
-   */
-  static addBulk(userArray) {
-    userArray.forEach((user) => {
-      this.add(user);
-    });
-  }
-
-  /**
    * static method to update user using user id
    * @param {object} user
    * @return {object} updated user | {err}
@@ -91,9 +80,7 @@ class Users {
   static getByEmail(email) {
     return UserModel.findAll({
       where: {
-        email: {
-          $ilike: `%${email}%`,
-        },
+        email,
       },
     })
       .then((returnedUser) => {
@@ -148,13 +135,5 @@ class Users {
       .then(() => null);
   }
 }
-
-// add default admin user
-Users.add({
-  email: 'stephen.aribaba@gmail.com',
-  username: 'Stephen',
-  password: 'stephen',
-  accountType: 'admin',
-});
 
 export default Users;

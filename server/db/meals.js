@@ -41,16 +41,6 @@ class Meals {
   }
 
   /**
-   * static method to add bulk meals to the db
-   * @param {array} mealArray
-   */
-  static addBulk(mealArray) {
-    mealArray.forEach((meal) => {
-      this.add(meal);
-    });
-  }
-
-  /**
    * static method to update meal
    * @param {object} meal
    * @return {object} {updated meal} | {err}
@@ -110,7 +100,7 @@ class Meals {
         }
         return returnedMeal.dataValues;
       })
-      .catch(error => ({ err: new Error(error.errors[0].message) }));
+      .catch(error => ({ err: error }));
   }
 
   /**

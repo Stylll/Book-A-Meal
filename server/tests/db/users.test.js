@@ -59,12 +59,6 @@ describe('Test Suite for users db model', () => {
     expect(result.err.message).to.equal('Password must have atleast 6 characters');
   });
 
-  it('should add bulk users to the db', async () => {
-    await users.addBulk([validUser1, validUser2]);
-    const result = await users.getAll();
-    expect(result.length).to.equal(3);
-  });
-
   it('should store hash password after adding', async () => {
     const result = await users.add(validUser1);
     expect(bcrypt.compareSync(validUser1.password, result.password));

@@ -48,7 +48,7 @@ describe('Test Suite for Menu Controller', () => {
   describe('POST: Create Menu - /api/v1/menu', () => {
     // before each hook to clean and insert data to the db
     beforeEach(async () => {
-      await clearMeals();
+      // await clearMeals();
       await clearMenus();
       await insertSeedMenu(existingMenu);
       await insertSeedMeal(existingMeal);
@@ -247,7 +247,7 @@ describe('Test Suite for Menu Controller', () => {
   describe('PUT: Update Menu - /api/v1/menu/:id', () => {
     // before each hook to clean and insert data to the db
     beforeEach(async () => {
-      await clearMeals();
+      // await clearMeals();
       await clearMenus();
       await insertSeedMeal(existingMeal);
       await insertSeedMeal(validMeal1);

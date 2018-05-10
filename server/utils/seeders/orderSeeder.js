@@ -52,15 +52,15 @@ const existingOrder = {
  * Inserts order into orders table
  * @param {object} order
  */
-const insertSeedOrder = (order) => {
-  orders.add(order);
+const insertSeedOrder = async (order) => {
+  await orders.add(order);
 };
 
 /**
  * truncate table orders
  */
-const clearOrders = () => {
-  orders.truncate();
+const clearOrders = async () => {
+  await orders.truncate();
 };
 
 export {

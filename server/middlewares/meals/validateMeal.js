@@ -1,5 +1,4 @@
 import meals from '../../db/meals';
-import menus from '../../db/menus';
 
 /**
  * Meal Middleware validators
@@ -9,10 +8,12 @@ class ValidateMeal {
   /**
    * static method to check if a meal id exists
    * @param {object} request
-   * @throws {object} Error message and status code
+   * @returns {object} Error message and status code
    */
   static async idExists(request, response, next) {
-    const test = await menus.truncate();
+    if (!Number.isInteger(parseInt(request.params.id, 10))) {
+      return response.status(400).json({ message: 'Meal id is invalid' });
+    }
     const result = await meals.get(parseInt(request.params.id, 10));
     if (!result) {
       return response.status(400).send({

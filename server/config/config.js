@@ -9,8 +9,11 @@ const config = {
   },
   test: {
     url: process.env.TEST_DATABASE_URL,
-    dialect: 'postgres',
+    database: 'test_bam_dev',
+    username: 'postgres',
+    password: null,
     logging: false,
+    dialect: 'postgres',
   },
   production: {
     url: process.env.PRODUCTION_DATABASE_URL,

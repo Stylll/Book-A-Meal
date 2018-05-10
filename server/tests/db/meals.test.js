@@ -89,12 +89,6 @@ describe('Test suite for meals model', () => {
     expect(result.image).to.equal(validMeal1.image);
   });
 
-  it('should add bulk meal', async () => {
-    await meals.addBulk([validMeal1, validMeal2]);
-    const result = await meals.getAll();
-    expect(result.length).to.equal(3);
-  });
-
   it('should update a meal', async () => {
     const updateMeal = {
       id: 1,

@@ -8,12 +8,12 @@ const env = process.env.NODE_ENV || 'development';
 const db = {};
 let sequelize;
 
-if (config[env].use_env_variable) {
-  sequelize = new Sequelize(process.env[config[env].use_env_variable], config[env]);
+if (config[env].url) {
+  sequelize = new Sequelize(config[env].url, config[env]);
 } else {
   sequelize = new Sequelize(
-    config[env].url,
-    config[env],
+    config[env].database, config[env].username,
+    config[env].password, config[env],
   );
 }
 
