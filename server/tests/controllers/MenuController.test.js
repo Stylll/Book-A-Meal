@@ -177,7 +177,7 @@ describe('Test Suite for Menu Controller', () => {
         });
     });
 
-    it('should add only existing meals to menu', (done) => {
+    it('should not add if array contains non existing meals', (done) => {
       request(app)
         .post('/api/v1/menu')
         .set({
@@ -187,17 +187,8 @@ describe('Test Suite for Menu Controller', () => {
           mealIds: [1, 2, 5, 7, 8],
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(201);
-          expect(resp.body.menu.mealIds[0]).to.equal(1);
-          expect(resp.body.menu.mealIds[1]).to.equal(2);
-          expect(resp.body.menu).to.haveOwnProperty('createdAt');
-          expect(resp.body.menu).to.haveOwnProperty('updatedAt');
-          expect(resp.body.menu).to.haveOwnProperty('id');
-          expect(resp.body.menu).to.haveOwnProperty('name');
-          expect(resp.body.menu).to.haveOwnProperty('date');
-          expect(resp.body.menu).to.haveOwnProperty('mealIds');
-          expect(resp.body.menu).to.haveOwnProperty('userId');
-          expect(resp.body.menu.mealIds).to.be.an('array');
+          expect(resp.status).to.equal(400);
+          expect(resp.body.message).to.equal('One or more meals don\'t exist in the database');
           done();
         });
     });
@@ -361,12 +352,25 @@ describe('Test Suite for Menu Controller', () => {
         .set({
           'x-access-token': catererToken,
         })
-        .send({ mealIds: [1, 1, 2, 2, 'a'] })
+        .send({ mealIds: [1, 1, 2, 2] })
         .end((err, resp) => {
           expect(resp.status).to.equal(201);
           expect(resp.body.menu.mealIds[0]).to.equal(1);
           expect(resp.body.menu.mealIds[1]).to.equal(2);
           expect(resp.body.menu.mealIds).to.eql([1, 2]);
+        });
+    });
+
+    it('should not save if non integer values are in the array', () => {
+      request(app)
+        .put('/api/v1/menu/1')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .send({ mealIds: [1, 1, 2, 2, 'a'] })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(400);
+          expect(resp.body.message).to.equal('One or more meal ids are invalid');
         });
     });
 
@@ -380,17 +384,8 @@ describe('Test Suite for Menu Controller', () => {
           mealIds: [1, 2, 5, 7, 8],
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(201);
-          expect(resp.body.menu.mealIds[0]).to.equal(1);
-          expect(resp.body.menu.mealIds[1]).to.equal(2);
-          expect(resp.body.menu).to.haveOwnProperty('createdAt');
-          expect(resp.body.menu).to.haveOwnProperty('updatedAt');
-          expect(resp.body.menu).to.haveOwnProperty('id');
-          expect(resp.body.menu).to.haveOwnProperty('name');
-          expect(resp.body.menu).to.haveOwnProperty('date');
-          expect(resp.body.menu).to.haveOwnProperty('mealIds');
-          expect(resp.body.menu).to.haveOwnProperty('userId');
-          expect(resp.body.menu.mealIds).to.be.an('array');
+          expect(resp.status).to.equal(400);
+          expect(resp.body.message).to.equal('One or more meals don\'t exist in the database');
           done();
         });
     });

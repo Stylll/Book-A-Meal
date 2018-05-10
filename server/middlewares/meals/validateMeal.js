@@ -16,7 +16,7 @@ class ValidateMeal {
     }
     const result = await meals.get(parseInt(request.params.id, 10));
     if (!result) {
-      return response.status(400).send({
+      return response.status(400).json({
         message: 'Meal does not exist',
       });
     }
@@ -31,7 +31,7 @@ class ValidateMeal {
    */
   static validateName(request, response, next) {
     if (!request.body.name || !request.body.name.trim()) {
-      return response.status(400).send({
+      return response.status(400).json({
         message: 'Meal name is required',
       });
     }
@@ -48,13 +48,13 @@ class ValidateMeal {
     if (request.body.name) {
       const result = await meals.getByName(request.body.name.trim());
       if (result && result.id !== parseInt(request.params.id, 10)) {
-        return response.status(409).send({
+        return response.status(409).json({
           message: 'Meal name already exists',
         });
       }
       return next();
     }
-    return response.status(400).send({
+    return response.status(400).json({
       message: 'Meal name is required',
     });
   }
@@ -68,15 +68,21 @@ class ValidateMeal {
    * @throws {object} Error message and status code
    */
   static priceValid(request, response, next) {
-    if (!request.body.price) return response.status(400).send({ message: 'Price is required' });
+    if (!request.body.price) return response.status(400).json({ message: 'Price is required' });
 
-    if (/[^0-9.]/gi.test(request.body.price) === true) {
-      return response.status(400).send({
+    if (Number.isNaN(parseFloat(request.body.price, 10))) {
+      return response.status(400).json({
         message: 'Price is invalid',
       });
     }
 
-    if (request.body.price <= 1) return response.status(400).send({ message: 'Price must be greater than one' });
+    if (/[^0-9.]/gi.test(request.body.price) === true) {
+      return response.status(400).json({
+        message: 'Price is invalid',
+      });
+    }
+
+    if (request.body.price <= 1) return response.status(400).json({ message: 'Price must be greater than one' });
 
     return next();
   }
@@ -91,7 +97,7 @@ class ValidateMeal {
     const result = await meals.get(parseInt(request.params.id, 10));
     if (request.decoded.user.accountType !== 'admin' &&
       request.decoded.user.id !== result.userId) {
-      return response.status(403).send({ message: 'Unauthorized access' });
+      return response.status(403).json({ message: 'Unauthorized access' });
     }
     return next();
   }

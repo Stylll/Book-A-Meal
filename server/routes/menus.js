@@ -12,7 +12,7 @@ const menus = (router) => {
   // router to handle menu post request
   router.post(
     '/menu', validateAccount.user, validateAccount.caterer,
-    ValidateMenu.existsForDay, ValidateMenu.mealsValid,
+    ValidateMenu.existsForDay, ValidateMenu.mealsValid, ValidateMenu.mealExists,
     ValidateMenu.validateMealOwner, MenuController.post,
   );
 
@@ -20,7 +20,8 @@ const menus = (router) => {
   router.put(
     '/menu/:id', validateAccount.user,
     validateAccount.caterer, ValidateMenu.menuValid, ValidateMenu.idExists,
-    ValidateMenu.mealsValid, MenuController.put,
+    ValidateMenu.mealsValid, ValidateMenu.mealExists, ValidateMenu.validateMealOwner,
+    MenuController.put,
   );
 
   // router to handle menu get request
