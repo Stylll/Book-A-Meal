@@ -34,6 +34,7 @@ describe('Test Suite for Meal Controller', () => {
 
   // generate access token for users
   const catererToken = Authenticate.authenticateUser({ id: 1, ...existingUser });
+  const catererToken2 = Authenticate.authenticateUser({ id: 5, ...existingUser });
   const customerToken = Authenticate.authenticateUser({ id: 2, ...validUser1 });
   const adminToken = Authenticate.authenticateUser({ id: 4, ...adminUser });
 
@@ -210,6 +211,8 @@ describe('Test Suite for Meal Controller', () => {
     beforeEach(async () => {
       await clearMeals();
       await insertSeedMeal(existingMeal);
+      await insertSeedMeal(validMeal2);
+      await insertSeedMeal({ ...validMeal2, userId: 3 });
     });
 
     it('should require an authentication token', (done) => {
@@ -265,8 +268,7 @@ describe('Test Suite for Meal Controller', () => {
         });
     });
 
-    it('should require a unique meal name', async () => {
-      await insertSeedMeal(validMeal2);
+    it('should require a unique meal name', (done) => {
       request(app)
         .put('/api/v1/meals/1')
         .set({
@@ -276,6 +278,7 @@ describe('Test Suite for Meal Controller', () => {
         .end((err, resp) => {
           expect(resp.status).to.equal(409);
           expect(resp.body.message).to.equal('Meal name already exists');
+          done();
         });
     });
 
@@ -331,8 +334,7 @@ describe('Test Suite for Meal Controller', () => {
         });
     });
 
-    it('should return updated meal with proper objects and proper status code', async () => {
-      await insertSeedMeal(validMeal2);
+    it('should return updated meal with proper objects and proper status code', (done) => {
       validMeal2.name = 'Jollof rice';
       validMeal2.price = 4030;
       request(app)
@@ -353,25 +355,24 @@ describe('Test Suite for Meal Controller', () => {
           expect(resp.body.meal).to.haveOwnProperty('userId');
           expect(resp.body.meal.userId).to.not.equal(null);
           expect(resp.body.meal.userId).to.equal(1);
+          done();
         });
     });
 
-    it('should not update if caterer is not the creator of the meal', async () => {
-      await insertSeedMeal({ ...validMeal2, userId: 3 });
-      validMeal2.name = 'Jollof rice';
-      validMeal2.price = 4030;
+    it('should not update if caterer is not the creator of the meal', (done) => {
       request(app)
         .put('/api/v1/meals/2')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': catererToken2,
         })
         .send({
-          name: validMeal2.name,
-          price: validMeal2.price,
+          name: 'Jollof rice',
+          price: 4030,
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(403);
           expect(resp.body.message).to.equal('Unauthorized access');
+          done();
         });
     });
   });

@@ -34,8 +34,8 @@ const meals = (router) => {
   // meal router to handle pull requests
   router.put(
     '/meals/:id', upload.single('image'), validateAccount.user,
-    validateAccount.caterer, ValidateMeal.idExists, ValidateMeal.nameExists,
-    ValidateMeal.priceValid, ValidateMeal.validateAccess, MealController.put,
+    validateAccount.caterer, ValidateMeal.idExists, ValidateMeal.validateAccess,
+    ValidateMeal.nameExists, ValidateMeal.priceValid, MealController.put,
   );
 
   // meal router to handle get requests
