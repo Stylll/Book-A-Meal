@@ -1,13 +1,12 @@
 # Book-A-Meal
-Book-A-Meal is an application that allows customers to make food orders and helps the food vendor know what the customers what to eat.
-
-BAM has 2 categories of users. The customer and the caterer.
-
-## Badges
 [![Build Status](https://travis-ci.org/Stylll/Book-A-Meal.svg?branch=develop)](https://travis-ci.org/Stylll/Book-A-Meal)
 [![Coverage Status](https://coveralls.io/repos/github/Stylll/Book-A-Meal/badge.svg?branch=develop)](https://coveralls.io/github/Stylll/Book-A-Meal?branch=develop)
 [![Maintainability](https://api.codeclimate.com/v1/badges/9037bcf71b13532947cd/maintainability)](https://codeclimate.com/github/Stylll/Book-A-Meal/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/9037bcf71b13532947cd/test_coverage)](https://codeclimate.com/github/Stylll/Book-A-Meal/test_coverage)
+
+Book-A-Meal is an application that allows customers to make food orders and helps the food vendor know what the customers what to eat.
+
+BAM has 2 categories of users. The customer and the caterer.
 
 ## Features
 * Authentication is done using **Json Web Token**. This ensure the api endpoints are secured. 
