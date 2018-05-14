@@ -12,8 +12,14 @@ import orders from './orders';
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.status(200).send({ message: 'Welcome to Book A Meal API version 1.' });
+router.get('/', (request, response) => {
+  response.status(200).send({ message: 'Welcome to Book A Meal API version 1.' });
+});
+
+// create the error object in the request object
+router.all('*', (request, response, next) => {
+  request.errors = {};
+  next();
 });
 
 // routes requests related to users authentication

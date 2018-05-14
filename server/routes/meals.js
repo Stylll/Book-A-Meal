@@ -4,6 +4,7 @@ import 'babel-polyfill';
 import MealController from '../controllers/MealController';
 import validateAccount from '../middlewares/users/validateAccount';
 import ValidateMeal from '../middlewares/meals/validateMeal';
+import ErrorHandler from '../middlewares/ErrorHandler';
 
 /**
  * Storage location for multer middleware
@@ -28,14 +29,15 @@ const meals = (router) => {
   router.post(
     '/meals', upload.single('image'), validateAccount.user,
     validateAccount.caterer, ValidateMeal.validateName, ValidateMeal.priceValid,
-    ValidateMeal.nameExists, MealController.post,
+    ValidateMeal.nameExists, ErrorHandler.handleErrors, MealController.post,
   );
 
   // meal router to handle pull requests
   router.put(
     '/meals/:id', upload.single('image'), validateAccount.user,
     validateAccount.caterer, ValidateMeal.idExists, ValidateMeal.validateAccess,
-    ValidateMeal.nameExists, ValidateMeal.priceValid, MealController.put,
+    ValidateMeal.validateName, ValidateMeal.nameExists, ValidateMeal.priceValid,
+    ErrorHandler.handleErrors, MealController.put,
   );
 
   // meal router to handle get requests
@@ -44,7 +46,8 @@ const meals = (router) => {
   // meal router to handle delete requests
   router.delete(
     '/meals/:id', validateAccount.user, validateAccount.caterer,
-    ValidateMeal.idExists, ValidateMeal.validateAccess, MealController.delete,
+    ValidateMeal.idExists, ValidateMeal.validateAccess, ErrorHandler.handleErrors,
+    MealController.delete,
   );
 };
 

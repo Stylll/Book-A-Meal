@@ -12,13 +12,19 @@ class ValidateMeal {
    */
   static async idExists(request, response, next) {
     if (!Number.isInteger(parseInt(request.params.id, 10))) {
-      return response.status(400).json({ message: 'Meal id is invalid' });
+      request.errors.id = {
+        message: 'Meal id is invalid',
+        statusCode: 400,
+      };
+      return next();
     }
     const result = await meals.get(parseInt(request.params.id, 10));
     if (!result) {
-      return response.status(400).json({
+      request.errors.id = {
         message: 'Meal does not exist',
-      });
+        statusCode: 400,
+      };
+      return next();
     }
 
     return next();
@@ -30,10 +36,12 @@ class ValidateMeal {
    * @throws {object} Error message and status code
    */
   static validateName(request, response, next) {
-    if (!request.body.name || !request.body.name.trim()) {
-      return response.status(400).json({
+    if (!(request.body.name && request.body.name.trim().length > 0)) {
+      request.errors.name = {
         message: 'Meal name is required',
-      });
+        statusCode: 400,
+      };
+      return next();
     }
     return next();
   }
@@ -48,15 +56,19 @@ class ValidateMeal {
     if (request.body.name) {
       const result = await meals.getByName(request.body.name.trim());
       if (result && result.id !== parseInt(request.params.id, 10)) {
-        return response.status(409).json({
+        request.errors.name = {
           message: 'Meal name already exists',
-        });
+          statusCode: 409,
+        };
+        return next();
       }
       return next();
     }
-    return response.status(400).json({
+    request.errors.name = {
       message: 'Meal name is required',
-    });
+      statusCode: 400,
+    };
+    return next();
   }
 
   /**
@@ -68,21 +80,37 @@ class ValidateMeal {
    * @throws {object} Error message and status code
    */
   static priceValid(request, response, next) {
-    if (!request.body.price) return response.status(400).json({ message: 'Price is required' });
+    if (!request.body.price) {
+      request.errors.price = {
+        message: 'Price is required',
+        statusCode: 400,
+      };
+      return next();
+    }
 
     if (Number.isNaN(parseFloat(request.body.price, 10))) {
-      return response.status(400).json({
+      request.errors.price = {
         message: 'Price is invalid',
-      });
+        statusCode: 400,
+      };
+      return next();
     }
 
     if (/[^0-9.]/gi.test(request.body.price) === true) {
-      return response.status(400).json({
+      request.errors.price = {
         message: 'Price is invalid',
-      });
+        statusCode: 400,
+      };
+      return next();
     }
 
-    if (request.body.price <= 1) return response.status(400).json({ message: 'Price must be greater than one' });
+    if (request.body.price <= 1) {
+      request.errors.price = {
+        message: 'Price must be greater than one',
+        statusCode: 400,
+      };
+      return next();
+    }
 
     return next();
   }
@@ -95,9 +123,13 @@ class ValidateMeal {
   static async validateAccess(request, response, next) {
     // check if user is admin or the creator of the meal
     const result = await meals.get(parseInt(request.params.id, 10));
-    if (request.decoded.user.accountType !== 'admin' &&
-      request.decoded.user.id !== result.userId) {
-      return response.status(403).json({ message: 'Unauthorized access' });
+    if (!result || (request.decoded.user.accountType !== 'admin' &&
+      request.decoded.user.id !== result.userId)) {
+      request.errors.access = {
+        message: 'Unauthorized access',
+        statusCode: 403,
+      };
+      return next();
     }
     return next();
   }
