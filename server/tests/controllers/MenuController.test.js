@@ -222,8 +222,6 @@ describe('Test Suite for Menu Controller', () => {
           expect(resp.status).to.equal(201);
           expect(resp.body.menu.mealIds[0]).to.equal(1);
           expect(resp.body.menu.mealIds[1]).to.equal(2);
-          expect(resp.body.menu).to.haveOwnProperty('createdAt');
-          expect(resp.body.menu).to.haveOwnProperty('updatedAt');
           expect(resp.body.menu).to.haveOwnProperty('id');
           expect(resp.body.menu).to.haveOwnProperty('name');
           expect(resp.body.menu).to.haveOwnProperty('date');
@@ -436,9 +434,9 @@ describe('Test Suite for Menu Controller', () => {
         .end((err, resp) => {
           expect(resp.status).to.equal(200);
           expect(resp.body.menus).to.be.an('array');
-          expect(resp.body.menus[0].id).to.equal(1);
-          expect(resp.body.menus[0].name).to.equal(currentMenu.name);
-          expect(resp.body.menus[0].date).to.equal(currentMenu.date);
+          expect(resp.body.menus[0].id).to.equal(2);
+          expect(resp.body.menus[0].name).to.equal(existingMenu.name);
+          expect(resp.body.menus[0].date).to.equal(existingMenu.date);
           expect(resp.body.menus.length).to.be.greaterThan(1);
           done();
         });
