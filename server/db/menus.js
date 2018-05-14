@@ -1,7 +1,7 @@
 import { isEmpty } from 'lodash';
 import { getNormalDate } from '../utils/dateBeautifier';
 import MealUtils from '../utils/meals/mealUtils';
-import { Menus as MenuModel } from '../models';
+import { Menus as MenuModel, Meals as MealModel } from '../models';
 
 /**
  * Menu model class
@@ -41,9 +41,10 @@ class Menus {
 
     // add the menu
     return MenuModel.create(newMenu)
-      .then((savedMenu) => {
+      .then(async (savedMenu) => {
         if (savedMenu) {
-          return savedMenu.dataValues;
+          await savedMenu.setMeals(newMenu.mealIds);
+          return this.get(savedMenu.id);
         }
         return null;
       })
@@ -78,18 +79,13 @@ class Menus {
 
     // get menu record and update it
     return MenuModel.findById(pendingMenu.id)
-      .then((returnedMenu) => {
+      .then(async (returnedMenu) => {
         if (isEmpty(returnedMenu)) {
           return { err: new Error('Menu does not exist') };
         }
-        return returnedMenu.update(pendingMenu)
-          .then((updateMenu) => {
-            if (updateMenu) {
-              return updateMenu.dataValues;
-            }
-            return null;
-          })
-          .catch(error => ({ err: new Error(error.errors[0].message) }));
+        await returnedMenu.update(pendingMenu);
+        await returnedMenu.setMeals(pendingMenu.mealIds);
+        return this.get(pendingMenu.id);
       });
   }
 
@@ -116,15 +112,18 @@ class Menus {
    */
   static get(id) {
     return MenuModel.findById(id, {
-      raw: true,
-    })
-      .then((returnedMenu) => {
-        if (isEmpty(returnedMenu)) {
-          return undefined;
-        }
-        return returnedMenu;
-      })
-      .catch(error => ({ err: new Error(error.errors[0].message) }));
+      include: [{
+        model: MealModel,
+        as: 'meals',
+        attributes: { exclude: ['createdAt', 'updatedAt', 'MenuMeals'] },
+      }],
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
+    }).then((result) => {
+      if (isEmpty(result)) {
+        return undefined;
+      }
+      return result;
+    });
   }
 
   /**
@@ -144,7 +143,15 @@ class Menus {
       where: {
         date: normalDate,
       },
-      raw: true,
+      order: [
+        ['id', 'DESC'],
+      ],
+      include: [{
+        model: MealModel,
+        as: 'meals',
+        attributes: { exclude: ['createdAt', 'updatedAt', 'MenuMeals'] },
+      }],
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
     })
       .then((returnedMenu) => {
         if (isEmpty(returnedMenu)) {
@@ -155,13 +162,46 @@ class Menus {
       .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
 
+  static getByUserId(userId) {
+    // filter for result by normalDate
+    return MenuModel.findAll({
+      order: [
+        ['id', 'DESC'],
+      ],
+      include: [{
+        model: MealModel,
+        as: 'meals',
+        where: {
+          userId,
+        },
+        attributes: { exclude: ['createdAt', 'updatedAt', 'MenuMeals'] },
+      }],
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
+    })
+      .then((returnedMenu) => {
+        if (isEmpty(returnedMenu)) {
+          return [];
+        }
+        return returnedMenu;
+      })
+      .catch(error => ({ err: new Error(error.errors[0].message) }));
+  }
+
   /**
    * static method to get all menus in the db
    * @returns {array} [menus]
    */
   static getAll() {
     return MenuModel.findAll({
-      raw: true,
+      order: [
+        ['id', 'DESC'],
+      ],
+      include: [{
+        model: MealModel,
+        as: 'meals',
+        attributes: { exclude: ['createdAt', 'updatedAt', 'MenuMeals'] },
+      }],
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
     })
       .then((returnedMenu) => {
         if (isEmpty(returnedMenu)) {

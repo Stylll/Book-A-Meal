@@ -76,7 +76,7 @@ describe('Test Suite for Menu Model', () => {
     const result = await menus.get(1);
     expect(result.name).to.equal(existingMenu.name);
     expect(result.date).to.equal(existingMenu.date);
-    expect(result).to.haveOwnProperty('id');
+    expect(result.id).to.equal(1);
   });
 
   it('should require a user id', async () => {
@@ -141,9 +141,9 @@ describe('Test Suite for Menu Model', () => {
     const result = await menus.getAll();
     expect(result).to.be.an('array');
     expect(result.length).to.equal(3);
-    expect(result[0].name).to.equal(existingMenu.name);
-    expect(result[0].date).to.equal(existingMenu.date);
-    expect(result[0]).to.haveOwnProperty('id');
+    expect(result[0].name).to.equal(validMenu2.name);
+    expect(result[0].date).to.equal(validMenu2.date);
+    expect(result[0].id).to.equal(3);
   });
 
   it('should delete all menu from the menu data store', async () => {

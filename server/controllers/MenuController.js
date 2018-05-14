@@ -1,7 +1,6 @@
 import { isEmpty } from 'lodash';
 import menus from '../db/menus';
 import { getNormalDate } from '../utils/dateBeautifier';
-import menuUtils from '../utils/menu/menuUtils';
 
 /**
  * Controller Class to handle user Menu requests
@@ -51,7 +50,7 @@ class MenuController {
     const newMenu = await menus.update({ id: oldMenu.id, mealIds });
 
     if (newMenu && !newMenu.err) {
-      return response.status(201).json({ menu: newMenu, message: 'Updated successfully' });
+      return response.status(200).json({ menu: newMenu, message: 'Updated successfully' });
     }
 
     return response.status(500).json({ message: 'Internal Server Error' });
@@ -66,20 +65,30 @@ class MenuController {
    * @returns {object} {menus} | {message}
    */
   static async get(request, response) {
-    const { accountType } = request.decoded.user;
+    const { accountType, id } = request.decoded.user;
+
+    /**
+     * if accounttype is admin,
+     * then we get all menus in the db
+     * and return them as an array
+     */
+    if (accountType === 'admin') {
+      const menuList = await menus.getAll();
+      if (menuList.length > 0) {
+        return response.status(200).json({ menus: menuList });
+      }
+      return response.status(200).json({ menus: [] });
+    }
 
     /**
      * if accounttype is caterer,
      * then we get all menus in the db
-     * and return them as an array
+     * and show only meals created by the caterer
      */
-    if (accountType === 'caterer' || accountType === 'admin') {
-      const menuList = await menus.getAll();
+    if (accountType === 'caterer') {
+      const menuList = await menus.getByUserId(id);
       if (menuList.length > 0) {
-        const properMenuList = (accountType === 'caterer') ?
-          await menuUtils.buildMenus(menuList, request.decoded.user.id) :
-          await menuUtils.buildMenus(menuList);
-        return response.status(200).json({ menus: properMenuList });
+        return response.status(200).json({ menus: menuList });
       }
       return response.status(200).json({ menus: [] });
     }
@@ -92,8 +101,7 @@ class MenuController {
     if (accountType === 'customer') {
       const menuObject = await menus.getByDate(new Date());
       if (!isEmpty(menuObject)) {
-        const properMenuObject = await menuUtils.buildMenu(menuObject);
-        return response.status(200).json({ menu: properMenuObject });
+        return response.status(200).json({ menu: menuObject });
       }
       return response.status(404).json({ message: 'Menu for the day not set' });
     }

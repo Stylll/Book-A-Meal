@@ -50,6 +50,11 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'userId',
       onDelete: 'CASCADE',
     });
+    Menus.belongsToMany(models.Meals, {
+      through: models.MenuMeals,
+      as: 'meals',
+      foreignKey: 'menuId',
+    });
   };
   // Instance Method
   Menus.prototype.setName = function setName() {
