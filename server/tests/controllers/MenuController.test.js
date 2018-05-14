@@ -108,8 +108,6 @@ describe('Test Suite for Menu Controller', () => {
           expect(resp.body).to.haveOwnProperty('menu');
           expect(resp.body.menu.date).to.equal(getNormalDate(new Date()));
           expect(resp.body.menu.name).to.equal(`Menu For ${beautifyDate(new Date())}`);
-          expect(resp.body.menu).to.haveOwnProperty('createdAt');
-          expect(resp.body.menu).to.haveOwnProperty('updatedAt');
           expect(resp.body.menu).to.haveOwnProperty('mealIds');
           expect(resp.body.menu.mealIds).to.eql([1, 2]);
           expect(resp.body.menu.userId).to.equal(1);
