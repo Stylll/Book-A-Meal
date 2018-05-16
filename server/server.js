@@ -31,7 +31,7 @@ app.use((req, res, next) => {
 
 // Error Handler
 app.use((err, req, res, next) => {
-  res.status(err.status || 500).send({ message: err.message || 'Error' });
+  res.status(err.status || 500).json({ message: err.message || 'Error' });
 });
 
 // UnhandledPromiseRejection Handler
