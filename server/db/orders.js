@@ -131,6 +131,7 @@ class Orders {
     if (!Number.isInteger(id)) return null;
     return OrderModel.findById(id, {
       raw: true,
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
     })
       .then((returnedOrder) => {
         if (isEmpty(returnedOrder)) {
@@ -148,6 +149,7 @@ class Orders {
   static getAll() {
     return OrderModel.findAll({
       raw: true,
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
     })
       .then((returnedOrder) => {
         if (isEmpty(returnedOrder)) {
@@ -171,6 +173,7 @@ class Orders {
           mealId,
         },
         raw: true,
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
       })
         .then((returnedOrder) => {
           if (isEmpty(returnedOrder)) {
@@ -195,6 +198,7 @@ class Orders {
         status,
       },
       raw: true,
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
     })
       .then((returnedOrder) => {
         if (isEmpty(returnedOrder)) {
@@ -218,6 +222,7 @@ class Orders {
         userId,
       },
       raw: true,
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
     })
       .then((returnedOrder) => {
         if (isEmpty(returnedOrder)) {
@@ -248,6 +253,7 @@ class Orders {
         },
       },
       raw: true,
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
     })
       .then((returnedOrder) => {
         if (isEmpty(returnedOrder)) {

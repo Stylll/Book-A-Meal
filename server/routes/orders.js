@@ -1,6 +1,7 @@
 import OrderController from '../controllers/OrderController';
 import validateAccount from '../middlewares/users/validateAccount';
 import validateOrder from '../middlewares/orders/validateOrder';
+import ErrorHandler from '../middlewares/ErrorHandler';
 
 /**
  * Router to handle order requests
@@ -15,7 +16,7 @@ const orders = (router) => {
   router.post(
     '/orders', validateAccount.user, validateAccount.customer, validateOrder.isOpen,
     validateOrder.mealValid, validateOrder.mealInMenu, validateOrder.quantityValid,
-    OrderController.post,
+    ErrorHandler.handleErrors, OrderController.post,
   );
 
   /**
@@ -25,7 +26,7 @@ const orders = (router) => {
     '/orders/:id', validateAccount.user, validateOrder.orderValid, validateOrder.mealValidIfPassed,
     validateOrder.mealInMenuIfPassed, validateOrder.quantityValidIfPassed,
     validateOrder.statusValid, validateOrder.validateCustomerAccess,
-    validateOrder.validateSuperAccess,
+    validateOrder.validateSuperAccess, ErrorHandler.handleErrors,
     OrderController.put,
   );
 

@@ -432,7 +432,7 @@ describe('Test Suite for Meal Controller', () => {
           expect(resp.status).to.equal(200);
           expect(resp.body.meals).to.be.an('array');
           expect(resp.body.meals[0])
-            .to.have.all.deep.keys('id', 'name', 'price', 'image', 'userId', 'createdAt', 'updatedAt');
+            .to.have.all.deep.keys('id', 'name', 'price', 'image', 'userId');
           expect(resp.body.meals.length).to.equal(2);
           expect(resp.body.meals[0].name).to.equal(existingMeal.name);
           expect(resp.body.meals[1].name).to.equal(validMeal1.name);
@@ -452,7 +452,7 @@ describe('Test Suite for Meal Controller', () => {
           expect(resp.status).to.equal(200);
           expect(resp.body.meals).to.be.an('array');
           expect(resp.body.meals[0])
-            .to.have.all.deep.keys('id', 'name', 'price', 'image', 'userId', 'createdAt', 'updatedAt');
+            .to.have.all.deep.keys('id', 'name', 'price', 'image', 'userId');
           expect(resp.body.meals.length).to.equal(3);
           expect(resp.body.meals[0].name).to.equal(existingMeal.name);
           expect(resp.body.meals[1].name).to.equal(validMeal1.name);
