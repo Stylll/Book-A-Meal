@@ -108,8 +108,8 @@ describe('Test Suite for Order Controller', () => {
 
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Meal id is required');
+          expect(resp.body.errors.meal.statusCode).to.equal(400);
+          expect(resp.body.errors.meal.message).to.equal('Meal id is required');
           done();
         });
     });
@@ -124,8 +124,8 @@ describe('Test Suite for Order Controller', () => {
           mealId: 99,
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Meal does not exist');
+          expect(resp.body.errors.meal.statusCode).to.equal(400);
+          expect(resp.body.errors.meal.message).to.equal('Meal does not exist');
           done();
         });
     });
@@ -140,8 +140,8 @@ describe('Test Suite for Order Controller', () => {
           mealId: 3,
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Meal does not exist in menu');
+          expect(resp.body.errors.meal.statusCode).to.equal(400);
+          expect(resp.body.errors.meal.message).to.equal('Meal does not exist in menu');
           done();
         });
     });
@@ -157,8 +157,8 @@ describe('Test Suite for Order Controller', () => {
           quantity: 0,
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Quantity is required');
+          expect(resp.body.errors.quantity.statusCode).to.equal(400);
+          expect(resp.body.errors.quantity.message).to.equal('Quantity is required');
           done();
         });
     });
@@ -174,8 +174,8 @@ describe('Test Suite for Order Controller', () => {
           quantity: 'abc',
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Quantity is invalid');
+          expect(resp.body.errors.quantity.statusCode).to.equal(400);
+          expect(resp.body.errors.quantity.message).to.equal('Quantity is invalid');
           done();
         });
     });
@@ -269,8 +269,8 @@ describe('Test Suite for Order Controller', () => {
         })
         .send({})
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Order id is invalid');
+          expect(resp.body.errors.order.statusCode).to.equal(400);
+          expect(resp.body.errors.order.message).to.equal('Order id is invalid');
           done();
         });
     });
@@ -283,8 +283,8 @@ describe('Test Suite for Order Controller', () => {
         })
         .send({})
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Order does not exist');
+          expect(resp.body.errors.order.statusCode).to.equal(400);
+          expect(resp.body.errors.order.message).to.equal('Order does not exist');
           done();
         });
     });
@@ -299,8 +299,8 @@ describe('Test Suite for Order Controller', () => {
           mealId: 3,
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Meal does not exist in menu');
+          expect(resp.body.errors.meal.statusCode).to.equal(400);
+          expect(resp.body.errors.meal.message).to.equal('Meal does not exist in menu');
           done();
         });
     });
@@ -315,8 +315,8 @@ describe('Test Suite for Order Controller', () => {
           mealId: 1,
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Status is required');
+          expect(resp.body.errors.status.statusCode).to.equal(400);
+          expect(resp.body.errors.status.message).to.equal('Status is required');
           done();
         });
     });
@@ -332,8 +332,8 @@ describe('Test Suite for Order Controller', () => {
           status: 'abc',
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Status is invalid');
+          expect(resp.body.errors.status.statusCode).to.equal(400);
+          expect(resp.body.errors.status.message).to.equal('Status is invalid');
           done();
         });
     });
@@ -350,8 +350,8 @@ describe('Test Suite for Order Controller', () => {
           status: 'canceled',
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(403);
-          expect(resp.body.message).to.equal('Cannot change status');
+          expect(resp.body.errors.status.statusCode).to.equal(403);
+          expect(resp.body.errors.status.message).to.equal('Cannot change status');
         });
     });
 
@@ -366,8 +366,8 @@ describe('Test Suite for Order Controller', () => {
           status: 'complete',
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(403);
-          expect(resp.body.message).to.equal('Can only update status with canceled or pending');
+          expect(resp.body.errors.status.statusCode).to.equal(403);
+          expect(resp.body.errors.status.message).to.equal('Can only update status with canceled or pending');
           done();
         });
     });
@@ -383,8 +383,8 @@ describe('Test Suite for Order Controller', () => {
           status: 'canceled',
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(403);
-          expect(resp.body.message).to.equal('Unauthorized access');
+          expect(resp.body.errors.access.statusCode).to.equal(403);
+          expect(resp.body.errors.access.message).to.equal('Unauthorized access');
           done();
         });
     });
@@ -447,8 +447,8 @@ describe('Test Suite for Order Controller', () => {
           status: 'canceled',
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(403);
-          expect(resp.body.message).to.equal('Unauthorized access');
+          expect(resp.body.errors.access.statusCode).to.equal(403);
+          expect(resp.body.errors.access.message).to.equal('Unauthorized access');
           done();
         });
     });
@@ -496,8 +496,8 @@ describe('Test Suite for Order Controller', () => {
           status: 'complete',
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(403);
-          expect(resp.body.message).to.equal('Unauthorized access');
+          expect(resp.body.errors.access.statusCode).to.equal(403);
+          expect(resp.body.errors.access.message).to.equal('Unauthorized access');
           done();
         });
     });
@@ -550,8 +550,10 @@ describe('Test Suite for Order Controller', () => {
           status: 'pending',
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(403);
-          expect(resp.body.message).to.equal('Only customers are allowed to change meal option or quantity');
+          expect(resp.body.errors.meal.statusCode).to.equal(403);
+          expect(resp.body.errors.meal.message).to.equal('Only customers are allowed to change meal option');
+          expect(resp.body.errors.quantity.statusCode).to.equal(403);
+          expect(resp.body.errors.quantity.message).to.equal('Only customers are allowed to change quantity');
           done();
         });
     });
@@ -568,8 +570,10 @@ describe('Test Suite for Order Controller', () => {
           status: 'pending',
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(403);
-          expect(resp.body.message).to.equal('Only customers are allowed to change meal option or quantity');
+          expect(resp.body.errors.meal.statusCode).to.equal(403);
+          expect(resp.body.errors.meal.message).to.equal('Only customers are allowed to change meal option');
+          expect(resp.body.errors.quantity.statusCode).to.equal(403);
+          expect(resp.body.errors.quantity.message).to.equal('Only customers are allowed to change quantity');
           done();
         });
     });
@@ -585,8 +589,8 @@ describe('Test Suite for Order Controller', () => {
           quantity: 5,
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Meal id is invalid');
+          expect(resp.body.errors.meal.statusCode).to.equal(400);
+          expect(resp.body.errors.meal.message).to.equal('Meal id is invalid');
           done();
         });
     });
@@ -602,8 +606,8 @@ describe('Test Suite for Order Controller', () => {
           quantity: 5,
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Meal does not exist');
+          expect(resp.body.errors.meal.statusCode).to.equal(400);
+          expect(resp.body.errors.meal.message).to.equal('Meal does not exist');
           done();
         });
     });
@@ -619,8 +623,8 @@ describe('Test Suite for Order Controller', () => {
           quantity: 'abc',
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Quantity is invalid');
+          expect(resp.body.errors.quantity.statusCode).to.equal(400);
+          expect(resp.body.errors.quantity.message).to.equal('Quantity is invalid');
           done();
         });
     });
@@ -637,8 +641,8 @@ describe('Test Suite for Order Controller', () => {
           status: 'pending',
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Quantity should be greater than zero');
+          expect(resp.body.errors.quantity.statusCode).to.equal(400);
+          expect(resp.body.errors.quantity.message).to.equal('Quantity should be greater than zero');
           done();
         });
     });
@@ -696,8 +700,6 @@ describe('Test Suite for Order Controller', () => {
           expect(resp.body.orders[0].meal.name).to.equal('Curry Rice');
           expect(resp.body.orders[0].status).to.equal('pending');
           expect(resp.body.orders[0].image).to.not.equal(null);
-          expect(resp.body.orders[0]).to.haveOwnProperty('createdAt');
-          expect(resp.body.orders[0]).to.haveOwnProperty('updatedAt');
           done();
         });
     });
@@ -718,8 +720,6 @@ describe('Test Suite for Order Controller', () => {
           expect(resp.body.orders[3].status).to.equal('pending');
           expect(resp.body.orders[3].image).to.not.equal(null);
           expect(resp.body.orders[3].cost).to.equal(4500);
-          expect(resp.body.orders[3]).to.haveOwnProperty('createdAt');
-          expect(resp.body.orders[3]).to.haveOwnProperty('updatedAt');
           done();
         });
     });
@@ -740,8 +740,6 @@ describe('Test Suite for Order Controller', () => {
           expect(resp.body.orders[3].status).to.equal('pending');
           expect(resp.body.orders[3].image).to.not.equal(null);
           expect(resp.body.orders[3].cost).to.equal(4500);
-          expect(resp.body.orders[3]).to.haveOwnProperty('createdAt');
-          expect(resp.body.orders[3]).to.haveOwnProperty('updatedAt');
           done();
         });
     });

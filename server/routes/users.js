@@ -1,5 +1,6 @@
 import UserController from '../controllers/UserController';
 import validateUser from '../middlewares/users/validateUser';
+import ErrorHandler from '../middlewares/ErrorHandler';
 
 /**
  * Router to handle user requests
@@ -8,9 +9,16 @@ import validateUser from '../middlewares/users/validateUser';
  */
 
 const users = (router) => {
-  router.post('/users/signup', validateUser.signup, UserController.signup);
+  router.post(
+    '/users/signup', validateUser.emailValid, validateUser.usernameValid,
+    validateUser.passwordValid, validateUser.accountValid, ErrorHandler.handleErrors,
+    UserController.signup,
+  );
 
-  router.post('/users/signin', validateUser.signin, UserController.signin);
+  router.post(
+    '/users/signin', validateUser.emailLoginValid, validateUser.passwordLoginValid,
+    ErrorHandler.handleErrors, UserController.signin,
+  );
 };
 
 export default users;

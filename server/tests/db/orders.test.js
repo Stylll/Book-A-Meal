@@ -151,8 +151,6 @@ describe('Test Suite for orders', () => {
     expect(result.quantity).to.equal(existingOrder.quantity);
     expect(result.cost).to.equal(existingOrder.price * existingOrder.quantity);
     expect(result.status).to.equal('pending');
-    expect(result).to.haveOwnProperty('createdAt');
-    expect(result).to.haveOwnProperty('updatedAt');
     expect(result).to.haveOwnProperty('userId');
   });
 

@@ -1,46 +1,182 @@
-import user from '../../utils/validators/vUser';
+import validator from 'validator';
+import users from '../../db/users';
 
 /**
- * Middleware class to validate user actions
+ * User Middleware validators
  */
-class validateUser {
+
+class ValidateUser {
   /**
-   * static method to validate a signup request body
+   * static method to check if email is valid
    * @param {object} request
    * @param {object} response
    * @param {object} next
-   * @throws {object} Error message and status code
-   * @returns {function} next
+   * @throws {function} next
    */
-  static signup(request, response, next) {
-    /**
-     * This uses a promise all to run all validation.
-     * It catches any invalid data and returns it.
-     */
-    return Promise.all([user.emailValid(request), user.usernameValid(request),
-      user.passwordValid(request)], user.accountValid(request)).then(() => next())
-      .catch(err => response.status(err.status).send({ message: err.message }));
+  static async emailValid(request, response, next) {
+    // check if email is provided
+    if (!request.body.email || !request.body.email.trim()) {
+      request.errors.email = {
+        message: 'Email is required',
+        statusCode: 400,
+      };
+      return next();
+    }
+    // check if email is valid
+    if (!validator.isEmail(request.body.email.trim())) {
+      request.errors.email = {
+        message: 'Email is invalid',
+        statusCode: 400,
+      };
+      return next();
+    }
+    // check if email already exists
+    const email = await users.getByEmail(request.body.email.trim());
+    if (email) {
+      request.errors.email = {
+        message: 'Email already exists. Try another one.',
+        statusCode: 409,
+      };
+      return next();
+    }
+    return next();
   }
 
   /**
-   * static method to validate a signin request body
+   * static method to check if email is passed when logging in
    * @param {object} request
    * @param {object} response
    * @param {object} next
-   * @throws {object} Error message and status code
-   * @returns {function} next
+   * @throws {function} next
    */
-  static signin(request, response, next) {
-    // validate email
-    return Promise.all([user.emailValid(request, false),
-      user.passwordValid(request, false)]).then(() => next())
-      .catch(err => response.status(err.status).send({ message: err.message }));
+  static async emailLoginValid(request, response, next) {
+    // check if email is provided
+    if (!request.body.email || !request.body.email.trim()) {
+      request.errors.email = {
+        message: 'Email is required',
+        statusCode: 400,
+      };
+      return next();
+    }
+    // check if email is valid
+    if (!validator.isEmail(request.body.email.trim())) {
+      request.errors.email = {
+        message: 'Email is invalid',
+        statusCode: 400,
+      };
+      return next();
+    }
+    return next();
+  }
 
-    // user.emailValid(request, false);
-    // validate password
-    // user.passwordValid(request, false);
-    // return next();
+  /**
+   * static method
+   * checks if username was supplied
+   * checks if username already exists
+   * @param {object} request
+   * @param {object} response
+   * @param {object} next
+   * @throws {function} next
+   */
+  static async usernameValid(request, response, next) {
+    // check if username is provided
+    if (!request.body.username || !request.body.username.trim()) {
+      request.errors.username = {
+        message: 'Username is required',
+        statusCode: 400,
+      };
+      return next();
+    }
+    // check if username already exists
+    const username = await users.getByUsername(request.body.username.trim());
+    if (username) {
+      request.errors.username = {
+        message: 'Username already exists. Try another one.',
+        statusCode: 409,
+      };
+      return next();
+    }
+    return next();
+  }
+
+  /**
+   * static method
+   * checks if the password was provided
+   * checks if password is above 6 characters
+   * @param {object} request
+   * @param {object} response
+   * @param {object} next
+   * @throws {function} next
+   */
+  static passwordValid(request, response, next) {
+    // check if password is provided
+    if (!request.body.password || !request.body.password.trim()) {
+      request.errors.password = {
+        message: 'Password is required',
+        statusCode: 400,
+      };
+      return next();
+    }
+    // check if password is valid
+    if (request.body.password.trim().length <= 5) {
+      request.errors.password = {
+        message: 'Password must have atleast 6 characters',
+        statusCode: 400,
+      };
+      return next();
+    }
+    return next();
+  }
+
+  /**
+   * static method
+   * checks if the password was provided
+   * adds error message to the request error object
+   * @param {object} request
+   * @param {object} response
+   * @param {object} next
+   * @throws {function} next
+   */
+  static passwordLoginValid(request, response, next) {
+    // check if password is provided
+    if (!request.body.password || !request.body.password.trim()) {
+      request.errors.password = {
+        message: 'Password is required',
+        statusCode: 400,
+      };
+      return next();
+    }
+    return next();
+  }
+
+  /**
+   * static method
+   * checks if account type was provided
+   * checks if account type is valid
+   * @param {object} request
+   * @param {object} response
+   * @param {object} next
+   * @throws {function} next
+   */
+  static accountValid(request, response, next) {
+    // check if account type is provided
+    if (!request.body.accountType || !request.body.accountType.trim()) {
+      request.errors.accountType = {
+        message: 'Account type is required',
+        statusCode: 400,
+      };
+      return next();
+    }
+    // check if account type is valid
+    if (request.body.accountType.trim() !== 'customer' && request.body.accountType.trim() !== 'caterer') {
+      request.errors.accountType = {
+        message: 'Account type is invalid',
+        statusCode: 400,
+      };
+      return next();
+    }
+    return next();
   }
 }
 
-export default validateUser;
+export default ValidateUser;

@@ -41,8 +41,8 @@ describe('Test suite for User Controller', () => {
         .send({ ...validUser1, email: 'email' })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
-          expect(resp.body).to.haveOwnProperty('message');
-          expect(resp.body.message).to.equal('Email is invalid');
+          expect(resp.body.errors.email).to.haveOwnProperty('message');
+          expect(resp.body.errors.email.message).to.equal('Email is invalid');
         });
       request(app)
         .post('/api/v1/users/signup')
@@ -54,8 +54,8 @@ describe('Test suite for User Controller', () => {
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
-          expect(resp.body).to.haveOwnProperty('message');
-          expect(resp.body.message).to.equal('Email is required');
+          expect(resp.body.errors.email).to.haveOwnProperty('message');
+          expect(resp.body.errors.email.message).to.equal('Email is required');
           done();
         });
     });
@@ -71,8 +71,8 @@ describe('Test suite for User Controller', () => {
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
-          expect(resp.body).to.haveOwnProperty('message');
-          expect(resp.body.message).to.equal('Username is required');
+          expect(resp.body.errors.username).to.haveOwnProperty('message');
+          expect(resp.body.errors.username.message).to.equal('Username is required');
           done();
         });
     });
@@ -88,8 +88,8 @@ describe('Test suite for User Controller', () => {
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
-          expect(resp.body).to.haveOwnProperty('message');
-          expect(resp.body.message).to.equal('Password must have atleast 6 characters');
+          expect(resp.body.errors.password).to.haveOwnProperty('message');
+          expect(resp.body.errors.password.message).to.equal('Password must have atleast 6 characters');
         });
 
       request(app)
@@ -102,8 +102,8 @@ describe('Test suite for User Controller', () => {
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
-          expect(resp.body).to.haveOwnProperty('message');
-          expect(resp.body.message).to.equal('Password is required');
+          expect(resp.body.errors.password).to.haveOwnProperty('message');
+          expect(resp.body.errors.password.message).to.equal('Password is required');
           done();
         });
     });
@@ -119,8 +119,8 @@ describe('Test suite for User Controller', () => {
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
-          expect(resp.body).to.haveOwnProperty('message');
-          expect(resp.body.message).to.equal('Account type is invalid');
+          expect(resp.body.errors.accountType).to.haveOwnProperty('message');
+          expect(resp.body.errors.accountType.message).to.equal('Account type is invalid');
         });
 
       request(app)
@@ -133,8 +133,8 @@ describe('Test suite for User Controller', () => {
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
-          expect(resp.body).to.haveOwnProperty('message');
-          expect(resp.body.message).to.equal('Account type is required');
+          expect(resp.body.errors.accountType).to.haveOwnProperty('message');
+          expect(resp.body.errors.accountType.message).to.equal('Account type is required');
           done();
         });
     });
@@ -144,9 +144,10 @@ describe('Test suite for User Controller', () => {
         .post('/api/v1/users/signup')
         .send({ ...validUser1, email: existingUser.email })
         .end((err, resp) => {
-          expect(resp.status).to.equal(409);
-          expect(resp.body).to.haveOwnProperty('message');
-          expect(resp.body.message).to.equal('Email already exists. Try another one.');
+          expect(resp.status).to.equal(400);
+          expect(resp.body.errors.email.statusCode).to.equal(409);
+          expect(resp.body.errors.email).to.haveOwnProperty('message');
+          expect(resp.body.errors.email.message).to.equal('Email already exists. Try another one.');
           done();
         });
     });
@@ -161,9 +162,10 @@ describe('Test suite for User Controller', () => {
           accountType: validUser1.accountType,
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(409);
-          expect(resp.body).to.haveOwnProperty('message');
-          expect(resp.body.message).to.equal('Username already exists. Try another one.');
+          expect(resp.status).to.equal(400);
+          expect(resp.body.errors.username.statusCode).to.equal(409);
+          expect(resp.body.errors.username).to.haveOwnProperty('message');
+          expect(resp.body.errors.username.message).to.equal('Username already exists. Try another one.');
           done();
         });
     });
@@ -205,8 +207,8 @@ describe('Test suite for User Controller', () => {
         .send({ ...validUser1, email: '   ' })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
-          expect(resp.body).to.haveOwnProperty('message');
-          expect(resp.body.message).to.equal('Email is required');
+          expect(resp.body.errors.email).to.haveOwnProperty('message');
+          expect(resp.body.errors.email.message).to.equal('Email is required');
           done();
         });
     });
@@ -217,8 +219,8 @@ describe('Test suite for User Controller', () => {
         .send({ ...validUser1, email: invalidUser.email })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
-          expect(resp.body).to.haveOwnProperty('message');
-          expect(resp.body.message).to.equal('Email is invalid');
+          expect(resp.body.errors.email).to.haveOwnProperty('message');
+          expect(resp.body.errors.email.message).to.equal('Email is invalid');
           done();
         });
     });
@@ -229,8 +231,8 @@ describe('Test suite for User Controller', () => {
         .send({ email: existingUser.email, password: '   ' })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
-          expect(resp.body).to.haveOwnProperty('message');
-          expect(resp.body.message).to.equal('Password is required');
+          expect(resp.body.errors.password).to.haveOwnProperty('message');
+          expect(resp.body.errors.password.message).to.equal('Password is required');
           done();
         });
     });

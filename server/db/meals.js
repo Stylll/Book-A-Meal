@@ -93,7 +93,9 @@ class Meals {
    * @returns {object|null} meal
    */
   static get(id) {
-    return MealModel.findById(id)
+    return MealModel.findById(id, {
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
+    })
       .then((returnedMeal) => {
         if (isEmpty(returnedMeal)) {
           return undefined;
@@ -113,6 +115,7 @@ class Meals {
       where: {
         name,
       },
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
     })
       .then((returnedMeal) => {
         if (isEmpty(returnedMeal)) {
@@ -128,7 +131,9 @@ class Meals {
    * @returns [array] meals
    */
   static getAll() {
-    return MealModel.findAll()
+    return MealModel.findAll({
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
+    })
       .then((returnedMeal) => {
         if (isEmpty(returnedMeal)) {
           return [];
@@ -148,6 +153,7 @@ class Meals {
       where: {
         userId,
       },
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
     })
       .then((returnedMeal) => {
         if (isEmpty(returnedMeal)) {

@@ -94,8 +94,8 @@ describe('Test Suite for Meal Controller', () => {
 
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Meal name is required');
+          expect(resp.body.errors.name.statusCode).to.equal(400);
+          expect(resp.body.errors.name.message).to.equal('Meal name is required');
           done();
         });
     });
@@ -108,8 +108,8 @@ describe('Test Suite for Meal Controller', () => {
         })
         .send(existingMeal)
         .end((err, resp) => {
-          expect(resp.status).to.equal(409);
-          expect(resp.body.message).to.equal('Meal name already exists');
+          expect(resp.body.errors.name.statusCode).to.equal(409);
+          expect(resp.body.errors.name.message).to.equal('Meal name already exists');
           done();
         });
     });
@@ -124,8 +124,8 @@ describe('Test Suite for Meal Controller', () => {
           name: validMeal1.name,
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Price is required');
+          expect(resp.body.errors.price.statusCode).to.equal(400);
+          expect(resp.body.errors.price.message).to.equal('Price is required');
           done();
         });
     });
@@ -141,8 +141,8 @@ describe('Test Suite for Meal Controller', () => {
           price: 'Three zero',
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Price is invalid');
+          expect(resp.body.errors.price.statusCode).to.equal(400);
+          expect(resp.body.errors.price.message).to.equal('Price is invalid');
           done();
         });
     });
@@ -158,8 +158,8 @@ describe('Test Suite for Meal Controller', () => {
           price: 1,
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Price must be greater than one');
+          expect(resp.body.errors.price.statusCode).to.equal(400);
+          expect(resp.body.errors.price.message).to.equal('Price must be greater than one');
           done();
         });
     });
@@ -212,7 +212,7 @@ describe('Test Suite for Meal Controller', () => {
       await clearMeals();
       await insertSeedMeal(existingMeal);
       await insertSeedMeal(validMeal2);
-      await insertSeedMeal({ ...validMeal2, userId: 3 });
+      await insertSeedMeal({ ...validMeal2, name: 'Burger and fries', userId: 3 });
     });
 
     it('should require an authentication token', (done) => {
@@ -262,8 +262,8 @@ describe('Test Suite for Meal Controller', () => {
         })
         .send(validMeal1)
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Meal does not exist');
+          expect(resp.body.errors.id.statusCode).to.equal(400);
+          expect(resp.body.errors.id.message).to.equal('Meal does not exist');
           done();
         });
     });
@@ -276,8 +276,8 @@ describe('Test Suite for Meal Controller', () => {
         })
         .send(validMeal2)
         .end((err, resp) => {
-          expect(resp.status).to.equal(409);
-          expect(resp.body.message).to.equal('Meal name already exists');
+          expect(resp.body.errors.name.statusCode).to.equal(409);
+          expect(resp.body.errors.name.message).to.equal('Meal name already exists');
           done();
         });
     });
@@ -293,8 +293,8 @@ describe('Test Suite for Meal Controller', () => {
           price: 'Three zero',
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Price is invalid');
+          expect(resp.body.errors.price.statusCode).to.equal(400);
+          expect(resp.body.errors.price.message).to.equal('Price is invalid');
           done();
         });
     });
@@ -310,8 +310,8 @@ describe('Test Suite for Meal Controller', () => {
           price: 1,
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Price must be greater than one');
+          expect(resp.body.errors.price.statusCode).to.equal(400);
+          expect(resp.body.errors.price.message).to.equal('Price must be greater than one');
           done();
         });
     });
@@ -370,8 +370,8 @@ describe('Test Suite for Meal Controller', () => {
           price: 4030,
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(403);
-          expect(resp.body.message).to.equal('Unauthorized access');
+          expect(resp.body.errors.access.statusCode).to.equal(403);
+          expect(resp.body.errors.access.message).to.equal('Unauthorized access');
           done();
         });
     });
@@ -432,7 +432,7 @@ describe('Test Suite for Meal Controller', () => {
           expect(resp.status).to.equal(200);
           expect(resp.body.meals).to.be.an('array');
           expect(resp.body.meals[0])
-            .to.have.all.deep.keys('id', 'name', 'price', 'image', 'userId', 'createdAt', 'updatedAt');
+            .to.have.all.deep.keys('id', 'name', 'price', 'image', 'userId');
           expect(resp.body.meals.length).to.equal(2);
           expect(resp.body.meals[0].name).to.equal(existingMeal.name);
           expect(resp.body.meals[1].name).to.equal(validMeal1.name);
@@ -452,7 +452,7 @@ describe('Test Suite for Meal Controller', () => {
           expect(resp.status).to.equal(200);
           expect(resp.body.meals).to.be.an('array');
           expect(resp.body.meals[0])
-            .to.have.all.deep.keys('id', 'name', 'price', 'image', 'userId', 'createdAt', 'updatedAt');
+            .to.have.all.deep.keys('id', 'name', 'price', 'image', 'userId');
           expect(resp.body.meals.length).to.equal(3);
           expect(resp.body.meals[0].name).to.equal(existingMeal.name);
           expect(resp.body.meals[1].name).to.equal(validMeal1.name);
@@ -533,8 +533,8 @@ describe('Test Suite for Meal Controller', () => {
           'x-access-token': catererToken,
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Meal does not exist');
+          expect(resp.body.errors.id.statusCode).to.equal(400);
+          expect(resp.body.errors.id.message).to.equal('Meal does not exist');
           done();
         });
     });
@@ -559,8 +559,8 @@ describe('Test Suite for Meal Controller', () => {
           'x-access-token': catererToken,
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(403);
-          expect(resp.body.message).to.equal('Unauthorized access');
+          expect(resp.body.errors.access.statusCode).to.equal(403);
+          expect(resp.body.errors.access.message).to.equal('Unauthorized access');
           done();
         });
     });

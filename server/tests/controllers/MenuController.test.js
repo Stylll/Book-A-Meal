@@ -123,8 +123,8 @@ describe('Test Suite for Menu Controller', () => {
         })
         .send({ mealIds: [1, 2] })
         .end((err, resp) => {
-          expect(resp.status).to.equal(409);
-          expect(resp.body.message).to.equal('Menu for the day already exists');
+          expect(resp.body.errors.menu.statusCode).to.equal(409);
+          expect(resp.body.errors.menu.message).to.equal('Menu for the day already exists');
         });
     });
 
@@ -137,8 +137,8 @@ describe('Test Suite for Menu Controller', () => {
         .send({
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Array of meal ids is required');
+          expect(resp.body.errors.meals.statusCode).to.equal(400);
+          expect(resp.body.errors.meals.message).to.equal('Array of meal ids is required');
           done();
         });
     });
@@ -153,8 +153,8 @@ describe('Test Suite for Menu Controller', () => {
           mealIds: { 1: 'a', 2: 'b', 3: 'c' },
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Meal ids must be in an array');
+          expect(resp.body.errors.meals.statusCode).to.equal(400);
+          expect(resp.body.errors.meals.message).to.equal('Meal ids must be in an array');
           done();
         });
     });
@@ -185,8 +185,8 @@ describe('Test Suite for Menu Controller', () => {
           mealIds: [1, 2, 5, 7, 8],
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('One or more meals don\'t exist in the database');
+          expect(resp.body.errors.meals.statusCode).to.equal(400);
+          expect(resp.body.errors.meals.message).to.equal('One or more meals don\'t exist in the database');
           done();
         });
     });
@@ -201,8 +201,8 @@ describe('Test Suite for Menu Controller', () => {
           mealIds: [1, 2],
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(403);
-          expect(resp.body.message).to.equal('Cannot add another caterers meal');
+          expect(resp.body.errors.access.statusCode).to.equal(403);
+          expect(resp.body.errors.access.message).to.equal('Cannot add another caterers meal');
           done();
         });
     });
@@ -290,8 +290,8 @@ describe('Test Suite for Menu Controller', () => {
         .send({
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Menu id is invalid');
+          expect(resp.body.errors.id.statusCode).to.equal(400);
+          expect(resp.body.errors.id.message).to.equal('Menu id is invalid');
           done();
         });
     });
@@ -305,8 +305,8 @@ describe('Test Suite for Menu Controller', () => {
         .send({
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Menu does not exist');
+          expect(resp.body.errors.id.statusCode).to.equal(400);
+          expect(resp.body.errors.id.message).to.equal('Menu does not exist');
           done();
         });
     });
@@ -320,8 +320,8 @@ describe('Test Suite for Menu Controller', () => {
         .send({
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Array of meal ids is required');
+          expect(resp.body.errors.meals.statusCode).to.equal(400);
+          expect(resp.body.errors.meals.message).to.equal('Array of meal ids is required');
           done();
         });
     });
@@ -336,8 +336,8 @@ describe('Test Suite for Menu Controller', () => {
           mealIds: { 1: 'a', 2: 'b', 3: 'c' },
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('Meal ids must be in an array');
+          expect(resp.body.errors.meals.statusCode).to.equal(400);
+          expect(resp.body.errors.meals.message).to.equal('Meal ids must be in an array');
           done();
         });
     });
@@ -365,8 +365,8 @@ describe('Test Suite for Menu Controller', () => {
         })
         .send({ mealIds: [1, 1, 2, 2, 'a'] })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('One or more meal ids are invalid');
+          expect(resp.body.errors.meals.statusCode).to.equal(400);
+          expect(resp.body.errors.meals.message).to.equal('One or more meal ids are invalid');
         });
     });
 
@@ -380,8 +380,8 @@ describe('Test Suite for Menu Controller', () => {
           mealIds: [1, 2, 5, 7, 8],
         })
         .end((err, resp) => {
-          expect(resp.status).to.equal(400);
-          expect(resp.body.message).to.equal('One or more meals don\'t exist in the database');
+          expect(resp.body.errors.meals.statusCode).to.equal(400);
+          expect(resp.body.errors.meals.message).to.equal('One or more meals don\'t exist in the database');
           done();
         });
     });
