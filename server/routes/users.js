@@ -20,6 +20,11 @@ const users = (router) => {
     '/users/signin', validateUser.emailLoginValid, validateUser.passwordLoginValid,
     ErrorHandler.handleErrors, AsyncWrapper(UserController.signin),
   );
+
+  router.put(
+    '/users/forgotpassword', validateUser.forgotPasswordValid, ErrorHandler.handleErrors,
+    AsyncWrapper(UserController.forgotpassword),
+  );
 };
 
 export default users;

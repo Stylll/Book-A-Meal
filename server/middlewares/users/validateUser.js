@@ -70,6 +70,43 @@ class ValidateUser {
   }
 
   /**
+   * static method to validate email when user wants to reset password
+   * adds any error to the error object present in the request object
+   * @param {object} request
+   * @param {object} response
+   * @param {object} next
+   * @returns {function} next
+   */
+  static async forgotPasswordValid(request, response, next) {
+    // check if email is provided
+    if (!request.body.email || !request.body.email.trim()) {
+      request.errors.email = {
+        message: 'Email is required',
+        statusCode: 400,
+      };
+      return next();
+    }
+    // check if email is valid
+    if (!validator.isEmail(request.body.email.trim())) {
+      request.errors.email = {
+        message: 'Email is invalid',
+        statusCode: 400,
+      };
+      return next();
+    }
+    // check if email already exists
+    const email = await users.getByEmail(request.body.email.trim());
+    if (!email) {
+      request.errors.email = {
+        message: 'Email does not exist',
+        statusCode: 400,
+      };
+      return next();
+    }
+    return next();
+  }
+
+  /**
    * static method
    * checks if username was supplied
    * checks if username already exists
