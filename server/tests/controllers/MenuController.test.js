@@ -3,6 +3,7 @@ import request from 'supertest';
 import app from '../../server';
 import Authenticate from '../../utils/authentication/authenticate';
 import { getNormalDate, beautifyDate } from '../../utils/dateBeautifier';
+import { transporter } from '../../utils/mailer/NodeMailer';
 
 import {
   existingMenu,
@@ -27,6 +28,8 @@ import {
   adminUser,
   clearUsers,
 } from '../../utils/seeders/userSeeder';
+
+transporter.sendMail = () => Promise.resolve(1);
 
 /* eslint-disable no-undef */
 describe('Test Suite for Menu Controller', () => {
