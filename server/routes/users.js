@@ -1,6 +1,7 @@
 import UserController from '../controllers/UserController';
 import validateUser from '../middlewares/users/validateUser';
 import ErrorHandler from '../middlewares/ErrorHandler';
+import AsyncWrapper from '../utils/AsyncWrapper';
 
 /**
  * Router to handle user requests
@@ -12,12 +13,12 @@ const users = (router) => {
   router.post(
     '/users/signup', validateUser.emailValid, validateUser.usernameValid,
     validateUser.passwordValid, validateUser.accountValid, ErrorHandler.handleErrors,
-    UserController.signup,
+    AsyncWrapper(UserController.signup),
   );
 
   router.post(
     '/users/signin', validateUser.emailLoginValid, validateUser.passwordLoginValid,
-    ErrorHandler.handleErrors, UserController.signin,
+    ErrorHandler.handleErrors, AsyncWrapper(UserController.signin),
   );
 };
 

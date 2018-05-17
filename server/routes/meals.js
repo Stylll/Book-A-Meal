@@ -5,6 +5,7 @@ import MealController from '../controllers/MealController';
 import validateAccount from '../middlewares/users/validateAccount';
 import ValidateMeal from '../middlewares/meals/validateMeal';
 import ErrorHandler from '../middlewares/ErrorHandler';
+import AsyncWrapper from '../utils/AsyncWrapper';
 
 /**
  * Storage location for multer middleware
@@ -29,7 +30,7 @@ const meals = (router) => {
   router.post(
     '/meals', upload.single('image'), validateAccount.user,
     validateAccount.caterer, ValidateMeal.validateName, ValidateMeal.priceValid,
-    ValidateMeal.nameExists, ErrorHandler.handleErrors, MealController.post,
+    ValidateMeal.nameExists, ErrorHandler.handleErrors, AsyncWrapper(MealController.post),
   );
 
   // meal router to handle pull requests
@@ -37,17 +38,17 @@ const meals = (router) => {
     '/meals/:id', upload.single('image'), validateAccount.user,
     validateAccount.caterer, ValidateMeal.idExists, ValidateMeal.validateAccess,
     ValidateMeal.validateName, ValidateMeal.nameExists, ValidateMeal.priceValid,
-    ErrorHandler.handleErrors, MealController.put,
+    ErrorHandler.handleErrors, AsyncWrapper(MealController.put),
   );
 
   // meal router to handle get requests
-  router.get('/meals', validateAccount.user, validateAccount.caterer, MealController.get);
+  router.get('/meals', validateAccount.user, validateAccount.caterer, AsyncWrapper(MealController.get));
 
   // meal router to handle delete requests
   router.delete(
     '/meals/:id', validateAccount.user, validateAccount.caterer,
     ValidateMeal.idExists, ValidateMeal.validateAccess, ErrorHandler.handleErrors,
-    MealController.delete,
+    AsyncWrapper(MealController.delete),
   );
 };
 

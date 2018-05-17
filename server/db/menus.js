@@ -38,7 +38,6 @@ class Menus {
     const newMenu = { ...menu, mealIds: realMeals };
     // newMenu.name = `Menu For ${beautifyDate(menu.date)}`;
     newMenu.userId = menu.userId;
-
     // add the menu
     return MenuModel.create(newMenu)
       .then(async (savedMenu) => {

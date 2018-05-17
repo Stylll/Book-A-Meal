@@ -2,7 +2,6 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import logger from 'morgan';
 import open from 'open';
-
 import routes from './routes';
 import trimmer from './utils/trimmer';
 
