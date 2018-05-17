@@ -11,6 +11,7 @@ import {
   insertSeedUsers,
   clearUsers,
 } from '../../utils/seeders/userSeeder';
+import { transporter } from '../../utils/mailer/NodeMailer';
 
 dotenv.config();
 
@@ -265,6 +266,65 @@ describe('Test suite for User Controller', () => {
           expect(resp.status).to.equal(401);
           expect(resp.body).to.haveOwnProperty('message');
           expect(resp.body.message).to.equal('Email or Password is incorrect');
+          done();
+        });
+    });
+  });
+
+  describe('PUT: Forgot Password - /api/v1/users/forgotpassword', () => {
+    it('should require an email', (done) => {
+      request(app)
+        .put('/api/v1/users/forgotpassword')
+        .send({ email: '' })
+        .end((err, resp) => {
+          expect(resp.body.errors.email.statusCode).to.equal(400);
+          expect(resp.body.errors.email.message).to.equal('Email is required');
+          done();
+        });
+    });
+
+    it('should require a valid email', (done) => {
+      request(app)
+        .put('/api/v1/users/forgotpassword')
+        .send({ email: 'unkno' })
+        .end((err, resp) => {
+          expect(resp.body.errors.email.statusCode).to.equal(400);
+          expect(resp.body.errors.email.message).to.equal('Email is invalid');
+          done();
+        });
+    });
+
+    it('should require an existing email', (done) => {
+      request(app)
+        .put('/api/v1/users/forgotpassword')
+        .send({ email: 'unknown@mail.com' })
+        .end((err, resp) => {
+          expect(resp.body.errors.email.statusCode).to.equal(400);
+          expect(resp.body.errors.email.message).to.equal('Email does not exist');
+          done();
+        });
+    });
+
+    it('should send a reset link to user\'s email if user\'s email exists', (done) => {
+      transporter.sendMail = () => Promise.resolve(1);
+      request(app)
+        .put('/api/v1/users/forgotpassword')
+        .send({ email: existingUser.email })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(200);
+          expect(resp.body.message).to.equal('A reset link has been sent to your email');
+          done();
+        });
+    });
+
+    it('should not send if there\'s a network problem', (done) => {
+      transporter.sendMail = () => Promise.reject(Error('error'));
+      request(app)
+        .put('/api/v1/users/forgotpassword')
+        .send({ email: existingUser.email })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(500);
+          expect(resp.body.message).to.equal('Sorry. An error occurred. Please try again.');
           done();
         });
     });
