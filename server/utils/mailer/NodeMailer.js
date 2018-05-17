@@ -66,7 +66,7 @@ const passwordResetMail = (url, username) => (
     <br><br />
   Your password has been successfully changed.
     <br><br />
-  Click <a href='http://${url}/login'>here</a> 
+  Click <a href='http://${url}/users/login'>here</a> 
   to login
   </p>
   </div>`
