@@ -1,6 +1,7 @@
 import { isEmpty } from 'lodash';
 import menus from '../db/menus';
 import { getNormalDate } from '../utils/dateBeautifier';
+import Notifications from '../utils/mailer/Notifications';
 
 /**
  * Controller Class to handle user Menu requests
@@ -20,6 +21,7 @@ class MenuController {
     const mealIds = [...uniqueIds];
     const newMenu = await menus.add({ date, mealIds, userId: request.decoded.user.id });
     if (newMenu && !newMenu.err) {
+      Notifications.customerMenuNotifier(request.headers.host, newMenu);
       return response.status(201).json({ menu: newMenu, message: 'Created successfully' });
     }
 

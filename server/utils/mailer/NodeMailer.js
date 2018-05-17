@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { getCurrentBeautifiedDate } from '../dateBeautifier';
 
 require('dotenv').config();
 
@@ -24,6 +25,14 @@ const transporter = nodemailer.createTransport({
 const mailOptions = (to, subject, html) => ({
   from: '"Book A Meal App" <noreply@bookameal.com>',
   to,
+  subject,
+  html,
+});
+
+const bccMailOptions = (to, bcc, subject, html) => ({
+  from: '"Book A Meal App" <noreply@bookameal.com>',
+  to,
+  bcc,
   subject,
   html,
 });
@@ -72,4 +81,34 @@ const passwordResetMail = (url, username) => (
   </div>`
 );
 
-export { transporter, mailOptions, forgotPasswordMail, passwordResetMail };
+/**
+ * method to return the email content to notify customers about the day's menu
+ * @param {string} url
+ * @param {string} meals
+ */
+const menuSetNotification = (url, meals) => (
+  `<div>
+    <p>Dear Customer,
+    <br /> <br />
+    The menu for today, ${getCurrentBeautifiedDate()} has been set.
+    <br />
+    Below is the list of the currently available meals.
+    <br />
+    <ol>
+    ${meals}
+    </ol>
+    <br />
+    More meals may be added as the day goes.
+    <br /><br />
+    We hope you will <a href='http://${url}/users/login'>logon</a> and place an order.
+    <br /><br />
+    Happy eating.
+    </p>
+  </div>
+  `
+);
+
+export {
+  transporter, mailOptions, bccMailOptions,
+  forgotPasswordMail, passwordResetMail, menuSetNotification,
+};
