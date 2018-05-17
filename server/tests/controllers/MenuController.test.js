@@ -48,12 +48,12 @@ describe('Test Suite for Menu Controller', () => {
   describe('POST: Create Menu - /api/v1/menu', () => {
     // before each hook to clean and insert data to the db
     beforeEach(async () => {
-      // await clearMeals();
+      await clearMeals();
       await clearMenus();
-      await insertSeedMenu(existingMenu);
       await insertSeedMeal(existingMeal);
       await insertSeedMeal(validMeal1);
       await insertSeedMeal(validMeal2);
+      await insertSeedMenu(existingMenu);
     });
 
     it('should require an authentication token', (done) => {
@@ -95,8 +95,7 @@ describe('Test Suite for Menu Controller', () => {
         });
     });
 
-    it('should create menu with current date by default', async () => {
-      await clearMenus();
+    it('should create menu with current date by default', (done) => {
       request(app)
         .post('/api/v1/menu')
         .set({
@@ -111,6 +110,7 @@ describe('Test Suite for Menu Controller', () => {
           expect(resp.body.menu).to.haveOwnProperty('mealIds');
           expect(resp.body.menu.mealIds).to.eql([1, 2]);
           expect(resp.body.menu.userId).to.equal(1);
+          done();
         });
     });
 
@@ -234,7 +234,7 @@ describe('Test Suite for Menu Controller', () => {
   describe('PUT: Update Menu - /api/v1/menu/:id', () => {
     // before each hook to clean and insert data to the db
     beforeEach(async () => {
-      // await clearMeals();
+      await clearMeals();
       await clearMenus();
       await insertSeedMeal(existingMeal);
       await insertSeedMeal(validMeal1);
@@ -342,7 +342,7 @@ describe('Test Suite for Menu Controller', () => {
         });
     });
 
-    it('should save unique meal ids', () => {
+    it('should save unique meal ids', (done) => {
       request(app)
         .put('/api/v1/menu/1')
         .set({
@@ -350,10 +350,11 @@ describe('Test Suite for Menu Controller', () => {
         })
         .send({ mealIds: [1, 1, 2, 2] })
         .end((err, resp) => {
-          expect(resp.status).to.equal(201);
+          expect(resp.status).to.equal(200);
           expect(resp.body.menu.mealIds[0]).to.equal(1);
           expect(resp.body.menu.mealIds[1]).to.equal(2);
           expect(resp.body.menu.mealIds).to.eql([1, 2]);
+          done();
         });
     });
 

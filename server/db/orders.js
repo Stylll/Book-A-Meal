@@ -64,8 +64,7 @@ class Orders {
           return savedOrder.dataValues;
         }
         return null;
-      })
-      .catch(error => ({ err: new Error(error.errors[0].message) }));
+      });
   }
 
   /**
@@ -116,8 +115,7 @@ class Orders {
               return updateOrder.dataValues;
             }
             return null;
-          })
-          .catch(error => ({ err: new Error(error.errors[0].message) }));
+          });
       });
   }
 
@@ -138,8 +136,7 @@ class Orders {
           return undefined;
         }
         return returnedOrder;
-      })
-      .catch(error => ({ err: new Error(error.errors[0].message) }));
+      });
   }
 
   /**
@@ -156,8 +153,7 @@ class Orders {
           return [];
         }
         return returnedOrder;
-      })
-      .catch(error => ({ err: new Error(error.errors[0].message) }));
+      });
   }
 
   /**
@@ -180,8 +176,7 @@ class Orders {
             return [];
           }
           return returnedOrder;
-        })
-        .catch(error => ({ err: new Error(error.errors[0].message) }));
+        });
     }
     return null;
   }
@@ -205,8 +200,7 @@ class Orders {
           return [];
         }
         return returnedOrder;
-      })
-      .catch(error => ({ err: new Error(error.errors[0].message) }));
+      });
   }
 
   /**
@@ -229,8 +223,7 @@ class Orders {
           return [];
         }
         return returnedOrder;
-      })
-      .catch(error => ({ err: new Error(error.errors[0].message) }));
+      });
   }
 
   /**
@@ -260,8 +253,7 @@ class Orders {
           return [];
         }
         return returnedOrder;
-      })
-      .catch(error => ({ err: new Error(error.errors[0].message) }));
+      });
   }
 
   /**
@@ -275,8 +267,7 @@ class Orders {
           return { err: new Error('Order does not exist') };
         }
         return returnedOrder.destroy()
-          .then(() => null)
-          .catch(error => ({ err: new Error(error.errors[0].message) }));
+          .then(() => null);
       });
   }
 

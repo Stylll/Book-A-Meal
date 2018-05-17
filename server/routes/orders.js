@@ -2,6 +2,7 @@ import OrderController from '../controllers/OrderController';
 import validateAccount from '../middlewares/users/validateAccount';
 import validateOrder from '../middlewares/orders/validateOrder';
 import ErrorHandler from '../middlewares/ErrorHandler';
+import AsyncWrapper from '../utils/AsyncWrapper';
 
 /**
  * Router to handle order requests
@@ -16,7 +17,7 @@ const orders = (router) => {
   router.post(
     '/orders', validateAccount.user, validateAccount.customer, validateOrder.isOpen,
     validateOrder.mealValid, validateOrder.mealInMenu, validateOrder.quantityValid,
-    ErrorHandler.handleErrors, OrderController.post,
+    ErrorHandler.handleErrors, AsyncWrapper(OrderController.post),
   );
 
   /**
@@ -27,13 +28,13 @@ const orders = (router) => {
     validateOrder.mealInMenuIfPassed, validateOrder.quantityValidIfPassed,
     validateOrder.statusValid, validateOrder.validateCustomerAccess,
     validateOrder.validateSuperAccess, ErrorHandler.handleErrors,
-    OrderController.put,
+    AsyncWrapper(OrderController.put),
   );
 
   /**
    * order router to handle get requests
    */
-  router.get('/orders', validateAccount.user, OrderController.get);
+  router.get('/orders', validateAccount.user, AsyncWrapper(OrderController.get));
 };
 
 export default orders;
