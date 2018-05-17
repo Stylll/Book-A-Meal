@@ -1,3 +1,4 @@
+import randomstring from 'randomstring';
 import users from '../../db/users';
 
 /**
@@ -23,6 +24,8 @@ const existingUser = {
   username: 'higgin',
   password: 'higgineee',
   accountType: 'caterer',
+  resetPasswordToken: randomstring.generate(30),
+  resetPasswordExpires: Date.now() + 360000,
 };
 
 const adminUser = {

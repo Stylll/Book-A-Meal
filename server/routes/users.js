@@ -25,6 +25,11 @@ const users = (router) => {
     '/users/forgotpassword', validateUser.forgotPasswordValid, ErrorHandler.handleErrors,
     AsyncWrapper(UserController.forgotpassword),
   );
+
+  router.put(
+    '/users/resetpassword/:token', validateUser.passwordValid, ErrorHandler.handleErrors,
+    AsyncWrapper(UserController.resetpassword),
+  );
 };
 
 export default users;

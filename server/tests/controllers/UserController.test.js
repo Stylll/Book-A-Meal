@@ -329,4 +329,59 @@ describe('Test suite for User Controller', () => {
         });
     });
   });
+
+  describe('PUT: Reset Password - /api/v1/users/resetpassword', () => {
+    it('should require a valid token associated with a user', (done) => {
+      request(app)
+        .put('/api/v1/users/resetpassword/123dddfj332')
+        .send({
+          password: 'newpasswordfrommars',
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(400);
+          expect(resp.body.message).to.equal('Reset token is invalid or has expired');
+          done();
+        });
+    });
+
+    it('should require a new password', (done) => {
+      request(app)
+        .put(`/api/v1/users/resetpassword/${existingUser.resetPasswordToken}`)
+        .send({
+          password: '',
+        })
+        .end((err, resp) => {
+          expect(resp.body.errors.password.statusCode).to.equal(400);
+          expect(resp.body.errors.password.message).to.equal('Password is required');
+          done();
+        });
+    });
+
+    it('should require password to be atleast 6 characters', (done) => {
+      request(app)
+        .put(`/api/v1/users/resetpassword/${existingUser.resetPasswordToken}`)
+        .send({
+          password: 'short',
+        })
+        .end((err, resp) => {
+          expect(resp.body.errors.password.statusCode).to.equal(400);
+          expect(resp.body.errors.password.message).to.equal('Password must have atleast 6 characters');
+          done();
+        });
+    });
+
+    it('should update password to new password if token is associated with a user', (done) => {
+      transporter.sendMail = () => Promise.resolve(1);
+      request(app)
+        .put(`/api/v1/users/resetpassword/${existingUser.resetPasswordToken}`)
+        .send({
+          password: 'newpasswordfrommars',
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(200);
+          expect(resp.body.message).to.equal('Password reset successful');
+          done();
+        });
+    });
+  });
 });

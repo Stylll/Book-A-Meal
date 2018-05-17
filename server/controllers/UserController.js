@@ -2,7 +2,8 @@ import bcrypt from 'bcrypt';
 import randomstring from 'randomstring';
 import users from '../db/users';
 import Authenticate from '../utils/authentication/authenticate';
-import { transporter, mailOptions, forgotPasswordMail } from '../utils/mailer/NodeMailer';
+import { Users as UserModel } from '../models';
+import { transporter, mailOptions, forgotPasswordMail, passwordResetMail } from '../utils/mailer/NodeMailer';
 /**
  * Controller Class to handle user authentication requests
  */
@@ -76,7 +77,7 @@ class UserController {
    * Static method to handle forgotpassword requests.
    * @param {object} request
    * @param {object} response
-   * @returns {object} {user, token, message} | {message}
+   * @returns {object} {status, message}
    * Updates user profile with reset token.
    * Sends reset token to user's email.
    */
@@ -101,6 +102,38 @@ class UserController {
       }
     }
     return response.status(500).json({ message: 'An error occurred' });
+  }
+
+  /**
+   * Static method to handle resetpassword requests.
+   * @param {object} request
+   * @param {object} response
+   * @returns {object} {status, message}
+   * Updates user profile with reset token.
+   * Sends reset token to user's email.
+   */
+  static async resetpassword(request, response) {
+    // find user by reset token
+    return UserModel.findOne({
+      where: {
+        resetPasswordToken: request.params.token,
+        resetPasswordExpires: { $gt: Date.now() },
+      },
+    }).then(user => user.update({
+      password: request.body.password,
+      resetPasswordToken: null,
+      resetPasswordExpires: null,
+    }).then(() => {
+      const to = user.email;
+      const subject = 'Book-A-Meal Password Reset';
+      return transporter.sendMail(mailOptions(
+        to,
+        subject,
+        passwordResetMail(request.headers.host, user.username),
+      ))
+        .then(() => response.status(200).json({ message: 'Password reset successful' }))
+        .catch(() => response.status(500).json({ message: 'Sorry. An error occurred. Please try again.' }));
+    })).catch(() => response.status(400).json({ message: 'Reset token is invalid or has expired' }));
   }
 }
 
