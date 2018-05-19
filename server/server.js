@@ -33,9 +33,7 @@ app.use((req, res, next) => {
 });
 
 // Error Handler
-app.use((err, req, res, next) => {
-  res.status(err.status || 500).json({ message: err.message || 'Error' });
-});
+app.use((err, req, res, next) => res.status(err.status || 500).json({ message: err.message || 'Error' }));
 
 // UnhandledPromiseRejection Handler
 process.on('unhandledRejection', (error) => {
