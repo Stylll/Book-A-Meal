@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import logger from 'morgan';
 import open from 'open';
+import path from 'path';
 import routes from './routes';
 import trimmer from './utils/trimmer';
 
@@ -17,6 +18,9 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(trimmer);
+
+// static api docs
+app.use('/api-docs', express.static(path.join(__dirname, './api-docs')));
 
 // Pass api/v1 requests to routes
 app.use('/api/v1', routes);
