@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../css/style.css" type="text/css" />
+  <title>Order Menu</title>
+</head>
+<body>
+  <main>
+    <!-- Navigation bar Starts -->
+    <nav class="navbar primary-bg-color flex-display-nav">
+      <div class="navitem flexleft"><a href="../orders/order-menu.html" class="navlink logo-text navicon">Book-A-Meal</a></div>
+      <div class="navitem"><a href="../orders/order-menu.html" class="navlink">View Menu</a></div>
+      <div class="navitem"><a href="../orders/my-pending.html" class="navlink">My Pending Orders</a></div>
+      <div class="navitem"><a href="./my-order-history.html" class="navlink">My Orders</a></div>
+      <div class="navitem"><a href="../users/profile.html" class="navlink">My Profile</a></div>
+      <div class="navitem"><a href="../users/signin.html" class="navlink">Logout</a></div>
+      <div class="navitem flexright breadcrumb"><a id='nav-trigger' href="javascript:void(0);" onclick="expandNav();" class="navlink">&#9776;</a></div>
+    </nav>
+    <!-- Navigation bar Ends -->
+    <!-- Intro Text Starts -->
+    <div class="container text-center black-text">
+      <div>
+        <h1 class="black-text bold-text">Welcome to Book-A-Meal</h1>
+        <h4>Your online restaurant to find the finest cuisines.</h4>
+        <p>Below is a list of our meal options for the day</p>
+      </div>
+    </div>
+    <!-- Intro Text Ends -->
+    <!-- Meal List Starts -->
+    <div class="container">
+      <div class="card-container">
+        <!-- Meal Starts -->
+        <div class="card flex-display">
+          <div class="card-img-container">
+            <img src="../assets/spaghetti.jpg" alt="meal-image" class="card-img" />
+          </div>
+          <div class="card-content">
+            <div class="card-text black-text">
+              <h3 class="black-text bold-text">Spaghetti and Meat Balls with crayfish</h3>
+              <h4 class="black-text light-text">Price: &#8358;1500</h4>
+              <a href="./confirm-order.html" class="btn btn-secondary">Order Now</a>
+              <br /><br />
+            </div>
+          </div>
+        </div>
+        <!-- Meal Ends -->
+        <!-- Meal Starts -->
+        <div class="card flex-display">
+          <div class="card-img-container">
+            <img src="../assets/bakedchicken.jpg" alt="meal-image" class="card-img" />
+          </div>
+          <div class="card-content">
+            <div class="card-text black-text">
+              <h3 class="black-text bold-text">Baked chicken with fries on the side</h3>
+              <h4 class="black-text light-text">Price: &#8358;3000</h4>
+              <a href="./confirm-order.html" class="btn btn-secondary">Order Now</a>
+              <br /><br />
+            </div>
+          </div>
+        </div>
+        <!-- Meal Ends -->
+        <!-- Meal Starts -->
+        <div class="card flex-display">
+            <div class="card-img-container">
+              <img src="../assets/basmati-rice.jpg" alt="meal-image" class="card-img" />
+            </div>
+            <div class="card-content">
+              <div class="card-text black-text">
+                <h3 class="black-text bold-text">Basmati rice and pepper sauce</h3>
+                <h4 class="black-text light-text">Price: &#8358;1000</h4>
+                <a href="./confirm-order.html" class="btn btn-secondary">Order Now</a>
+                <br /><br />
+              </div>
+            </div>
+          </div>
+          <!-- Meal Ends -->
+          <!-- Meal Starts -->
+        <div class="card flex-display">
+            <div class="card-img-container">
+              <img src="../assets/butter-bean-stew.jpg" alt="meal-image" class="card-img" />
+            </div>
+            <div class="card-content">
+              <div class="card-text black-text">
+                <h3 class="black-text bold-text">Butter beans stew.</h3>
+                <h4 class="black-text light-text">Price: &#8358;2500</h4>
+                <a href="./confirm-order.html" class="btn btn-secondary">Order Now</a>
+                <br /><br />
+              </div>
+            </div>
+          </div>
+          <!-- Meal Ends -->
+      </div>
+    </div>
+    <!-- Meal List Ends -->
+
+  </main>
+  <footer>
+    <div class="secondary-bg-color container">
+      <div class="text-center white-text">
+        Book-A-Meal &copy; 2018
+      </div>
+    </div>
+  </footer>
+  
+  <script type="text/javascript" src="../js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+node_modules
+.env
+server/temp
+.nyc_output
+coverage
+.coveralls.yml
+.vscode

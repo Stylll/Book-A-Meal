@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../css/style.css" type="text/css" />
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <title>My Order History</title>
+</head>
+<body>
+  <main>
+    <!-- Navigation bar Starts -->
+    <nav class="navbar primary-bg-color flex-display-nav">
+      <div class="navitem flexleft"><a href="../orders/order-menu.html" class="navlink logo-text navicon">Book-A-Meal</a></div>
+      <div class="navitem"><a href="../orders/order-menu.html" class="navlink">View Menu</a></div>
+      <div class="navitem"><a href="../orders/my-pending.html" class="navlink">My Pending Orders</a></div>
+      <div class="navitem"><a href="./my-order-history.html" class="navlink">My Orders</a></div>
+      <div class="navitem"><a href="../users/profile.html" class="navlink">My Profile</a></div>
+      <div class="navitem"><a href="../users/signin.html" class="navlink">Logout</a></div>
+      <div class="navitem flexright breadcrumb"><a id='nav-trigger' href="javascript:void(0);" onclick="expandNav();" class="navlink">&#9776;</a></div>
+    </nav>
+    <!-- Navigation bar Ends -->
+    <!-- Header Content Starts -->
+    <div class="container text-center black-text">
+      <h1 class="secondary-text-color">My Order History</h1>
+      <!-- Date Filter Box Starts -->
+      <h3 class="black-text normal-text">Filter orders by date
+        <form>
+          <input type="text" class="datepicker textbox" placeholder="Click here to select by date..." />
+          <input type="submit" value="GO" class="btn btn-secondary" />
+      </form></h3>
+      <!-- Date Filter Box Ends -->
+    </div>
+    <!-- Header Content Ends -->
+    <!-- Order List Starts -->
+    <div class="container">
+        
+        <div class="card-container">
+          <!-- Order Starts -->
+          <div class="card flex-display">
+            <div class="card-img-container">
+              <img src="../assets/spaghetti.jpg" alt="meal-image" class="card-img" />
+            </div>
+            <div class="card-content">
+              <div class="card-text black-text">
+                <h4 class="black-text light-text">#1122 - Friday, 13 April 2018</h4>
+                <h3 class="black-text bold-text">Spaghetti and Meat Balls with crayfish</h3>
+                <h4 class="black-text light-text">Price: &#8358;1500 x 4</h4>
+                <h4 class="black-text normal-text">Cost: &#8358;6000</h4>
+              </div>
+            </div>
+          </div>
+          <!-- Order Starts -->
+          <div class="card flex-display">
+            <div class="card-img-container">
+              <img src="../assets/bakedchicken.jpg" alt="meal-image" class="card-img" />
+            </div>
+            <div class="card-content">
+              <div class="card-text black-text">
+                <h4 class="black-text light-text">#1101 - Thursday, 12 April 2018</h4>
+                <h3 class="black-text bold-text">Baked chicken with fries on the side</h3>
+                <h4 class="black-text light-text">Price: &#8358;3000 x 1</h4>
+                <h4 class="black-text normal-text">Cost: &#8358;3000</h4>
+              </div>
+            </div>
+          </div>
+          <!-- Order Ends -->
+          <!-- Order Starts -->
+          <div class="card flex-display">
+            <div class="card-img-container">
+              <img src="../assets/basmati-rice.jpg" alt="meal-image" class="card-img" />
+            </div>
+            <div class="card-content">
+              <div class="card-text black-text">
+                <h4 class="black-text light-text">#1099 - Wednesday, 13 April 2018</h4>
+                <h3 class="black-text bold-text">Basmati rice and pepper sauce</h3>
+                <h4 class="black-text light-text">Price: &#8358;1000 x 4</h4>
+                <h4 class="black-text normal-text">Cost: &#8358;4000</h4>
+              </div>
+            </div>
+          </div>
+          <!-- Order Ends -->
+          <!-- Order Starts -->
+          <div class="card flex-display">
+            <div class="card-img-container">
+              <img src="../assets/spaghetti.jpg" alt="meal-image" class="card-img" />
+            </div>
+            <div class="card-content">
+              <div class="card-text black-text">
+                <h4 class="black-text light-text">#1080 - Monday, 11 April 2018</h4>
+                <h3 class="black-text bold-text">Spaghetti and Meat Balls with crayfish</h3>
+                <h4 class="black-text light-text">Price: &#8358;1500 x 4</h4>
+                <h4 class="black-text normal-text">Cost: &#8358;6000</h4>
+              </div>
+            </div>
+          </div>
+          <!-- Order Ends -->
+        </div>
+    </div>
+    <!-- Order List Ends -->
+    
+
+  </main>
+  <footer>
+    <div class="secondary-bg-color container">
+      <div class="text-center white-text">
+        Book-A-Meal &copy; 2018
+      </div>
+    </div>
+  </footer>
+  
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script type="text/javascript" src="../js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+.menu {
+  justify-content: flex-end;
+  align-items: center;
+  min-height: 10vh;
+  margin-bottom: 20px;
+}
+.menu-item {
+  padding: 10px;
+}
