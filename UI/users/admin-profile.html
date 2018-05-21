@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="../css/style.css" type="text/css" />
-  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <title>Edit Menu</title>
+  <title>My Profile</title>
 </head>
+
 <body>
   <main>
     <!-- Navigation bar Starts -->
@@ -17,7 +18,7 @@
           <a href="../orders/order-menu.html" class="navlink logo-text navicon">Book-A-Meal</a>
         </div>
         <div class="navitem dropdown">
-          <a href="#" onclick="toggleNav(this); return false;" class="navlink active">Menus</a>
+          <a href="#" onclick="toggleNav(this); return false;" class="navlink">Menus</a>
           <div class="dropdown-content">
               <a href="../menus/meals.html">New Menu</a>
               <a href="../menus/manage.html">Manage Menu</a>
@@ -39,7 +40,7 @@
           </div>
         </div>
         <div class="navitem dropdown">
-          <a href="#" onclick="toggleNav(this); return false;" class="navlink">Welcome, Stephen</a>
+          <a href="#" onclick="toggleNav(this); return false;" class="navlink active">Welcome, Stephen</a>
           <div class="dropdown-content">
               <a href="../users/admin-profile.html">My Profile</a>
               <a href="../users/signin.html">Logout</a>
@@ -50,27 +51,47 @@
         </div>
       </nav>
     <!-- Navigation bar Ends -->
-    <!-- Header Content Start -->
-    <div class="container">
-        <h1 class="secondary-text-color text-center">Add / Edit Menu</h1>
+    <!-- Header Content Starts -->
+    <div class="container text-center black-text">
+      <h2 class="secondary-text-color">My Profile</h2>
     </div>
     <!-- Header Content Ends -->
-    <!-- Form Content Starts -->
+    <!-- Main Content Starts -->
     <div class="container text-center black-text">
-      <h3>Select a menu date and click on save to proceed to add meal options to the menu.</h3>
-        <form onsubmit="redirectTo('../menus/meals.html'); return false;">
-          <div>
-            <h2 class="black-text normal-text">Menu Date</h2>
-            <input type="text" class="textbox datepicker" placeholder="Click to select menu date..." />
+      <div class="profile-card">
+        <div>
+          <h4 class="black-text bold-text">Username</h4>
+          <h4 class="black-text light-text">Stephen Aribaba</h4>
+        </div>
+        <div>
+          <h4 class="black-text bold-text">Email</h4>
+          <h4 class="black-text light-text">stephen.aribaba@gmail.com</h4>
+        </div>
+        <div>
+          <h4 class="black-text bold-text">Account Type</h4>
+          <h4 class="black-text light-text">Caterer</h4>
+        </div>
+        <div>
+          <h4 class="black-text bold-text">Total Meals</h4>
+          <h4 class="black-text light-text">20</h4>
+        </div>
+        <div>
+            <h4 class="black-text bold-text">Total Sales</h4>
+            <h4 class="black-text light-text">32</h4>
           </div>
-          <br /><br />
-          <div>
-            <input type="submit" class="btn btn-secondary" value="Save" />
-            <a href="../menus/manage.html">Cancel</a>
-          </div>
-        </form>
+        <div>
+          <h4 class="black-text bold-text">Total Income</h4>
+          <h4 class="black-text light-text">&#8358;12,400</h4>
+        </div>
+        <div>
+          <a href="./forgotpassword.html">Reset My Password</a>
+        </div>
+        <br/>
+        <br/>
+      </div>
+
     </div>
-    <!-- Form Content Ends -->
+    <!-- Main Content Ends -->
 
   </main>
   <footer>
@@ -80,12 +101,8 @@
       </div>
     </div>
   </footer>
-  
-  <script
-  src="https://code.jquery.com/jquery-3.3.1.min.js"
-  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-  crossorigin="anonymous"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
   <script type="text/javascript" src="../js/script.js"></script>
 </body>
+
 </html>
