@@ -11,3 +11,5 @@ ratings:
 exclude_paths:
   - server/tests/
   - UI/
+  - client/__tests__/
+  - client/dist
