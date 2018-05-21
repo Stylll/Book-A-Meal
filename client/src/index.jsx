@@ -2,15 +2,14 @@ import 'babel-polyfill';
 import React from 'react';
 import { render } from 'react-dom';
 
-const Test = (props) => {
-  return (
+/* eslint-disable no-undef */
+const Test = props => (
     <div>
       <p>This is a react component</p>
     </div>
-  );
-};
+);
 
-render (
+render(
   <Test />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
