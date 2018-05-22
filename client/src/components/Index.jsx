@@ -8,10 +8,10 @@ const Index = () => (
         <div className="content">
           <h1 className="title">Book-A-Meal</h1>
           <p className="sub-text">Your online restaurant to find the finest cuisines</p>
-          <h3>BAM is an application where customers can make food orders and caterers 
+          <h3>BAM is an application where customers can make food orders and caterers
             can know what a customer whats to eat</h3>
-          <h3>We create a platform for customers to enjoy classy and tasty meals 
-            while leveraging the finesse of our world className caterers who are masters 
+          <h3>We create a platform for customers to enjoy classy and tasty meals
+            while leveraging the finesse of our world className caterers who are masters
             of their craft
           </h3>
           <h3 className="normal-text"><a href="./users/signup.html" className="secondary-text-color">
