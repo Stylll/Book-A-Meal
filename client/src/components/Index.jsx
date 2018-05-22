@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 import Main from './Main';
 
 const Index = () => (
@@ -14,8 +15,11 @@ const Index = () => (
             while leveraging the finesse of our world className caterers who are masters
             of their craft
           </h3>
-          <h3 className="normal-text"><a href="./users/signup.html" className="secondary-text-color">
-          Click here</a> to join and become our customer or caterer</h3>
+          <h3 className="normal-text">
+          <NavLink to="/users/signup" className="secondary-text-color">
+          Click here
+          </NavLink>
+           to join and become our customer or caterer</h3>
           <h3 className="normal-text">You can <a href="./users/signin.html" className="secondary-text-color">
           sign in here </a> if you are already one of us
           </h3>

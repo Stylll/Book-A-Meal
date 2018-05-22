@@ -1,6 +1,7 @@
 import 'babel-polyfill';
 import React from 'react';
 import PropTypes from 'prop-types';
+import LoadingBar from 'react-redux-loading-bar';
 import NavBar from './common/NavBar';
 
 /* eslint-disable no-useless-constructor */
@@ -16,6 +17,7 @@ class Main extends React.Component {
      */
     return (
       <div>
+        <LoadingBar className="loadingBar" />
         <NavBar />
         {this.props.children}
       </div>
