@@ -1,8 +1,7 @@
 import React from 'react';
 import Main from './Main';
 
-const Index = () => {
-  return (
+const Index = () => (
     <Main>
       <div className="main">
       <div className="container text-center white-text level-one">
@@ -24,7 +23,6 @@ const Index = () => {
       </div>
     </div>
     </Main>
-  );
-};
+);
 
 export default Index;
