@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../css/style.css" type="text/css" />
+  <link rel="stylesheet" href="../css/confirm-order.css" type="text/css" />
+  <title>Confirm Order</title>
+</head>
+
+<body>
+  <main>
+    <!-- Navigation bar Starts -->
+    <nav class="navbar primary-bg-color flex-display-nav">
+        <div class="navitem flexleft"><a href="../orders/order-menu.html" class="navlink logo-text navicon">Book-A-Meal</a></div>
+        <div class="navitem"><a href="../orders/order-menu.html" class="navlink">View Menu</a></div>
+        <div class="navitem dropdown"><a href="#" onclick="toggleNav(this); return false;" class="navlink">Orders</a>
+          <div class="dropdown-content">
+              <a href="../orders/my-pending.html">Pending Orders</a>
+              <a href="../orders/my-order-history.html">Order History</a>
+          </div>
+        </div>
+        <div class="navitem dropdown"><a href="#" onclick="toggleNav(this); return false;" class="navlink">Welcome, Alex</a>
+          <div class="dropdown-content">
+              <a href="../users/profile.html">My Profile</a>
+              <a href="../users/signin.html">Logout</a>
+          </div>
+        </div>
+        <div class="navitem flexright breadcrumb"><a id='nav-trigger' href="javascript:void(0);" onclick="expandNav();" class="navlink">&#9776;</a></div>
+      </nav>
+    <!-- Navigation bar Ends -->
+    <!-- Header Content Start -->
+    <div class="container text-center">
+      <h1 class="secondary-text-color">Edit your order</h1>
+    </div>
+    <!-- Header Content End -->
+    <!-- Main Content Start -->
+    <div class="container text-center black-text">
+      <div class="profile-card">
+        <div class="container">
+          <img src="../assets/spaghetti.jpg" alt="meal-image" class="img-responsive" />
+        </div>
+        <div class="card-content">
+          <div class="card-text black-text">
+            <form onsubmit="redirectTo('./order-complete.html'); return false;">
+              <h1 class="black-text bold-text">Spaghetti and Meat Balls with crayfish</h1>
+              <h3 class="black-text normal-text">Price: &#8358;1500</h3>
+              <h3>Quantity (plates): <select>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select> </h3>
+              <h3 class="black-text light-text">Cost: &#8358;1500</h3>
+              <br />
+              <input type="submit" class="btn btn-secondary" value="Confirm" />
+            </form>
+            <br />
+            <a href="./my-pending.html">Back to pending</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Main Content Ends -->
+
+  </main>
+  <footer>
+    <div class="secondary-bg-color container">
+      <div class="text-center white-text">
+        Book-A-Meal &copy; 2018
+      </div>
+    </div>
+  </footer>
+
+  <script type="text/javascript" src="../js/script.js"></script>
+</body>
+
+</html>

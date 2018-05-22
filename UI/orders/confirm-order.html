@@ -14,14 +14,22 @@
   <main>
     <!-- Navigation bar Starts -->
     <nav class="navbar primary-bg-color flex-display-nav">
-      <div class="navitem flexleft"><a href="../orders/order-menu.html" class="navlink logo-text navicon">Book-A-Meal</a></div>
-      <div class="navitem"><a href="../orders/order-menu.html" class="navlink">View Menu</a></div>
-      <div class="navitem"><a href="../orders/my-pending.html" class="navlink">My Pending Orders</a></div>
-      <div class="navitem"><a href="./my-order-history.html" class="navlink">My Orders</a></div>
-      <div class="navitem"><a href="../users/profile.html" class="navlink">My Profile</a></div>
-      <div class="navitem"><a href="../users/signin.html" class="navlink">Logout</a></div>
-      <div class="navitem flexright breadcrumb"><a id='nav-trigger' href="javascript:void(0);" onclick="expandNav();" class="navlink">&#9776;</a></div>
-    </nav>
+        <div class="navitem flexleft"><a href="../orders/order-menu.html" class="navlink logo-text navicon">Book-A-Meal</a></div>
+        <div class="navitem"><a href="../orders/order-menu.html" class="navlink">View Menu</a></div>
+        <div class="navitem dropdown"><a href="#" onclick="toggleNav(this); return false;" class="navlink">Orders</a>
+          <div class="dropdown-content">
+              <a href="../orders/my-pending.html">Pending Orders</a>
+              <a href="../orders/my-order-history.html">Order History</a>
+          </div>
+        </div>
+        <div class="navitem dropdown"><a href="#" onclick="toggleNav(this); return false;" class="navlink">Welcome, Alex</a>
+          <div class="dropdown-content">
+              <a href="../users/profile.html">My Profile</a>
+              <a href="../users/signin.html">Logout</a>
+          </div>
+        </div>
+        <div class="navitem flexright breadcrumb"><a id='nav-trigger' href="javascript:void(0);" onclick="expandNav();" class="navlink">&#9776;</a></div>
+      </nav>
     <!-- Navigation bar Ends -->
     <!-- Header Content Start -->
     <div class="container text-center">

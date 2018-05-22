@@ -1,1 +1,5 @@
 tools
+UI
+client/src/assets/*
+client/src/styles/*
+client/dist/*

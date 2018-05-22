@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../css/style.css" type="text/css" />
+  <title>My Profile</title>
+</head>
+
+<body>
+  <main>
+    <!-- Navigation bar Starts -->
+    <nav class="navbar primary-bg-color flex-display-nav">
+
+        <div class="navitem flexleft">
+          <a href="../orders/order-menu.html" class="navlink logo-text navicon">Book-A-Meal</a>
+        </div>
+        <div class="navitem dropdown">
+          <a href="#" onclick="toggleNav(this); return false;" class="navlink">Menus</a>
+          <div class="dropdown-content">
+              <a href="../menus/meals.html">New Menu</a>
+              <a href="../menus/manage.html">Manage Menu</a>
+          </div>
+        </div>
+        <div class="navitem dropdown">
+          <a href="#" onclick="toggleNav(this); return false;" class="navlink">Meals</a>
+          <div class="dropdown-content">
+              <a href="../meals/edit.html">New Meal</a>
+              <a href="../meals/manage.html">Manage Meals</a>
+          </div>
+        </div>
+        <div class="navitem dropdown">
+          <a href="#" onclick="toggleNav(this); return false;" class="navlink">Orders</a>
+          <div class="dropdown-content">
+              <a href="../orders/pending.html">Pending Orders</a>
+              <a href="../orders/order-history.html">Order History</a>
+              <a href="../orders/summary.html">Order Summary</a>
+          </div>
+        </div>
+        <div class="navitem dropdown">
+          <a href="#" onclick="toggleNav(this); return false;" class="navlink active">Welcome, Stephen</a>
+          <div class="dropdown-content">
+              <a href="../users/admin-profile.html">My Profile</a>
+              <a href="../users/signin.html">Logout</a>
+          </div>
+        </div>
+        <div class="navitem flexright breadcrumb">
+          <a id='nav-trigger' href="javascript:void(0);" onclick="expandNav();" class="navlink">&#9776;</a>
+        </div>
+      </nav>
+    <!-- Navigation bar Ends -->
+    <!-- Header Content Starts -->
+    <div class="container text-center black-text">
+      <h2 class="secondary-text-color">My Profile</h2>
+    </div>
+    <!-- Header Content Ends -->
+    <!-- Main Content Starts -->
+    <div class="container text-center black-text">
+      <div class="profile-card">
+        <div>
+          <h4 class="black-text bold-text">Username</h4>
+          <h4 class="black-text light-text">Stephen Aribaba</h4>
+        </div>
+        <div>
+          <h4 class="black-text bold-text">Email</h4>
+          <h4 class="black-text light-text">stephen.aribaba@gmail.com</h4>
+        </div>
+        <div>
+          <h4 class="black-text bold-text">Account Type</h4>
+          <h4 class="black-text light-text">Caterer</h4>
+        </div>
+        <div>
+          <h4 class="black-text bold-text">Total Meals</h4>
+          <h4 class="black-text light-text">20</h4>
+        </div>
+        <div>
+            <h4 class="black-text bold-text">Total Sales</h4>
+            <h4 class="black-text light-text">32</h4>
+          </div>
+        <div>
+          <h4 class="black-text bold-text">Total Income</h4>
+          <h4 class="black-text light-text">&#8358;12,400</h4>
+        </div>
+        <div>
+          <a href="./forgotpassword.html">Reset My Password</a>
+        </div>
+        <br/>
+        <br/>
+      </div>
+
+    </div>
+    <!-- Main Content Ends -->
+
+  </main>
+  <footer>
+    <div class="secondary-bg-color container">
+      <div class="text-center white-text">
+        Book-A-Meal &copy; 2018
+      </div>
+    </div>
+  </footer>
+
+  <script type="text/javascript" src="../js/script.js"></script>
+</body>
+
+</html>
