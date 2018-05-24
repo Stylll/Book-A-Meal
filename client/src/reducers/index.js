@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import { loadingBarReducer } from 'react-redux-loading-bar';
+import { reducer as toastrReducer } from 'react-redux-toastr';
 import authReducer from './authReducer';
 
 /**
@@ -10,6 +11,7 @@ import authReducer from './authReducer';
 const rootReducer = combineReducers({
   auth: authReducer,
   loadingBar: loadingBarReducer,
+  toastr: toastrReducer,
 });
 
 export default rootReducer;

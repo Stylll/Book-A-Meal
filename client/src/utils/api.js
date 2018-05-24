@@ -3,7 +3,7 @@
  */
 const api = {
   user: {
-    signUp: '/api/v1/user/signup',
+    signUp: '/api/v1/users/signup',
   },
 };
 

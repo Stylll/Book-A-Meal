@@ -20,8 +20,10 @@ const Index = () => (
           Click here
           </NavLink>
            to join and become our customer or caterer</h3>
-          <h3 className="normal-text">You can <a href="./users/signin.html" className="secondary-text-color">
-          sign in here </a> if you are already one of us
+          <h3 className="normal-text">You can&nbsp;
+          <NavLink to="/users/signin" className="secondary-text-color">
+          sign in here
+          </NavLink> if you are already one of us
           </h3>
         </div>
       </div>
