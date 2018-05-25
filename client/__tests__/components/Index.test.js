@@ -8,7 +8,7 @@ describe('Index page component', () => {
     const wrapper = shallow(<Index />);
     expect(wrapper.find('.title').length).to.equal(1);
     expect(wrapper.find('.title').text()).to.equal('Book-A-Meal');
-    expect(wrapper.find('a').length).to.equal(2);
+    expect(wrapper.find('NavLink').length).to.equal(2);
     expect(wrapper.find('.sub-text').length).to.equal(1);
     expect(wrapper.find('.normal-text').length).to.equal(2);
   });

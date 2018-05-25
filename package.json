@@ -40,10 +40,17 @@
     ]
   },
   "jest": {
-    "verbose": true,
     "collectCoverage": true,
+    "collectCoverageFrom": [
+      "client/src/**/*.{js,jsx}",
+      "!client/src/store/*",
+      "!client/src/{index,routes}.jsx",
+      "!client/src/reducers/{index,initialState}.js"
+    ],
     "testPathIgnorePatterns": [
-      "client/__tests__/setup.js"
+      "client/__tests__/setup.js",
+      "client/__tests__/helpers",
+      "client/src/store/*"
     ],
     "setupTestFrameworkScriptFile": "<rootDir>./client/__tests__/setup.js"
   },
@@ -103,8 +110,12 @@
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-redux": "^5.0.7",
+    "react-redux-loading-bar": "^4.0.5",
+    "react-redux-toastr": "^7.2.6",
     "react-router-dom": "^4.2.2",
     "redux": "^4.0.0",
+    "redux-mock-store": "^1.5.1",
+    "redux-thunk": "^2.2.0",
     "sass-loader": "^7.0.1",
     "sequelize": "^4.37.6",
     "style-loader": "^0.21.0",
@@ -128,8 +139,10 @@
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.8.2",
     "istanbul": "^0.4.5",
+    "moxios": "^0.4.0",
     "nodemon": "^1.17.3",
     "nyc": "^11.7.1",
+    "react-router-enzyme-context": "^1.2.0",
     "rimraf": "^2.6.2"
   }
 }
