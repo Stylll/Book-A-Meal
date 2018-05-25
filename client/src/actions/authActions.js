@@ -53,8 +53,66 @@ const signupFailed = (errors) => {
   };
 };
 
+/**
+ * action to handle signin event
+ * @param {object} signinDetails
+ * @returns {func} dispatch
+ */
+const signin = signinDetails => function (dispatch) {
+  dispatch(showLoading());
+  return axios.post(api.user.signin, signinDetails)
+    .then((resp) => {
+      /* eslint-disable no-undef */
+      localStorage.setItem('jwtToken', resp.data.token);
+      setAuthorizationToken(resp.data.token);
+      dispatch(signinSuccess(resp.data.user));
+      dispatch(hideLoading());
+    })
+    .catch((err) => {
+      dispatch(signinFailed(err.response.data));
+      dispatch(hideLoading());
+    });
+};
+
+/**
+ * action to handle successful signin
+ * @param {object} user
+ * @returns {object} reducer payload
+ */
+const signinSuccess = (user) => {
+  toastr.success('', `Welcome, ${user.username}`);
+  return {
+    type: types.SIGNIN_SUCCESS,
+    user,
+  };
+};
+
+/**
+ * action to handle failed signin
+ * @param {object} data
+ * @returns {object} reducer payload
+ */
+const signinFailed = (data) => {
+  let errors = {};
+  if (data.errors) {
+    errors = getMessageValue(data.errors);
+  } else if (data.message) {
+    errors = {
+      message: data.message,
+    };
+  }
+  toastr.error('Signin Failed', data.message || 'An error occurred');
+  return {
+    type: types.SIGNIN_FAILED,
+    errors,
+  };
+};
+
 export {
+  signin,
   signup,
+  signinSuccess,
+  signinFailed,
   signupSuccess,
   signupFailed,
 };

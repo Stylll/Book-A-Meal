@@ -18,6 +18,21 @@ const authReducer = (state = initialState.auth, action) => {
         errors: action.errors,
       };
 
+    case types.SIGNIN_SUCCESS:
+      return {
+        ...state,
+        isAuthenticated: true,
+        isCaterer: (action.user.accountType === 'caterer'),
+        user: action.user,
+        errors: {},
+      };
+
+    case types.SIGNIN_FAILED:
+      return {
+        ...state,
+        errors: action.errors,
+      };
+
     default:
       return state;
   }

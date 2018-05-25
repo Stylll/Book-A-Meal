@@ -7,7 +7,6 @@ import validator from 'validator';
  * @returns {object} {errors, isValid}
  */
 
-/* eslint-disable import/prefer-default-export */
 const validateSignupInput = (state) => {
   const errors = {};
 
@@ -41,4 +40,28 @@ const validateSignupInput = (state) => {
   };
 };
 
-export { validateSignupInput };
+/**
+ * method to validate signin input
+ * @param {object} state
+ * @returns {object} {errors, isValid}
+ */
+
+const validateSigninInput = (state) => {
+  const errors = {};
+  if (!state.email || !state.email.trim()) {
+    errors.email = 'Email is required';
+  } else if (!validator.isEmail(state.email.trim())) {
+    errors.email = 'Email is invalid';
+  }
+
+  if (!state.password || !state.password.trim()) {
+    errors.password = 'Password is required';
+  }
+
+  return {
+    isValid: isEmpty(errors),
+    errors,
+  };
+};
+
+export { validateSignupInput, validateSigninInput };

@@ -10,7 +10,6 @@ import routes from './routes';
 import configureStore from './store/configureStore';
 import initialState from './reducers/initialState';
 import './styles/style.scss';
-import './styles/signup.scss';
 
 
 /* eslint-disable no-undef */

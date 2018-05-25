@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { validateSignupInput } from '../../src/utils/validateInput';
+import { validateSignupInput, validateSigninInput } from '../../src/utils/validateInput';
 import {
   emptyUser,
   validUser,
@@ -35,5 +35,20 @@ describe('Test Suite for validateSignupInput function', () => {
     expect(result.isValid).to.equal(false);
     expect(result.errors.password).to.equal('Passwords dont match');
     expect(result.errors.confirmPassword).to.equal('Passwords dont match');
+  });
+});
+
+describe('Test suite for validateSigninInput function', () => {
+  it('should return errors for empty fields', () => {
+    const result = validateSigninInput(emptyUser);
+    expect(result.isValid).to.equal(false);
+    expect(result.errors.email).to.equal('Email is required');
+    expect(result.errors.password).to.equal('Password is required');
+  });
+
+  it('should return error for invalid email', () => {
+    const result = validateSigninInput(invalidUser);
+    expect(result.isValid).to.equal(false);
+    expect(result.errors.email).to.equal('Email is invalid');
   });
 });
