@@ -7,7 +7,7 @@ const authReducer = (state = initialState.auth, action) => {
       return {
         ...state,
         isAuthenticated: true,
-        isCaterer: (action.user.accountType === 'caterer'),
+        isCaterer: (action.user.accountType === 'caterer' || action.user.accountType === 'admin'),
         user: action.user,
         errors: {},
       };
@@ -22,7 +22,7 @@ const authReducer = (state = initialState.auth, action) => {
       return {
         ...state,
         isAuthenticated: true,
-        isCaterer: (action.user.accountType === 'caterer'),
+        isCaterer: (action.user.accountType === 'caterer' || action.user.accountType === 'admin'),
         user: action.user,
         errors: {},
       };

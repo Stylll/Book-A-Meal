@@ -43,7 +43,7 @@ describe('Test suite for Auth Reducer', () => {
   });
 
   it('should update state with error message if signin failed', () => {
-    const action = signinFailed(signinFailedResponse.message);
+    const action = signinFailed(signinFailedResponse);
     const newState = authReducer(initialState.auth, action);
     expect(newState.user).to.eql(initialState.auth.user);
     expect(newState.isAuthenticated).to.equal(false);

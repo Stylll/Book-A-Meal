@@ -33,7 +33,7 @@ const setup = (isAuthenticated = false, isCaterer = false) => {
 describe('Test suite for Signin component', () => {
   it('should render unconnected component properly', () => {
     const wrapper = setup();
-    expect(wrapper.find('.overall').length).toBe(1);
+    expect(wrapper.find('.signin-overall').length).toBe(1);
     expect(wrapper.find('.title').length).toBe(1);
     expect(wrapper.find('.title').text()).toBe('Book-A-Meal');
     expect(wrapper.find('.signin-content').length).toBe(1);
@@ -93,6 +93,10 @@ describe('Test suite for Signin component', () => {
 
   it('should handleSubmit and call signin action', () => {
     const wrapper = setup();
+    wrapper.setState({
+      email: validUser.email,
+      password: validUser.password,
+    });
     const handleSubmitSpy = jest.spyOn(wrapper.instance(), 'handleSubmit');
     const signinSpy = jest.spyOn(wrapper.instance().props.actions, 'signin');
     const event = {

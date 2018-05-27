@@ -9,12 +9,19 @@ import 'react-redux-toastr/src/styles/index.scss';
 import routes from './routes';
 import configureStore from './store/configureStore';
 import initialState from './reducers/initialState';
+import setAuthorizationToken from './utils/setAuthorizationToken';
+import { signinSuccess } from './actions/authActions';
 import './styles/style.scss';
 
 
 /* eslint-disable no-undef */
 
 const store = configureStore(initialState);
+// if token exists then log user in
+if (localStorage.jwtToken) {
+  setAuthorizationToken(localStorage.jwtToken);
+  store.dispatch(signinSuccess(jwt.decode(localStorage.jwtToken).user));
+}
 
 render(
   <Provider store={store}>
