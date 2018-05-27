@@ -5,25 +5,21 @@ import { NavLink, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Main from '../Main';
 import TextInput from '../common/TextInput';
-import { validateSignupInput } from '../../utils/validateInput';
-import { signup } from '../../actions/authActions';
+import { validateSigninInput } from '../../utils/validateInput';
+import { signin } from '../../actions/authActions';
 
-export class Signup extends React.Component {
+export class Signin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       email: '',
-      username: '',
       password: '',
-      confirmPassword: '',
-      accountType: 'customer',
       errors: {},
     };
 
-    // bind class methods
     this.handleChange = this.handleChange.bind(this);
-    this.isValid = this.isValid.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.isValid = this.isValid.bind(this);
   }
 
   /**
@@ -44,7 +40,7 @@ export class Signup extends React.Component {
    * @returns {bool} isValid
    */
   isValid() {
-    const { isValid, errors } = validateSignupInput(this.state);
+    const { isValid, errors } = validateSigninInput(this.state);
     this.setState({
       errors,
     });
@@ -59,7 +55,7 @@ export class Signup extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     if (this.isValid()) {
-      this.props.actions.signup(this.state)
+      this.props.actions.signin(this.state)
         .then((resp) => {
           this.setState({
             errors: this.props.errors,
@@ -81,8 +77,7 @@ export class Signup extends React.Component {
     }
     return (
       <Main>
-        { /* Content starts */}
-        <div className="overall">
+        <div className="signin-overall">
           <div className="intro">
             <div className="intro-content">
               <div className="container white-text title text-center">
@@ -102,24 +97,16 @@ export class Signup extends React.Component {
             </div>
 
           </div>
-          <div className="signup-content">
+          <div className="signin-content">
             <div className="container text-center">
-              <h1 className="black-text bold-text">Create an account</h1>
+              <h1 className="black-text bold-text">Sign In to your account</h1>
             </div>
             <div className="container">
-                <div>
-                  <h4 className="black-text light-text">Username</h4>
-                  <TextInput
-                    name="username"
-                    type="text"
-                    value={this.state.username}
-                    required
-                    className="signup-textbox textbox"
-                    placeholder="Enter username here..."
-                    onChange={this.handleChange}
-                    error={this.state.errors.username}
-                    />
-                </div>
+              <div className="text-center">
+              {this.state.errors.message && <span className="red-text error">
+              {this.state.errors.message}
+              </span>}
+              </div>
                 <div>
                   <h4 className="black-text light-text">Email</h4>
                   <TextInput
@@ -127,7 +114,7 @@ export class Signup extends React.Component {
                     type="text"
                     value={this.state.email}
                     required
-                    className="signup-textbox textbox"
+                    className="textbox"
                     placeholder="Enter email here..."
                     onChange={this.handleChange}
                     error={this.state.errors.email}
@@ -140,60 +127,40 @@ export class Signup extends React.Component {
                     type="password"
                     value={this.state.password}
                     required
-                    className="signup-textbox textbox"
+                    className="textbox"
                     placeholder="Enter password here..."
                     onChange={this.handleChange}
                     error={this.state.errors.password}
                     />
                 </div>
-                <div>
-                  <h4 className="black-text light-text">Confirm Password</h4>
-                  <TextInput
-                    name="confirmPassword"
-                    type="password"
-                    value={this.state.confirmPassword}
-                    required
-                    className="signup-textbox textbox"
-                    placeholder="Enter password again..."
-                    onChange={this.handleChange}
-                    error={this.state.errors.confirmPassword}
-                    />
-                </div>
-                <div>
-                  <h4 className="black-text light-text">Account Type</h4>
-                  <select name="accountType" onChange={this.handleChange} value={this.state.accountType}
-                    className="signup-select" required>
-                    <option value="customer">Customer</option>
-                    <option value="caterer">Caterer</option>
-                  </select>
-                  {this.state.errors.accountType && <span className="red-text errors" id="at-error">
-                  {this.state.errors.accountType}
-                  </span>}
-                </div>
-                <br />
-                <br />
+                <div className="container text-right">
+                <NavLink to="/users/forgotpassword" className="secondary-text-color light-text">
+                  forgot password ?
+                  </NavLink>
+                 </div>
+                <br /><br />
                 <div className="container text-center">
-                  <input type="button" onClick={this.handleSubmit} className="btn btn-secondary" value="Sign Up" />
+                  <input type="button" onClick={this.handleSubmit} className="btn btn-secondary" value="Sign In" />
                 </div>
                 <br />
                 <div className="container text-center">
-                <NavLink to="/users/signin" className="secondary-text-color">
-                  Have an account ?. Sign In
-                </NavLink>
+                  <NavLink to="/users/signup" className="secondary-text-color">
+                  Don't have an account ?. Sign Up
+                  </NavLink>
                 </div>
                 <br />
             </div>
           </div>
 
         </div>
-        { /* Content Ends */}
+
       </Main>
     );
   }
 }
 
 // proptypes
-Signup.propTypes = {
+Signin.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
   isCaterer: PropTypes.bool.isRequired,
   actions: PropTypes.object.isRequired,
@@ -220,8 +187,8 @@ const mapStateToProps = state => (
  */
 const mapDispatchToProps = dispatch => (
   {
-    actions: bindActionCreators({ signup }, dispatch),
+    actions: bindActionCreators({ signin }, dispatch),
   }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(Signup);
+export default connect(mapStateToProps, mapDispatchToProps)(Signin);

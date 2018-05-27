@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 import authReducer from '../../src/reducers/authReducer';
 import initialState from '../../src/reducers/initialState';
-import { signupSuccess, signupFailed } from '../../src/actions/authActions';
+import { signupSuccess, signupFailed, signinFailed, signinSuccess } from '../../src/actions/authActions';
 import { SIGNUP_SUCCESS, SIGNUP_FAILED } from '../../src/actions/actionTypes';
-import { validCaterer, signupError, signupFailedResponse } from '../helpers/mockData';
+import { validCaterer, signupError, signupFailedResponse, signinFailedResponse } from '../helpers/mockData';
 
 describe('Test suite for Auth Reducer', () => {
   it('should update state if signup is successful', () => {
@@ -31,5 +31,23 @@ describe('Test suite for Auth Reducer', () => {
     };
     const newState = authReducer(initialState.auth, action);
     expect(newState).to.equal(initialState.auth);
+  });
+
+  it('should update state if signin is successful', () => {
+    const action = signinSuccess(validCaterer);
+    const newState = authReducer(initialState.auth, action);
+    expect(newState.user).to.eql(validCaterer);
+    expect(newState.isAuthenticated).to.equal(true);
+    expect(newState.isCaterer).to.equal(true);
+    expect(newState.errors).to.eql({});
+  });
+
+  it('should update state with error message if signin failed', () => {
+    const action = signinFailed(signinFailedResponse);
+    const newState = authReducer(initialState.auth, action);
+    expect(newState.user).to.eql(initialState.auth.user);
+    expect(newState.isAuthenticated).to.equal(false);
+    expect(newState.isCaterer).to.equal(false);
+    expect(newState.errors.message).to.equal(signinFailedResponse.message);
   });
 });
