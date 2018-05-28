@@ -108,6 +108,18 @@ const signinFailed = (data) => {
   };
 };
 
+/**
+ * action to handle logout
+ * @returns {object} reducer payload
+ */
+const logout = () => {
+  localStorage.removeItem('jwtToken');
+  setAuthorizationToken(false);
+  return {
+    type: types.LOGOUT,
+  };
+};
+
 export {
   signin,
   signup,
@@ -115,4 +127,5 @@ export {
   signinFailed,
   signupSuccess,
   signupFailed,
+  logout,
 };

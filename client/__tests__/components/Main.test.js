@@ -1,7 +1,7 @@
 import React from 'react';
 import { expect } from 'chai';
 import { shallow, render } from 'enzyme';
-import Main from '../../src/components/Main';
+import { Main } from '../../src/components/Main';
 
 let props;
 
