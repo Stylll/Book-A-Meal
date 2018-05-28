@@ -16,13 +16,14 @@
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint \"server/**/*.js\" \"client/src/**/*.jsx\" \"client/src/**/*.js\" app.js --fix",
     "heroku:server": "babel-node ./server/server.js",
+    "heroku-postbuild": "npm run build",
+    "heroku:app": "babel-node tools/distServer.js",
     "prod:build": "npm run build",
     "clean-dist": "npm run remove-dist && mkdirp client/dist",
     "remove-dist": "rimraf client/dist",
     "build:html": "babel-node tools/buildHtml.js",
     "prebuild": "npm-run-all clean-dist build:html",
     "build": "babel-node tools/build.js",
-    "postbuild": "babel-node tools/distServer.js",
     "open:build": "babel-node tools/distServer.js"
   },
   "repository": {
