@@ -16,7 +16,7 @@
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint \"server/**/*.js\" \"client/src/**/*.jsx\" \"client/src/**/*.js\" app.js --fix",
     "heroku:server": "babel-node ./server/server.js",
-    "heroku:postbuild": "npm run build",
+    "heroku-postbuild": "npm run build",
     "heroku:app": "babel-node tools/distServer.js",
     "prod:build": "npm run build",
     "clean-dist": "npm run remove-dist && mkdirp client/dist",
