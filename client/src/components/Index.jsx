@@ -17,9 +17,9 @@ const Index = () => (
           </h3>
           <h3 className="normal-text">
           <NavLink to="/users/signup" className="secondary-text-color">
-          Click here
+          Click here&nbsp;
           </NavLink>
-           to join and become our customer or caterer</h3>
+          to join and become our customer or caterer</h3>
           <h3 className="normal-text">You can&nbsp;
           <NavLink to="/users/signin" className="secondary-text-color">
           sign in here
