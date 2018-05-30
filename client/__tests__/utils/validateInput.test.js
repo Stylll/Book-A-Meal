@@ -1,11 +1,20 @@
 import { expect } from 'chai';
-import { validateSignupInput, validateSigninInput } from '../../src/utils/validateInput';
+import {
+  validateSignupInput, validateSigninInput,
+  validateMealInput,
+} from '../../src/utils/validateInput';
 import {
   emptyUser,
   validUser,
   invalidUser,
   unmatchingUserPassword,
 } from '../helpers/mockUsers';
+import {
+  emptyMeal,
+  invalidMeal,
+  longMealName,
+  validMeal,
+} from '../helpers/mockMeals';
 
 describe('Test Suite for validateSignupInput function', () => {
   it('should return no errors for valid input', () => {
@@ -50,5 +59,33 @@ describe('Test suite for validateSigninInput function', () => {
     const result = validateSigninInput(invalidUser);
     expect(result.isValid).to.equal(false);
     expect(result.errors.email).to.equal('Email is invalid');
+  });
+});
+
+describe('Test suite for validateMealInput function', () => {
+  it('should return errors for empty fields', () => {
+    const result = validateMealInput(emptyMeal);
+    expect(result.isValid).to.equal(false);
+    expect(result.errors.name).to.equal('Meal name is required');
+    expect(result.errors.price).to.equal('Price is required');
+  });
+
+  it('meal name should not be more than 50 characters', () => {
+    const result = validateMealInput(longMealName);
+    expect(result.isValid).to.equal(false);
+    expect(result.errors.name).to.equal('Meal name should not be more than 50 characters');
+  });
+
+  it('should return errors for invalid input', () => {
+    const result = validateMealInput(invalidMeal);
+    expect(result.isValid).to.equal(false);
+    expect(result.errors.name).to.equal('Meal name can only contain alphanumeric characters');
+    expect(result.errors.price).to.equal('Price is invalid');
+  });
+
+  it('meal price should be more than 1', () => {
+    const result = validateMealInput({ ...validMeal, price: '1' });
+    expect(result.isValid).to.equal(false);
+    expect(result.errors.price).to.equal('Price must be greater than 1');
   });
 });
