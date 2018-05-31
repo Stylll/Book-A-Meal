@@ -64,4 +64,33 @@ const validateSigninInput = (state) => {
   };
 };
 
-export { validateSignupInput, validateSigninInput };
+/**
+ * method to valid create meal input
+ * @param {object} state
+ * @returns {object} error object
+ */
+const validateMealInput = (state) => {
+  const errors = {};
+  if (!state.name || !state.name.trim()) {
+    errors.name = 'Meal name is required';
+  } else if (state.name.trim().length > 50) {
+    errors.name = 'Meal name should not be more than 50 characters';
+  } else if (/[^A-Za-z0-9 ]/gi.test(state.name.trim())) {
+    errors.name = 'Meal name can only contain alphanumeric characters';
+  }
+
+  if (!state.price || !state.price.trim()) {
+    errors.price = 'Price is required';
+  } else if (/[^0-9.]/gi.test(state.price.trim())) {
+    errors.price = 'Price is invalid';
+  } else if (parseFloat(state.price.trim()) <= 1) {
+    errors.price = 'Price must be greater than 1';
+  }
+
+  return {
+    isValid: isEmpty(errors),
+    errors,
+  };
+};
+
+export { validateSignupInput, validateSigninInput, validateMealInput };

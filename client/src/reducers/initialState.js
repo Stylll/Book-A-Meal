@@ -5,4 +5,8 @@ export default {
     user: {},
     errors: {},
   },
+  meals: {
+    meals: [],
+    errors: {},
+  },
 };

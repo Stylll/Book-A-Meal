@@ -4,6 +4,7 @@
 
 $primary-color: #4CAF50;
 $secondary-color: #4CAF50;
+$alternate-color: #700353;
 
 /*Containers Start*/
 body{
@@ -226,6 +227,10 @@ nav {
   height: 20px;
   padding: 5px;
   font-size: 15px;
+}
+
+.meal-textbox {
+  width: 80% !important;
 }
 
 /* Text Variant Starts */

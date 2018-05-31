@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import Main from './Main';
 
 const Index = () => (
-    <Main>
+    <Main allowAnonymous allowCaterer allowCustomer>
       <div className="main">
       <div className="container text-center white-text level-one">
         <div className="content">
