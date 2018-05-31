@@ -75,7 +75,7 @@ const validateMealInput = (state) => {
     errors.name = 'Meal name is required';
   } else if (state.name.trim().length > 50) {
     errors.name = 'Meal name should not be more than 50 characters';
-  } else if (/[^A-Za-z0-9]/gi.test(state.name.trim())) {
+  } else if (/[^A-Za-z0-9 ]/gi.test(state.name.trim())) {
     errors.name = 'Meal name can only contain alphanumeric characters';
   }
 

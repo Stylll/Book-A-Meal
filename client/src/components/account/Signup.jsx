@@ -80,7 +80,7 @@ export class Signup extends React.Component {
       );
     }
     return (
-      <Main>
+      <Main allowAnonymous>
         { /* Content starts */}
         <div className="overall">
           <div className="intro">

@@ -11,6 +11,7 @@ import configureStore from './store/configureStore';
 import initialState from './reducers/initialState';
 import setAuthorizationToken from './utils/setAuthorizationToken';
 import { signinSuccess } from './actions/authActions';
+import { getMeals } from './actions/mealActions';
 import './styles/style.scss';
 
 
@@ -19,8 +20,12 @@ import './styles/style.scss';
 const store = configureStore(initialState);
 // if token exists then log user in
 if (localStorage.jwtToken) {
+  const { user } = jwt.decode(localStorage.jwtToken);
   setAuthorizationToken(localStorage.jwtToken);
-  store.dispatch(signinSuccess(jwt.decode(localStorage.jwtToken).user));
+  store.dispatch(signinSuccess(user));
+  if (user.accountType === 'caterer' || user.accountType === 'admin') {
+    store.dispatch(getMeals());
+  }
 }
 
 render(

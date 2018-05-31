@@ -76,7 +76,7 @@ export class Signin extends React.Component {
       );
     }
     return (
-      <Main>
+      <Main allowAnonymous>
         <div className="signin-overall">
           <div className="intro">
             <div className="intro-content">

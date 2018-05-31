@@ -45,6 +45,30 @@ const saveMealFailedResponseB = {
   },
 };
 
+const getMealsResponse = {
+  meals: [
+    {
+      id: 1,
+      name: 'Bread',
+      image: 'https://res.cloudinary.com/styll/image/upload/v1524560568/foods.jpg',
+      price: 200,
+      userId: 1,
+    },
+    {
+      id: 2,
+      name: 'Fried Rice',
+      image: 'https://res.cloudinary.com/styll/image/upload/v1524560568/foods.jpg',
+      price: 2500.23,
+      userId: 1,
+    },
+  ],
+};
+
+const getMealsFailedResponse = {
+  message: 'An error occurred',
+  status: 500,
+};
+
 export {
   emptyMeal,
   invalidMeal,
@@ -53,4 +77,6 @@ export {
   saveMealResponse,
   saveMealFailedResponse,
   saveMealFailedResponseB,
+  getMealsResponse,
+  getMealsFailedResponse,
 };

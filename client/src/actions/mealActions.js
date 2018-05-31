@@ -10,13 +10,20 @@ import { getMessageValue } from '../utils/utils';
  * action to handle save meals
  * @param {object} mealDetails
  * @returns {function} dispatch function.
- * it checks if meal id exists, if it does, then 
+ * it checks if meal id exists, if it does, then
  * its an update operation. Else its a create operation.
  */
 const saveMeal = mealDetails => function (dispatch) {
   dispatch(showLoading());
+  /* eslint-disable no-undef */
+  const formData = new FormData();
+  formData.append('name', mealDetails.name);
+  formData.append('price', mealDetails.price);
+  if (mealDetails.imageUpload) {
+    formData.append('image', mealDetails.imageUpload, mealDetails.imageUpload.name);
+  }
   if (!mealDetails.id) {
-    return axios.post(api.meals.post, mealDetails)
+    return axios.post(api.meals.post, formData)
       .then((resp) => {
         dispatch(saveMealSuccess(resp.data));
         dispatch(hideLoading());
@@ -26,7 +33,7 @@ const saveMeal = mealDetails => function (dispatch) {
         dispatch(hideLoading());
       });
   }
-  return axios.put(api.meals.put(mealDetails.id), mealDetails)
+  return axios.put(api.meals.put(mealDetails.id), formData)
     .then((resp) => {
       dispatch(saveMealSuccess(resp.data));
       dispatch(hideLoading());
@@ -71,8 +78,53 @@ const saveMealFailed = (data) => {
   };
 };
 
+/**
+ * action to handle getting meals for a caterer.
+ */
+const getMeals = () => function (dispatch) {
+  dispatch(showLoading());
+  return axios.get(api.meals.get)
+    .then((resp) => {
+      dispatch(getMealsSuccess(resp.data));
+      dispatch(hideLoading());
+    })
+    .catch((err) => {
+      dispatch(getMealsFailed(err.response.data));
+      dispatch(hideLoading());
+    });
+};
+
+/**
+ * action to handle successful meals get request
+ * @param {object} data
+ * @returns {object} action object for reducer
+ */
+const getMealsSuccess = data => ({
+  type: types.GET_MEAL_SUCCESS,
+  meals: data.meals,
+});
+
+/**
+ * action to handle failed meals get request
+ * @param {object} data
+ * @returns {object} action object for reducer
+ */
+const getMealsFailed = (data) => {
+  const errors = {
+    message: data.message,
+  };
+  toastr.error('Unexpected Error', data.message || 'Could not get meals');
+  return {
+    type: types.GET_MEAL_FAILED,
+    errors,
+  };
+};
+
 export {
   saveMeal,
   saveMealSuccess,
   saveMealFailed,
+  getMeals,
+  getMealsSuccess,
+  getMealsFailed,
 };

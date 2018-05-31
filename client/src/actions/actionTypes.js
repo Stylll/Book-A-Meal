@@ -8,3 +8,5 @@ export const LOGOUT = 'LOGOUT';
 /* Meal action types */
 export const SAVE_MEAL_SUCCESS = 'SAVE_MEAL_SUCCESS';
 export const SAVE_MEAL_FAILED = 'SAVE_MEAL_FAILED';
+export const GET_MEAL_SUCCESS = 'GET_MEAL_SUCCESS';
+export const GET_MEAL_FAILED = 'GET_MEAL_FAILED';

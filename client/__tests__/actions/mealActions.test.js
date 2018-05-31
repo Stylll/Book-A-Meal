@@ -1,13 +1,15 @@
 import moxios from 'moxios';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { saveMeal } from '../../src/actions/mealActions';
+import { saveMeal, getMeals } from '../../src/actions/mealActions';
 import * as types from '../../src/actions/actionTypes';
 import {
   validMeal,
   saveMealResponse,
   saveMealFailedResponse,
   saveMealFailedResponseB,
+  getMealsResponse,
+  getMealsFailedResponse,
 } from '../helpers/mockMeals';
 import localStorage from '../helpers/mockLocalStorage';
 import initialState from '../../src/reducers/initialState';
@@ -83,6 +85,46 @@ describe('Test suite for Meal Actions', () => {
       response: saveMealFailedResponseB,
     });
     const result = store.dispatch(saveMeal({ id: 1 }))
+      .then(() => {
+        const actions = store.getActions();
+        expect(actions[1]).toEqual(expectedResult);
+      });
+  });
+});
+
+describe('Test suite for Meal get Actions', () => {
+  beforeEach(() => moxios.install());
+  afterEach(() => moxios.uninstall());
+  it('should return get meal success action with payload', () => {
+    const store = mockStore(initialState);
+    const expectedResult = {
+      type: types.GET_MEAL_SUCCESS,
+      meals: getMealsResponse.meals,
+    };
+
+    moxios.stubRequest(api.meals.get, {
+      status: 200,
+      response: getMealsResponse,
+    });
+
+    return store.dispatch(getMeals())
+      .then(() => {
+        const actions = store.getActions();
+        expect(actions[1]).toEqual(expectedResult);
+      })
+  });
+
+  it('should return get meal failed action', () => {
+    const store = mockStore(initialState);
+    const expectedResult = {
+      type: types.GET_MEAL_FAILED,
+      errors: { message: getMealsFailedResponse.message },
+    };
+    moxios.stubRequest(api.meals.get, {
+      status: 500,
+      response: getMealsFailedResponse,
+    });
+    return store.dispatch(getMeals())
       .then(() => {
         const actions = store.getActions();
         expect(actions[1]).toEqual(expectedResult);

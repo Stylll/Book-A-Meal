@@ -8,7 +8,8 @@ const api = {
   },
   meals: {
     post: '/api/v1/meals',
-    put: id => (`/api/v1/meals${id}`),
+    put: id => (`/api/v1/meals/${id}`),
+    get: '/api/v1/meals',
   },
 };
 

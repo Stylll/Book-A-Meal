@@ -5,7 +5,7 @@ import { Main } from '../../src/components/Main';
 
 let props;
 
-const setup = () => shallow(<Main> <div><h1>Hello</h1> </div> </Main>);
+const setup = () => shallow(<Main allowAnonymous> <div><h1>Hello</h1> </div> </Main>);
 
 describe('Test Suite for Main component', () => {
   it('should render properly', () => {

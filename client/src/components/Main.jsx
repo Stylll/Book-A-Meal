@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import LoadingBar from 'react-redux-loading-bar';
+import { Redirect } from 'react-router-dom';
 import NavBar from './common/NavBar';
 import { logout } from '../actions/authActions';
 
@@ -32,6 +33,7 @@ export class Main extends React.Component {
    */
   expandNav(event) {
     event.preventDefault();
+    /* eslint-disable no-undef */
     const nav = document.getElementsByTagName('nav')[0];
     if (nav.className.indexOf('responsive') === -1) {
       nav.className += ' responsive';
@@ -57,11 +59,44 @@ export class Main extends React.Component {
 
   render() {
     /**
+     * Restricts user from accessing page if user is not authenticated
+     */
+    if (!this.props.allowAnonymous) {
+      if (!this.props.isAuthenticated) {
+        return (
+          <Redirect to="/users/signin" />
+        );
+      }
+    }
+
+    /**
+     * Restricts caterers from accessing page if caterer is not allowed
+     */
+    if (!this.props.allowCaterer) {
+      if (this.props.isCaterer) {
+        return (
+          <Redirect to="/unauthorized" />
+        );
+      }
+    }
+
+    /**
+     * Restricts customer from accessing page if customer is not allowed
+     */
+    if (!this.props.allowCustomer) {
+      if (!this.props.isCaterer && this.props.isAuthenticated) {
+        return (
+          <Redirect to="/unauthorized" />
+        );
+      }
+    }
+
+    /**
      * Handles output rendered by the component.
      * @returns {jsx} form of the component.
      */
     return (
-      <div className="primary-bg-color">
+      <div className="">
         <LoadingBar className="loadingBar" />
         <NavBar user={this.props.user} isAuthenticated={this.props.isAuthenticated}
           isCaterer={this.props.isCaterer} logout={this.logout} expandNav={this.expandNav}
@@ -81,6 +116,16 @@ Main.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
   isCaterer: PropTypes.bool.isRequired,
   actions: PropTypes.object.isRequired,
+  allowAnonymous: PropTypes.bool,
+  allowCaterer: PropTypes.bool,
+  allowCustomer: PropTypes.bool,
+};
+
+// default props
+Main.defaultProps = {
+  allowAnonymous: false,
+  allowCaterer: false,
+  allowCustomer: false,
 };
 
 /**

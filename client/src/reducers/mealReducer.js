@@ -16,6 +16,18 @@ const mealReducer = (state = initialState.meals, action) => {
         errors: action.errors,
       };
 
+    case types.GET_MEAL_SUCCESS:
+      return {
+        ...state,
+        meals: action.meals,
+      };
+
+    case types.GET_MEAL_FAILED:
+      return {
+        ...state,
+        errors: action.errors,
+      };
+
     default:
       return state;
   }
