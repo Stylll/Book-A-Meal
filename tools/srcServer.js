@@ -32,6 +32,9 @@ app.use(trimmer);
 // static api docs
 app.use('/api-docs', express.static(path.join(__dirname, './api-docs')));
 
+// assets
+app.use('/assets', express.static(path.join(__dirname, '../client/src/assets')));
+
 // Pass api/v1 requests to routes
 app.use('/api/v1', routes);
 

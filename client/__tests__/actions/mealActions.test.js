@@ -1,7 +1,7 @@
 import moxios from 'moxios';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { saveMeal, getMeals } from '../../src/actions/mealActions';
+import { saveMeal, getMeals, deleteMeal } from '../../src/actions/mealActions';
 import * as types from '../../src/actions/actionTypes';
 import {
   validMeal,
@@ -10,6 +10,9 @@ import {
   saveMealFailedResponseB,
   getMealsResponse,
   getMealsFailedResponse,
+  deleteMealResponse,
+  deleteMealFailedResponse,
+  deleteMealFailedResponseB,
 } from '../helpers/mockMeals';
 import localStorage from '../helpers/mockLocalStorage';
 import initialState from '../../src/reducers/initialState';
@@ -125,6 +128,60 @@ describe('Test suite for Meal get Actions', () => {
       response: getMealsFailedResponse,
     });
     return store.dispatch(getMeals())
+      .then(() => {
+        const actions = store.getActions();
+        expect(actions[1]).toEqual(expectedResult);
+      });
+  });
+});
+
+describe('Test suite for Meal delete Actions', () => {
+  beforeEach(() => moxios.install());
+  afterEach(() => moxios.uninstall());
+
+  it('should return delete success action and payload if successful', () => {
+    const store = mockStore(initialState);
+    const expectedResult = {
+      type: types.DELETE_MEAL_SUCCESS,
+      mealId: saveMealResponse.meal.id,
+    };
+    moxios.stubRequest(api.meals.delete(saveMealResponse.meal.id), {
+      status: 200,
+      response: deleteMealResponse,
+    });
+    return store.dispatch(deleteMeal(saveMealResponse.meal.id))
+      .then(() => {
+        const actions = store.getActions();
+        expect(actions[1]).toEqual(expectedResult);
+      });
+  });
+
+  it('should return delete failed action and payload if failed', () => {
+    const store = mockStore(initialState);
+    const expectedResult = {
+      type: types.DELETE_MEAL_FAILED,
+    };
+    moxios.stubRequest(api.meals.delete(saveMealResponse.meal.id), {
+      status: 401,
+      response: deleteMealFailedResponse,
+    });
+    return store.dispatch(deleteMeal(saveMealResponse.meal.id))
+      .then(() => {
+        const actions = store.getActions();
+        expect(actions[1]).toEqual(expectedResult);
+      });
+  });
+
+  it('should return delete failed action type', () => {
+    const store = mockStore(initialState);
+    const expectedResult = {
+      type: types.DELETE_MEAL_FAILED,
+    };
+    moxios.stubRequest(api.meals.delete(saveMealResponse.meal.id), {
+      status: 401,
+      response: deleteMealFailedResponseB,
+    });
+    return store.dispatch(deleteMeal(saveMealResponse.meal.id))
       .then(() => {
         const actions = store.getActions();
         expect(actions[1]).toEqual(expectedResult);

@@ -40,7 +40,7 @@ export class EditMeal extends React.Component {
    */
   setup(meals) {
     const { id } = this.props.match.params;
-    if (id && meals.length > 1) {
+    if (id && meals.length > 0) {
       const meal = meals.find(x => x.id === Number.parseInt(id, 10));
       if (meal) {
         this.setState({

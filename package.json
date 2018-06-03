@@ -49,9 +49,13 @@
       "!client/src/components/Main.jsx",
       "!client/src/reducers/{index,initialState}.js"
     ],
+    "moduleNameMapper": {
+      "\\.(css|less|scss)$": "<rootDir>./client/__tests__/__mocks__/styleMock.js"
+    },
     "testPathIgnorePatterns": [
       "client/__tests__/setup.js",
       "client/__tests__/helpers",
+      "client/__tests__/__mocks__/*",
       "client/src/store/*"
     ],
     "setupTestFrameworkScriptFile": "<rootDir>./client/__tests__/setup.js"
@@ -85,6 +89,7 @@
     "cloudinary": "^1.11.0",
     "colors": "^1.2.5",
     "compression": "^1.7.2",
+    "create-array": "^1.1.0",
     "css-loader": "^0.28.11",
     "dotenv": "^5.0.1",
     "enzyme": "^3.3.0",
@@ -110,11 +115,14 @@
     "prop-types": "^15.6.1",
     "randomstring": "^1.1.5",
     "react": "^16.3.2",
+    "react-confirm-alert": "^2.0.2",
     "react-dom": "^16.3.2",
+    "react-paginate": "^5.2.3",
     "react-redux": "^5.0.7",
     "react-redux-loading-bar": "^4.0.5",
     "react-redux-toastr": "^7.2.6",
     "react-router-dom": "^4.2.2",
+    "react-router-enzyme-context": "^1.2.0",
     "redux": "^4.0.0",
     "redux-mock-store": "^1.5.1",
     "redux-thunk": "^2.2.0",
@@ -127,8 +135,7 @@
     "validator": "^9.4.1",
     "webpack": "^4.8.3",
     "webpack-dev-middleware": "^3.1.3",
-    "webpack-hot-middleware": "^2.22.2",
-    "react-router-enzyme-context": "^1.2.0"
+    "webpack-hot-middleware": "^2.22.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

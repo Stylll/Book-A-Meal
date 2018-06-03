@@ -5,6 +5,7 @@ import * as types from './actionTypes';
 import setAuthorizationToken from '../utils/setAuthorizationToken';
 import api from '../utils/api';
 import { getMessageValue } from '../utils/utils';
+import { getMeals } from './mealActions';
 
 /**
  * action to handle signup events
@@ -66,6 +67,7 @@ const signin = signinDetails => function (dispatch) {
       localStorage.setItem('jwtToken', resp.data.token);
       setAuthorizationToken(resp.data.token);
       dispatch(signinSuccess(resp.data.user));
+      dispatch(getMeals());
       dispatch(hideLoading());
     })
     .catch((err) => {

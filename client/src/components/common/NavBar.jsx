@@ -54,7 +54,7 @@ const NavBar = ({
             <a href="#" onClick="toggleNav(this); return false;" className="navlink">Meals</a>
             <div className="dropdown-content">
               <NavLink to="/caterer/meals/edit">New Meal</NavLink>
-              <NavLink to="/caterer/meals/manage">Manage Meals</NavLink>
+              <NavLink to="/caterer/meals">Manage Meals</NavLink>
             </div>
           </div>
           <div className="navitem dropdown">
