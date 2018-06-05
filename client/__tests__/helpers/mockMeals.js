@@ -69,6 +69,25 @@ const getMealsFailedResponse = {
   status: 500,
 };
 
+const deleteMealResponse = {
+  status: 200,
+  message: 'Meal deleted successfully',
+};
+
+const deleteMealFailedResponse = {
+  status: 401,
+  message: 'Unauthorized Access',
+};
+
+const deleteMealFailedResponseB = {
+  errors: {
+    id: {
+      message: 'Meal does not existss',
+      status: 401,
+    }
+  }
+}
+
 export {
   emptyMeal,
   invalidMeal,
@@ -79,4 +98,7 @@ export {
   saveMealFailedResponseB,
   getMealsResponse,
   getMealsFailedResponse,
+  deleteMealResponse,
+  deleteMealFailedResponse,
+  deleteMealFailedResponseB,
 };

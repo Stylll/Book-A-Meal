@@ -1,10 +1,14 @@
 import mealReducer from '../../src/reducers/mealReducer';
 import initialState from '../../src/reducers/initialState';
-import { saveMealSuccess, saveMealFailed, getMealsSuccess, getMealsFailed } from '../../src/actions/mealActions';
+import {
+  saveMealSuccess, saveMealFailed, getMealsSuccess, getMealsFailed,
+  deleteMealSuccess, deleteMealFailed,
+} from '../../src/actions/mealActions';
 import { SAVE_MEAL_SUCCESS, SAVE_MEAL_FAILED } from '../../src/actions/actionTypes';
 import {
   validMeal, saveMealResponse, saveMealFailedResponse,
   saveMealFailedResponseB, getMealsResponse, getMealsFailedResponse,
+  deleteMealFailedResponseB,
 } from '../helpers/mockMeals';
 
 describe('Test Suite for Meal Reducer - SAVE', () => {
@@ -45,3 +49,20 @@ describe('Test suite for Meal Reducer - GET', () => {
     expect(newState.errors.message).toEqual(getMealsFailedResponse.message);
   });
 });
+
+describe('Test suite for Meal Reducer - DELETE', () => {
+  it('should update state by removing meal if deletion is successful', () => {
+    const initialStateB = { ...initialState };
+    const meal = { ...saveMealResponse.meal };
+    initialStateB.meals.meals.push(meal);
+    const action = deleteMealSuccess(meal.id);
+    const newState = mealReducer(initialStateB.meals, action);
+    expect(newState.meals.length).toBe(0);
+  });
+
+  it('should not update state if deletion failed', () => {
+    const action = deleteMealFailed(deleteMealFailedResponseB);
+    const newState = mealReducer(initialState.meals, action);
+    expect(newState).toEqual(initialState.meals);
+  });
+})

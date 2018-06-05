@@ -120,6 +120,55 @@ const getMealsFailed = (data) => {
   };
 };
 
+/**
+ * action to handle deleting meals for a caterer.
+ * @param {integer} mealId
+ */
+const deleteMeal = mealId => function (dispatch) {
+  dispatch(showLoading());
+  return axios.delete(api.meals.delete(mealId))
+    .then((resp) => {
+      dispatch(deleteMealSuccess(mealId));
+      dispatch(hideLoading());
+    })
+    .catch((err) => {
+      dispatch(deleteMealFailed(err.response.data));
+      dispatch(hideLoading());
+    });
+};
+
+/**
+ * action to handle successful meal delete request
+ * @param {integer} mealId
+ * @returns {object} action object for reducer
+ */
+const deleteMealSuccess = (mealId) => {
+  toastr.success('Deletion', 'Meal deleted successfully');
+  return {
+    type: types.DELETE_MEAL_SUCCESS,
+    mealId,
+  };
+};
+
+/**
+ * action to handle failed meal delete request
+ * @param {object} data
+ */
+const deleteMealFailed = (data) => {
+  let errors = {};
+  if (data.errors) {
+    errors = getMessageValue(data.errors);
+  } else if (data.message) {
+    errors = {
+      message: data.message,
+    };
+    toastr.error('Unexpected Error', data.message || 'Could not delete meal');
+  }
+  return {
+    type: types.DELETE_MEAL_FAILED,
+  };
+};
+
 export {
   saveMeal,
   saveMealSuccess,
@@ -127,4 +176,7 @@ export {
   getMeals,
   getMealsSuccess,
   getMealsFailed,
+  deleteMeal,
+  deleteMealSuccess,
+  deleteMealFailed,
 };
