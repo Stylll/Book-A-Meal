@@ -3,6 +3,9 @@ import { shallow } from 'enzyme';
 import MealList from '../../../src/components/meals/MealList';
 import { saveMealResponse } from '../../helpers/mockMeals';
 
+/* eslint-disable no-undef */
+window.scrollTo = jest.fn();
+
 const meals = [
   saveMealResponse.meal, saveMealResponse.meal, saveMealResponse.meal,
   saveMealResponse.meal, saveMealResponse.meal, saveMealResponse.meal,

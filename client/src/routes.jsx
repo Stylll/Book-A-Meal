@@ -5,6 +5,7 @@ import Signup from './components/account/Signup';
 import Signin from './components/account/Signin';
 import EditMeal from './components/meals/EditMeal';
 import ManageMeals from './components/meals/ManageMeals';
+import EditMenu from './components/menu/EditMenu';
 
 export default (
   <div>
@@ -15,6 +16,9 @@ export default (
       <Route exact path="/caterer/meals" component={ManageMeals} />
       <Route exact path="/caterer/meals/edit" component={EditMeal} />
       <Route exact path="/caterer/meals/edit/:id" component={EditMeal} />
+      <Route exact path="/caterer/meals/edit" component={EditMeal} />
+      <Route exact path="/caterer/menus/edit" component={EditMenu} />
+      <Route exact path="/caterer/menus/edit/:id" component={EditMenu} />
     </Switch>
   </div>
 );

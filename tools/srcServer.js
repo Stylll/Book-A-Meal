@@ -30,7 +30,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(trimmer);
 
 // static api docs
-app.use('/api-docs', express.static(path.join(__dirname, './api-docs')));
+app.use('/api-docs', express.static(path.join(__dirname, './server/api-docs')));
 
 // assets
 app.use('/assets', express.static(path.join(__dirname, '../client/src/assets')));

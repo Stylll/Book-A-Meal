@@ -239,6 +239,18 @@ nav {
 
 /* Card Style Ends */
 
+.meal-options {
+  width: 300px;
+  margin: auto;
+}
+
+.meal-options span {
+  float: left;
+}
+.meal-options input {
+  float: right;
+}
+
 .textbox {
   height: 20px;
   padding: 5px;
