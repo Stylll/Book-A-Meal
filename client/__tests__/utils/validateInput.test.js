@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import {
   validateSignupInput, validateSigninInput,
-  validateMealInput,
+  validateMealInput, validateMenuInput,
 } from '../../src/utils/validateInput';
 import {
   emptyUser,
@@ -15,6 +15,11 @@ import {
   longMealName,
   validMeal,
 } from '../helpers/mockMeals';
+import {
+  emptyMenu,
+  invalidMenu,
+  validMenu,
+} from '../helpers/mockMenu';
 
 describe('Test Suite for validateSignupInput function', () => {
   it('should return no errors for valid input', () => {
@@ -92,5 +97,24 @@ describe('Test suite for validateMealInput function', () => {
   it('should return no error', () => {
     const result = validateMealInput({ ...validMeal });
     expect(result.isValid).to.equal(true);
+  });
+
+  describe('Test suite for validateMenuInput function', () => {
+    it('should return error for empty input', () => {
+      const result = validateMenuInput({ ...emptyMenu });
+      expect(result.isValid).to.equal(false);
+      expect(result.errors.mealIds).to.equal('Please select atleast one meal');
+    });
+
+    it('should return error for invalid input', () => {
+      const result = validateMenuInput({ ...invalidMenu });
+      expect(result.isValid).to.equal(false);
+      expect(result.errors.mealIds).to.equal('One or more of the meal options are invalid');
+    });
+
+    it('should return no error', () => {
+      const result = validateMenuInput({ ...validMenu });
+      expect(result.isValid).to.equal(true);
+    });
   });
 });

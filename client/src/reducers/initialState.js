@@ -9,4 +9,8 @@ export default {
     meals: [],
     errors: {},
   },
+  menus: {
+    menus: [],
+    errors: {},
+  },
 };

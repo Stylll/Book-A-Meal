@@ -93,4 +93,18 @@ const validateMealInput = (state) => {
   };
 };
 
-export { validateSignupInput, validateSigninInput, validateMealInput };
+const validateMenuInput = (state) => {
+  const errors = {};
+  if (isEmpty(state.mealIds)) {
+    errors.mealIds = 'Please select atleast one meal';
+  } else if (/[^0-9]/gi.test(state.mealIds.join(''))) {
+    errors.mealIds = 'One or more of the meal options are invalid';
+  }
+
+  return {
+    isValid: isEmpty(errors),
+    errors,
+  };
+};
+
+export { validateSignupInput, validateSigninInput, validateMealInput, validateMenuInput };

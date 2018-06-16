@@ -12,6 +12,10 @@ const api = {
     get: '/api/v1/meals',
     delete: id => (`/api/v1/meals/${id}`),
   },
+  menu: {
+    post: '/api/v1/menu',
+    put: id => (`/api/v1/menu/${id}`),
+  },
 };
 
 export default api;
