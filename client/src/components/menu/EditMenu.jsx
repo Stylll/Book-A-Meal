@@ -149,7 +149,7 @@ export class EditMenu extends React.Component {
           && <span className="red-text errors" id="mealOption-error">{this.state.errors.menu}</span>}
         <div>
           <p>Selected Options: ({this.state.mealIds.length})</p>
-          <div className="mealOptions">
+          <div className="meal-options">
             {this.state.mealIds.map(id => (
                 <div key={id}>
                 {this.props.meals.find(meal => meal.id === id) &&

@@ -16,6 +16,7 @@ import { getMessageValue } from '../../src/utils/utils';
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
+/* eslint-disable no-undef */
 window.localStorage = localStorage;
 
 describe('Test Suite for Menu Action', () => {

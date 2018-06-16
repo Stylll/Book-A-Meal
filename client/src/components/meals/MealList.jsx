@@ -63,6 +63,7 @@ class MealList extends React.Component {
       meals,
       pageNo: selected + 1,
     });
+    /* eslint-disable no-undef */
     window.scrollTo(0, 100);
   }
 
