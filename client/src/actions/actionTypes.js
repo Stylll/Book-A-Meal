@@ -16,3 +16,5 @@ export const DELETE_MEAL_FAILED = 'DELETE_MEAL_FAILED';
 /* Menu action types */
 export const SAVE_MENU_SUCCESS = 'SAVE_MENU_SUCCESS';
 export const SAVE_MENU_FAILED = 'SAVE_MENU_FAILED';
+export const GET_MENU_SUCCESS = 'GET_MENU_SUCCESS';
+export const GET_MENU_FAILED = 'GET_MENU_FAILED';

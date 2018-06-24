@@ -71,8 +71,52 @@ const saveMenuFailed = (errorData) => {
   };
 };
 
+/**
+ * action to handle get menus for caterer
+ */
+const getMenus = () => (dispatch) => {
+  dispatch(showLoading());
+  return axios.get(api.menu.get)
+    .then((resp) => {
+      dispatch(getMenusSuccess(resp.data));
+      dispatch(hideLoading());
+    })
+    .catch((err) => {
+      dispatch(getMenusFailed(err.response.data));
+      dispatch(hideLoading());
+    });
+};
+
+/**
+ * Action handle successful get menu request
+ * @param {object} data
+ * @returns {object} action object
+ */
+const getMenusSuccess = data => (
+  {
+    type: types.GET_MENU_SUCCESS,
+    menus: data.menus,
+  }
+);
+
+/**
+ * action to handle failed menu get request
+ * @param {object} data
+ * @return {object} action object
+ */
+const getMenusFailed = (data) => {
+  toastr.error('Unexpected Error', data.message || 'Could not get menus');
+  return {
+    type: types.GET_MENU_FAILED,
+    errors: data,
+  };
+};
+
 export {
   saveMenu,
   saveMenuSuccess,
   saveMenuFailed,
+  getMenus,
+  getMenusSuccess,
+  getMenusFailed,
 };

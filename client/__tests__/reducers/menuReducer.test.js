@@ -3,11 +3,13 @@ import initialState from '../../src/reducers/initialState';
 import {
   saveMenu,
   saveMenuSuccess, saveMenuFailed,
+  getMenus, getMenusSuccess, getMenusFailed,
 } from '../../src/actions/menuActions';
-import { SAVE_MENU_SUCCESS, SAVE_MENU_FAILED } from '../../src/actions/actionTypes';
+import { SAVE_MENU_SUCCESS, SAVE_MENU_FAILED, GET_MENU_SUCCESS, GET_MENU_FAILED } from '../../src/actions/actionTypes';
 import {
   saveMenuResponse,
   saveMenuFailedResponse, saveMenuFailedResponseB,
+  getMenuResponse, getMenuFailedResponse,
 } from '../helpers/mockMenu';
 
 describe('Test Suite for Menu Reducer - SAVE', () => {
@@ -31,6 +33,20 @@ describe('Test Suite for Menu Reducer - SAVE', () => {
       type: null,
     };
     const newState = menuReducer(initialState.menus, action);
+    expect(newState).toEqual(initialState.menus);
+  });
+});
+
+describe('Test Suite for Menu Reducer - GET', () => {
+  it('should update the state with menu if get was successful', () => {
+    const action = getMenusSuccess(getMenuResponse);
+    const newState = menuReducer(initialState.menu, action);
+    expect(newState.menus.length).toBe(2);
+  });
+
+  it('should not update the state if get failed', () => {
+    const action = getMenusFailed(getMenuFailedResponse);
+    const newState = menuReducer(initialState.menu, action);
     expect(newState).toEqual(initialState.menus);
   });
 });

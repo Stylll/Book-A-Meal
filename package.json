@@ -8,7 +8,7 @@
     "migrate:db-dev": "sequelize db:migrate:undo:all --env=development && sequelize db:migrate --env=development && sequelize db:seed:all --env=development",
     "migrate:db": "sequelize db:migrate:undo:all --env=test && sequelize db:migrate --env=test && sequelize db:seed:all --env=test",
     "pretest": "npm run migrate:db",
-    "test:server": "npm run pretest && set NODE_ENV=test&& nyc --reporter=html --reporter=text --reporter=lcov mocha --compilers js:babel-core/register server/tests/**/*.test.js --timeout 10000 --exit",
+    "test:server": "npm run pretest && NODE_ENV=test nyc --reporter=html --reporter=text --reporter=lcov mocha --compilers js:babel-core/register server/tests/**/*.test.js --timeout 10000 --exit",
     "test:client": "jest /client",
     "start": "babel-node ./server/server",
     "start:dev": "nodemon --inspect --watch server --exec babel-node ./server/server --trace-warnings",

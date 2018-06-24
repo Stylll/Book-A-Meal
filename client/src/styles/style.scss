@@ -251,6 +251,16 @@ nav {
   float: right;
 }
 
+.menu {
+  justify-content: flex-end;
+  align-items: center;
+  min-height: 10vh;
+  margin-bottom: 20px;
+}
+.menu-item {
+  padding: 10px;
+}
+
 .textbox {
   height: 20px;
   padding: 5px;
@@ -258,6 +268,10 @@ nav {
 }
 
 .meal-textbox {
+  width: 80% !important;
+}
+
+.menu-textbox {
   width: 80% !important;
 }
 
