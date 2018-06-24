@@ -15,6 +15,7 @@ const api = {
   menu: {
     post: '/api/v1/menu',
     put: id => (`/api/v1/menu/${id}`),
+    get: '/api/v1/menu',
   },
 };
 

@@ -6,6 +6,7 @@ import setAuthorizationToken from '../utils/setAuthorizationToken';
 import api from '../utils/api';
 import { getMessageValue } from '../utils/utils';
 import { getMeals } from './mealActions';
+import { getMenus } from './menuActions';
 
 /**
  * action to handle signup events
@@ -68,6 +69,7 @@ const signin = signinDetails => function (dispatch) {
       setAuthorizationToken(resp.data.token);
       dispatch(signinSuccess(resp.data.user));
       dispatch(getMeals());
+      dispatch(getMenus());
       dispatch(hideLoading());
     })
     .catch((err) => {

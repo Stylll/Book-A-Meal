@@ -50,9 +50,16 @@ export class EditMenu extends React.Component {
     const { id } = this.props.match.params;
     if (id && menus.length > 0) {
       const menu = menus.find(m => m.id === Number.parseInt(id, 10));
+      /**
+       * get only the meals created by the caterer from the menu since we don't want a caterer
+       * to be able to delete another caterer's meal from the menu
+      */
+      const createdMealIdsInMenu = this.props.meals.filter(m => menu.mealIds.includes(m.id))
+        .map(meal => meal.id);
       if (menu) {
         this.setState({
-          mealIds: menu.mealIds,
+          id: menu.id,
+          mealIds: createdMealIdsInMenu,
         });
       }
     }
@@ -119,6 +126,7 @@ export class EditMenu extends React.Component {
   handleSubmit(event) {
     if (this.isValid()) {
       const menuDetails = {
+        id: this.state.id || null,
         mealIds: [...this.state.mealIds],
       };
       this.props.actions.saveMenu(menuDetails)
@@ -176,9 +184,11 @@ export class EditMenu extends React.Component {
             <input type="button" className="btn btn-secondary" onClick={this.handleAdd} value="Add to Menu" />
             &nbsp; &nbsp;
             <input type="button" className="btn btn-secondary" onClick={this.handleSubmit} value="Save" />
+            &nbsp; &nbsp;
+            <NavLink to="/caterer/menus" className="btn btn-danger">Cancel</NavLink>
           </div>
         <br /><br />
-        <NavLink to="/caterer/menus" className="btn btn-danger">Cancel</NavLink>
+
     </div>
     {/* Form Content Ends */ }
       </Main>
