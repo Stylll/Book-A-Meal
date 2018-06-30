@@ -81,7 +81,10 @@ class MealList extends React.Component {
             {this.state.meals.filter((x, j) => (j >= (i * this.state.rowLength) &&
             j < ((i + 1) * this.state.rowLength)))
               .map((meal, k) => (
-                <MealItem key={k} meal={meal} handleDelete={this.props.handleDelete} />
+                <MealItem key={k} meal={meal}
+                  handleDelete={this.props.handleDelete}
+                  showEdit={this.props.showEdit}
+                  showDelete={this.props.showDelete} />
               ))}
           </div>
         ))}
@@ -107,13 +110,16 @@ class MealList extends React.Component {
 // prop-types
 MealList.propTypes = {
   meals: PropTypes.array.isRequired,
-  handleDelete: PropTypes.func.isRequired,
+  handleDelete: PropTypes.func,
   perPage: PropTypes.number,
+  showEdit: PropTypes.bool.isRequired,
+  showDelete: PropTypes.bool.isRequired,
 };
 
 // default props
 MealList.defaultProps = {
   perPage: 4,
+  handleDelete: () => Promise.resolve(),
 };
 
 export default MealList;
