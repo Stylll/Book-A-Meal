@@ -1,7 +1,7 @@
 import moxios from 'moxios';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { saveMenu, getMenus } from '../../src/actions/menuActions';
+import { saveMenu, getMenus, getMenu } from '../../src/actions/menuActions';
 import {
   saveMenuResponse,
   updateMenuResponse,
@@ -125,6 +125,45 @@ describe('Test Suite for Menu Action', () => {
         response: getMenuFailedResponse,
       });
       store.dispatch(getMenus())
+        .then(() => {
+          const actions = store.getActions();
+          expect(actions[1].toEqual(expectedAction));
+        });
+    });
+  });
+
+  describe('Test suite for Menu action - GET CURRENT', () => {
+    beforeEach(() => moxios.install());
+    afterEach(() => moxios.uninstall());
+
+    it('it should return proper status and payload if get request was successful', () => {
+      const store = mockStore(initialState);
+      const expectedAction = {
+        type: types.GET_CURR_MENU_SUCCESS,
+        menu: getMenuResponse.menus[0],
+      };
+      moxios.stubRequest(api.menu.get, {
+        status: 200,
+        response: { menu: getMenuResponse.menus[0] },
+      });
+      store.dispatch(getMenu())
+        .then(() => {
+          const actions = store.getActions();
+          expect(actions[1].toEqual(expectedAction));
+        });
+    });
+
+    it('it should return error status and message if request failed', () => {
+      const store = mockStore(initialState);
+      const expectedAction = {
+        type: types.GET_CURR_MENU_FAILED,
+        errors: getMenuFailedResponse,
+      };
+      moxios.stubRequest(api.menu.get, {
+        status: 500,
+        response: getMenuFailedResponse,
+      });
+      store.dispatch(getMenu())
         .then(() => {
           const actions = store.getActions();
           expect(actions[1].toEqual(expectedAction));

@@ -22,6 +22,12 @@ const menuReducer = (state = initialState.menus, action) => {
         menus: action.menus,
       };
 
+    case types.GET_CURR_MENU_SUCCESS:
+      return {
+        ...state,
+        currentMenu: action.menu,
+      };
+
     case types.LOGOUT:
       return {
         ...state,

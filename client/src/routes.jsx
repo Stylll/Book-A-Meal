@@ -8,6 +8,7 @@ import ManageMeals from './components/meals/ManageMeals';
 import EditMenu from './components/menu/EditMenu';
 import ManageMenus from './components/menu/ManageMenus';
 import ViewMeals from './components/menu/ViewMeals';
+import CurrentMenu from './components/menu/CurrentMenu';
 
 export default (
   <div>
@@ -23,6 +24,7 @@ export default (
       <Route exact path="/caterer/menus/edit" component={EditMenu} />
       <Route exact path="/caterer/menus/edit/:id" component={EditMenu} />
       <Route exact path="/caterer/menus/view/:id" component={ViewMeals} />
+      <Route exact path="/customer/menu" component={CurrentMenu} />
     </Switch>
   </div>
 );

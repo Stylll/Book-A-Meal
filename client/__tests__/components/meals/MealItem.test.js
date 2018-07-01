@@ -26,4 +26,41 @@ describe('Test suite for Meal Item', () => {
     expect(wrapper.find('a').length).toBe(1);
     expect(wrapper.find('NavLink').length).toBe(1);
   });
+
+  it('should display only showEdit link', () => {
+    const props = {
+      showEdit: true,
+      showDelete: false,
+      showOrder: false,
+      meal: saveMealResponse.meal,
+      handleDelete: () => Promise.resolve(),
+    };
+    const wrapper = shallow(<MealItem {...props} />);
+    expect(wrapper.find('NavLink').length).toBe(1);
+  });
+
+  it('should display only showDelete link', () => {
+    const props = {
+      showEdit: false,
+      showDelete: true,
+      showOrder: false,
+      meal: saveMealResponse.meal,
+      handleDelete: () => Promise.resolve(),
+    };
+    const wrapper = shallow(<MealItem {...props} />);
+    expect(wrapper.find('a').length).toBe(1);
+    expect(wrapper.find('a').first().text()).toBe('Delete');
+  });
+
+  it('should display only showOrder link', () => {
+    const props = {
+      showEdit: false,
+      showDelete: false,
+      showOrder: true,
+      meal: saveMealResponse.meal,
+      handleDelete: () => Promise.resolve(),
+    };
+    const wrapper = shallow(<MealItem {...props} />);
+    expect(wrapper.find('NavLink').length).toBe(1);
+  });
 });

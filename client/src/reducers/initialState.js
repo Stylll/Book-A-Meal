@@ -11,6 +11,7 @@ export default {
   },
   menus: {
     menus: [],
+    currentMenu: {},
     errors: {},
   },
 };
