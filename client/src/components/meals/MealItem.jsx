@@ -8,7 +8,7 @@ import { NavLink } from 'react-router-dom';
  * @returns {object} rendered component
  */
 const MealItem = ({
-  meal, handleDelete, showEdit, showDelete,
+  meal, handleDelete, showEdit, showDelete, showOrder,
 }) => (
     <div className="card flex-display">
           <div className="card-img-container">
@@ -18,6 +18,10 @@ const MealItem = ({
             <div className="card-text black-text">
               <h3 className="black-text bold-text">{meal.name}</h3>
               <h4 className="black-text light-text">Price: &#8358;{meal.price}</h4>
+              {showOrder &&
+              <NavLink to={`/customer/orders/${meal.id}`} className="btn btn-secondary">Order</NavLink>
+              }
+              &nbsp;&nbsp;
               {showEdit &&
               <NavLink to={`/caterer/meals/edit/${meal.id}`} className="btn btn-secondary">Edit</NavLink>
               }
@@ -38,11 +42,13 @@ MealItem.propTypes = {
   handleDelete: PropTypes.func.isRequired,
   showEdit: PropTypes.bool,
   showDelete: PropTypes.bool,
+  showOrder: PropTypes.bool,
 };
 
 MealItem.defaultProps = {
   showEdit: true,
   showDelete: true,
+  showOrder: false,
 };
 
 export default MealItem;

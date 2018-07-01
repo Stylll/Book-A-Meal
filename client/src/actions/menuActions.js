@@ -112,6 +112,47 @@ const getMenusFailed = (data) => {
   };
 };
 
+/**
+ * action to handle get menu for customer
+ */
+const getMenu = () => (dispatch) => {
+  dispatch(showLoading());
+  return axios.get(api.menu.get)
+    .then((resp) => {
+      dispatch(getMenuSuccess(resp.data));
+      dispatch(hideLoading());
+    })
+    .catch((err) => {
+      dispatch(getMenuFailed(err.response.data));
+      dispatch(hideLoading());
+    });
+};
+
+/**
+ * Action handle successful get menu request for customer
+ * @param {object} data
+ * @returns {object} action object
+ */
+const getMenuSuccess = data => (
+  {
+    type: types.GET_CURR_MENU_SUCCESS,
+    menu: data.menu,
+  }
+);
+
+/**
+ * action to handle failed menu get request for customer
+ * @param {object} data
+ * @return {object} action object
+ */
+const getMenuFailed = (data) => {
+  toastr.error('Unexpected Error', data.message || 'Could not get menus');
+  return {
+    type: types.GET_CURR_MENU_FAILED,
+    errors: data,
+  };
+};
+
 export {
   saveMenu,
   saveMenuSuccess,
@@ -119,4 +160,7 @@ export {
   getMenus,
   getMenusSuccess,
   getMenusFailed,
+  getMenu,
+  getMenuSuccess,
+  getMenuFailed,
 };

@@ -84,7 +84,8 @@ class MealList extends React.Component {
                 <MealItem key={k} meal={meal}
                   handleDelete={this.props.handleDelete}
                   showEdit={this.props.showEdit}
-                  showDelete={this.props.showDelete} />
+                  showDelete={this.props.showDelete}
+                  showOrder={this.props.showOrder} />
               ))}
           </div>
         ))}
@@ -114,12 +115,14 @@ MealList.propTypes = {
   perPage: PropTypes.number,
   showEdit: PropTypes.bool.isRequired,
   showDelete: PropTypes.bool.isRequired,
+  showOrder: PropTypes.bool,
 };
 
 // default props
 MealList.defaultProps = {
   perPage: 4,
   handleDelete: () => Promise.resolve(),
+  showOrder: false,
 };
 
 export default MealList;

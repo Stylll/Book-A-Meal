@@ -4,8 +4,13 @@ import {
   saveMenu,
   saveMenuSuccess, saveMenuFailed,
   getMenus, getMenusSuccess, getMenusFailed,
+  getMenu, getMenuSuccess, getMenuFailed,
 } from '../../src/actions/menuActions';
-import { SAVE_MENU_SUCCESS, SAVE_MENU_FAILED, GET_MENU_SUCCESS, GET_MENU_FAILED } from '../../src/actions/actionTypes';
+import {
+  SAVE_MENU_SUCCESS, SAVE_MENU_FAILED,
+  GET_MENU_SUCCESS, GET_MENU_FAILED,
+  GET_CURR_MENU_SUCCESS, GET_CURR_MENU_FAILED,
+} from '../../src/actions/actionTypes';
 import {
   saveMenuResponse,
   saveMenuFailedResponse, saveMenuFailedResponseB,
@@ -46,6 +51,20 @@ describe('Test Suite for Menu Reducer - GET', () => {
 
   it('should not update the state if get failed', () => {
     const action = getMenusFailed(getMenuFailedResponse);
+    const newState = menuReducer(initialState.menu, action);
+    expect(newState).toEqual(initialState.menus);
+  });
+});
+
+describe('Test suite for Menu Reducer - GET CURRENT', () => {
+  it('should update state with menu if request was successful', () => {
+    const action = getMenuSuccess({ menu: getMenuResponse.menus[0] });
+    const newState = menuReducer(initialState.menu, action);
+    expect(newState.currentMenu).toEqual(getMenuResponse.menus[0]);
+  });
+
+  it('should not update state if get request failed', () => {
+    const action = getMenuFailed(getMenuFailedResponse);
     const newState = menuReducer(initialState.menu, action);
     expect(newState).toEqual(initialState.menus);
   });
