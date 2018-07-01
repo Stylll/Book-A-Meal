@@ -5,22 +5,24 @@
 $primary-color: #4CAF50;
 $secondary-color: #4CAF50;
 $alternate-color: #700353;
+$white: #ffffff;
+$box-shadow-color: #888888;
+$linear-gradient: linear-gradient(rgba(255, 255, 255, 0.93), rgba(255, 255, 255, 0.93));
 
 /*Containers Start*/
 body{
   margin: 0;
   font-family: 'Average Sans', 'Roboto', sans-serif;
-  background-color: #4CAF50;
+  background-color: $primary-color;
   background-repeat: no-repeat;
   background-size: cover;
-  background-image:
-        linear-gradient(rgba(37, 42, 48, 0.6), rgba(37, 42, 48, 0.7)),
-        url("../assets/kitchen.jpg");
 }
 main{
   min-height: 100vh;
   background-color: white;
-  opacity: 0.96;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: $linear-gradient, url("../assets/kitchen.jpg");
 }
 a {
   color: $primary-color;
@@ -201,20 +203,24 @@ nav {
   min-height: 100px;
   width: 300px;
   margin: 10px;
-  border: 0.4px solid #888888;
-  box-shadow: 0px 2px 2px #888888;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px $box-shadow-color;
+  background-color: $white;
 
 }
 .hor-card {
-  border: 0.4px solid #888888;
-  box-shadow: 0px 2px 2px #888888;
+  background-color: $white;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px $box-shadow-color;
   margin: 10px;
 }
 .profile-card {
   margin:auto !important; 
   width:50%;
-  border: 0.4px solid #888888;
-  box-shadow: 0px 2px 2px #888888;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px $box-shadow-color;
+  background-color: $white;
 }
 .card-container {
   display: flex;
