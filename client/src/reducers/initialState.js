@@ -14,4 +14,16 @@ export default {
     currentMenu: {},
     errors: {},
   },
+  orders: {
+    isCustomer: false,
+    isCaterer: false,
+    customerOrders: {
+      orders: [],
+      errors: {},
+    },
+    catererOrders: {
+      orders: [],
+      errors: {},
+    },
+  },
 };

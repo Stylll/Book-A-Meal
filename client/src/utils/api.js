@@ -17,6 +17,10 @@ const api = {
     put: id => (`/api/v1/menu/${id}`),
     get: '/api/v1/menu',
   },
+  orders: {
+    post: '/api/v1/orders',
+    put: id => (`/api/v1/orders/${id}`),
+  },
 };
 
 export default api;

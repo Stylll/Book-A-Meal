@@ -50,7 +50,7 @@
       "!client/src/reducers/{index,initialState}.js"
     ],
     "moduleNameMapper": {
-      "\\.(css|less|scss)$": "<rootDir>./client/__tests__/__mocks__/styleMock.js"
+      "\\.(css|less|scss|png|jpg|svg)$": "<rootDir>./client/__tests__/__mocks__/importMock.js"
     },
     "testPathIgnorePatterns": [
       "client/__tests__/setup.js",
