@@ -20,3 +20,7 @@ export const GET_MENU_SUCCESS = 'GET_MENU_SUCCESS';
 export const GET_MENU_FAILED = 'GET_MENU_FAILED';
 export const GET_CURR_MENU_SUCCESS = 'GET_CURR_MENU_SUCCESS';
 export const GET_CURR_MENU_FAILED = 'GET_CURR_MENU_FAILED';
+
+/** Order action types */
+export const SAVE_ORDER_SUCCESS = 'SAVE_ORDER_SUCCESS';
+export const SAVE_ORDER_FAILED = 'SAVE_ORDER_FAILED';

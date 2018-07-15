@@ -33,6 +33,7 @@ const menuReducer = (state = initialState.menus, action) => {
         ...state,
         menus: [],
         errors: {},
+        currentMenu: {},
       };
 
     default:

@@ -19,7 +19,7 @@ const MealItem = ({
               <h3 className="black-text bold-text">{meal.name}</h3>
               <h4 className="black-text light-text">Price: &#8358;{meal.price}</h4>
               {showOrder &&
-              <NavLink to={`/customer/orders/${meal.id}`} className="btn btn-secondary">Order</NavLink>
+              <NavLink to={`/customer/orders/confirm/${meal.id}`} className="btn btn-secondary">Order</NavLink>
               }
               &nbsp;&nbsp;
               {showEdit &&

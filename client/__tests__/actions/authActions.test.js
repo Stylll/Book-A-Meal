@@ -114,5 +114,5 @@ describe('Test Suite for Auth Actions', () => {
         const actions = store.getActions();
         expect(actions[1]).to.eql(expectedAction);
       });
-  })
+  });
 });

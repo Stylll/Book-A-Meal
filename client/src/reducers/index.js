@@ -4,6 +4,7 @@ import { reducer as toastrReducer } from 'react-redux-toastr';
 import authReducer from './authReducer';
 import mealReducer from './mealReducer';
 import menuReducer from './menuReducer';
+import orderReducer from './orderReducer';
 
 /**
  * Reducers combiner
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   meals: mealReducer,
   menus: menuReducer,
+  orders: orderReducer,
   loadingBar: loadingBarReducer,
   toastr: toastrReducer,
 });
