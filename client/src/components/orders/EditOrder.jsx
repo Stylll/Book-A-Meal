@@ -25,6 +25,7 @@ export class EditOrder extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.setup = this.setup.bind(this);
+    this.sendOrder = this.sendOrder.bind(this);
   }
 
   componentDidMount() {
@@ -59,6 +60,8 @@ export class EditOrder extends React.Component {
           price: order.price.toString(),
           quantity: order.quantity,
           cost: order.cost,
+          meal: order.meal,
+          status: order.status,
         });
       }
     } else if (mealId && !isEmpty(menu)) {
@@ -72,6 +75,7 @@ export class EditOrder extends React.Component {
           price: meal.price.toString(),
           quantity: 0,
           cost: 0,
+          meal,
         });
       }
     } else {
@@ -113,6 +117,38 @@ export class EditOrder extends React.Component {
   }
 
   /**
+   * method to send order object to the action
+   * @param {object} state
+   */
+  sendOrder(state) {
+    let orderObject = { ...state };
+    if (state.id) {
+      // means an order is being updated
+      orderObject = {
+        id: state.id,
+        mealId: state.mealId,
+        quantity: state.quantity,
+        meal: state.meal,
+        status: state.status,
+      };
+    }
+    this.props.actions.saveOrder(orderObject)
+      .then(() => {
+        if (isEmpty(this.props.errors)) {
+          this.setState({
+            complete: true,
+            errors: {},
+          });
+        } else {
+          this.setState({
+            complete: false,
+            errors: this.props.errors,
+          });
+        }
+      });
+  }
+
+  /**
    * method to submit form to api.
    * calls saveOrder action if form is valid.
    * @param {object} event
@@ -120,19 +156,7 @@ export class EditOrder extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     if (this.isValid()) {
-      this.props.actions.saveOrder(this.state)
-        .then(() => {
-          if (isEmpty(this.props.errors)) {
-            this.setState({
-              complete: true,
-              errors: {},
-            });
-          } else {
-            this.setState({
-              errors: this.props.errors,
-            });
-          }
-        });
+      this.sendOrder(this.state);
     }
   }
 
@@ -157,8 +181,9 @@ export class EditOrder extends React.Component {
                   <form>
                     <h1 className="black-text bold-text">{this.state.name}</h1>
                     <h3 className="black-text normal-text">Price: &#8358;{this.state.price}</h3>
-                    <h3>Quantity (plates): &nbsp;
-                      <select name="quantity" onChange={this.handleChange} value={this.state.quantity}>
+                    <h3>Quantity (plates):</h3>
+                      <select className="textbox order-textbox" name="quantity"
+                        onChange={this.handleChange} value={this.state.quantity}>
                       <option value="0">select quantity</option>
                       <option value="1">1</option>
                       <option value="2">2</option>
@@ -166,7 +191,6 @@ export class EditOrder extends React.Component {
                       <option value="4">4</option>
                       <option value="5">5</option>
                       </select>
-                    </h3>
                     {this.state.errors.quantity &&
                     <span className="red-text">{this.state.errors.quantity}</span>
                     }

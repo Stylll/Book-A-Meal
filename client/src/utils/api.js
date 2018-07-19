@@ -20,6 +20,8 @@ const api = {
   orders: {
     post: '/api/v1/orders',
     put: id => (`/api/v1/orders/${id}`),
+    get: '/api/v1/orders',
+    delete: id => (`/api/v1/orders/${id}`),
   },
 };
 

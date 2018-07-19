@@ -695,7 +695,7 @@ describe('Test Suite for Order Controller', () => {
           expect(resp.status).to.equal(200);
           expect(resp.body.orders).to.be.an('array');
           expect(resp.body.orders.length).to.equal(2);
-          expect(resp.body.orders[0].id).to.equal(2);
+          expect(resp.body.orders[0].id).to.equal(3);
           expect(resp.body.orders[0].mealId).to.equal(1);
           expect(resp.body.orders[0].meal.name).to.equal('Curry Rice');
           expect(resp.body.orders[0].status).to.equal('pending');
@@ -714,7 +714,7 @@ describe('Test Suite for Order Controller', () => {
           expect(resp.status).to.equal(200);
           expect(resp.body.orders).to.be.an('array');
           expect(resp.body.orders.length).to.equal(4);
-          expect(resp.body.orders[3].id).to.equal(4);
+          expect(resp.body.orders[3].id).to.equal(1);
           expect(resp.body.orders[3].mealId).to.equal(1);
           expect(resp.body.orders[3].meal.name).to.equal('Curry Rice');
           expect(resp.body.orders[3].status).to.equal('pending');
@@ -734,7 +734,7 @@ describe('Test Suite for Order Controller', () => {
           expect(resp.status).to.equal(200);
           expect(resp.body.orders).to.be.an('array');
           expect(resp.body.orders.length).to.equal(4);
-          expect(resp.body.orders[3].id).to.equal(4);
+          expect(resp.body.orders[3].id).to.equal(1);
           expect(resp.body.orders[3].mealId).to.equal(1);
           expect(resp.body.orders[3].meal.name).to.equal('Curry Rice');
           expect(resp.body.orders[3].status).to.equal('pending');

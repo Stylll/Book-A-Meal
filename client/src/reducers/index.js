@@ -5,13 +5,14 @@ import authReducer from './authReducer';
 import mealReducer from './mealReducer';
 import menuReducer from './menuReducer';
 import orderReducer from './orderReducer';
+import * as types from '../actions/actionTypes';
 
 /**
  * Reducers combiner
  * This combines all the reducers for redux
  */
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
   auth: authReducer,
   meals: mealReducer,
   menus: menuReducer,
@@ -19,5 +20,14 @@ const rootReducer = combineReducers({
   loadingBar: loadingBarReducer,
   toastr: toastrReducer,
 });
+
+const rootReducer = (state, action) => {
+  if (action.type === types.LOGOUT) {
+    /* eslint-disable no-param-reassign */
+    state = undefined;
+  }
+
+  return appReducer(state, action);
+};
 
 export default rootReducer;

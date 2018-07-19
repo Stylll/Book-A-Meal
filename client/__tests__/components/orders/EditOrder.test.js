@@ -4,8 +4,9 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import ReactRouterEnzymeContext from 'react-router-enzyme-context';
-import ConnectedConfirmOrder, { EditOrder } from '../../../src/components/orders/EditOrder';
+import ConnectedEditOrder, { EditOrder } from '../../../src/components/orders/EditOrder';
 import { saveMenuResponse } from '../../helpers/mockMenu';
+import { getOrdersResponse } from '../../helpers/mockOrders';
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
@@ -38,6 +39,42 @@ const setup = () => {
   return shallow(<EditOrder {...props} />);
 };
 
+const setupB = () => {
+  const props = {
+    actions: {
+      saveOrder: () => (Promise.resolve()),
+      getMenu: () => (Promise.resolve()),
+    },
+    menu: saveMenuResponse.menu,
+    orders: getOrdersResponse.orders,
+    errors: {},
+    match: {
+      params: {
+        id: 1,
+      },
+    },
+  };
+  return shallow(<EditOrder {...props} />);
+};
+
+const setupC = () => {
+  const props = {
+    actions: {
+      saveOrder: () => (Promise.resolve()),
+      getMenu: () => (Promise.resolve()),
+    },
+    menu: saveMenuResponse.menu,
+    orders: getOrdersResponse.orders,
+    errors: {},
+    match: {
+      params: {
+      },
+    },
+    history: [],
+  };
+  return shallow(<EditOrder {...props} />);
+};
+
 describe('Test suite for EditOrder component', () => {
   it('should render unconnected component properly', () => {
     const wrapper = setup();
@@ -64,13 +101,31 @@ describe('Test suite for EditOrder component', () => {
     expect(state.errors.quantity).toBe('Quantity must be greater than zero');
   });
 
-  it('should call handleSubmit function and saveOrder action', () => {
+  it('should call handleSubmit function and saveOrder action for saving an order', () => {
     const wrapper = setup();
     wrapper.setState({
       quantity: 1,
     });
     const handleSubmitSpy = jest.spyOn(wrapper.instance(), 'handleSubmit');
     const saveOrderSpy = jest.spyOn(wrapper.instance().props.actions, 'saveOrder');
+    const sendOrderSpy = jest.spyOn(wrapper.instance(), 'sendOrder');
+    const event = {
+      preventDefault: jest.fn(),
+    };
+    wrapper.instance().handleSubmit(event);
+    expect(handleSubmitSpy).toHaveBeenCalled();
+    expect(saveOrderSpy).toHaveBeenCalled();
+    expect(sendOrderSpy).toHaveBeenCalled();
+  });
+
+  it('should call handleSubmit function and saveOrder action for updating an order', () => {
+    const wrapper = setupB();
+    wrapper.setState({
+      quantity: 3,
+    });
+    const handleSubmitSpy = jest.spyOn(wrapper.instance(), 'handleSubmit');
+    const saveOrderSpy = jest.spyOn(wrapper.instance().props.actions, 'saveOrder');
+    const sendOrderSpy = jest.spyOn(wrapper.instance(), 'sendOrder');
     const event = {
       preventDefault: jest.fn(),
     };
@@ -78,11 +133,34 @@ describe('Test suite for EditOrder component', () => {
     const state = wrapper.state();
     expect(handleSubmitSpy).toHaveBeenCalled();
     expect(saveOrderSpy).toHaveBeenCalled();
+    expect(sendOrderSpy).toHaveBeenCalled();
+  });
+
+  it('should call handleChange and update state', () => {
+    const wrapper = setup();
+    const handleChangeSpy = jest.spyOn(wrapper.instance(), 'handleChange');
+    const event = {
+      preventDefault: jest.fn(),
+      target: {
+        name: 'quantity',
+        value: '2',
+      },
+    };
+    wrapper.instance().handleChange(event);
+    const state = wrapper.state();
+    expect(handleChangeSpy).toHaveBeenCalled();
+    expect(state.quantity).toBe('2');
   });
 
   it('should render connected component properly', () => {
     const props = {};
-    const wrapper = shallow(<ConnectedConfirmOrder {...props} store={store} />);
+    const wrapper = shallow(<ConnectedEditOrder {...props} store={store} />);
     expect(wrapper.length).toBe(1);
+  });
+
+  it('redirects to menu page if id or meal id is not provided', () => {
+    const wrapper = setupC();
+    const result = wrapper.instance().props.history;
+    expect(result[0]).toBe('/customer/menu');
   });
 });

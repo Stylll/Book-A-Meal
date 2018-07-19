@@ -82,11 +82,11 @@ const deleteMealFailedResponse = {
 const deleteMealFailedResponseB = {
   errors: {
     id: {
-      message: 'Meal does not existss',
-      status: 401,
-    }
-  }
-}
+      message: 'Meal does not exists',
+      status: 404,
+    },
+  },
+};
 
 export {
   emptyMeal,
