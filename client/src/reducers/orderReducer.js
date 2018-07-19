@@ -41,6 +41,38 @@ const orderReducer = (state = initialState.orders, action) => {
           },
         };
 
+      case types.GET_ORDERS_SUCCESS:
+        return {
+          ...state,
+          customerOrders: {
+            orders: action.orders,
+            errors: {},
+          },
+        };
+
+      case types.GET_ORDERS_FAILED:
+        return {
+          ...state,
+          customerOrders: {
+            orders: state.customerOrders.orders,
+            errors: action.errors,
+          },
+        };
+
+      case types.DELETE_ORDER_SUCCESS:
+        return {
+          ...state,
+          customerOrders: {
+            orders: state.customerOrders.orders.filter(m => m.id !== action.orderId),
+            errors: {},
+          },
+        };
+
+      case types.DELETE_ORDER_FAILED:
+        return {
+          ...state,
+        };
+
       case types.LOGOUT:
         return {
           ...state,

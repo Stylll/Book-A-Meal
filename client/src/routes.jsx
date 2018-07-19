@@ -10,6 +10,8 @@ import ManageMenus from './components/menu/ManageMenus';
 import ViewMeals from './components/menu/ViewMeals';
 import CurrentMenu from './components/menu/CurrentMenu';
 import EditOrder from './components/orders/EditOrder';
+import ViewOrders from './components/orders/ViewOrders';
+import MyPendingOrders from './components/orders/MyPendingOrders';
 
 export default (
   <div>
@@ -28,6 +30,8 @@ export default (
       <Route exact path="/customer/menu" component={CurrentMenu} />
       <Route exact path="/customer/orders/confirm/:mealId" component={EditOrder} />
       <Route exact path="/customer/orders/edit/:id" component={EditOrder} />
+      <Route exact path="/customer/orders" component={ViewOrders} />
+      <Route exact path="/customer/orders/pending" component={MyPendingOrders} />
     </Switch>
   </div>
 );

@@ -281,6 +281,10 @@ nav {
   width: 80% !important;
 }
 
+.order-textbox {
+  width: 80% !important;
+}
+
 .img-popup {
   height: 20%;
   width: 20%;
@@ -382,6 +386,15 @@ nav {
 }
 .red-text {
   color: rgb(209, 32, 32);
+}
+.error-text {
+  color: rgb(209, 32, 32);
+}
+.warning-text {
+  color: rgb(209, 209, 22);
+}
+.success-text {
+  color: rgb(6, 197, 6);
 }
 /** Colors End **/
 

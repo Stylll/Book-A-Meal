@@ -21,7 +21,7 @@ const NavBar = ({
             <a href="#" onClick={toggleNav} className="navlink">Orders</a>
               <div className="dropdown-content">
                 <NavLink to="/customer/orders/pending">Pending Orders</NavLink>
-                <NavLink to="/customer/orders/history">Order History</NavLink>
+                <NavLink to="/customer/orders">Order History</NavLink>
               </div>
           </div>
           <div className="navitem dropdown">

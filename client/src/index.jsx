@@ -13,6 +13,7 @@ import setAuthorizationToken from './utils/setAuthorizationToken';
 import { signinSuccess } from './actions/authActions';
 import { getMeals } from './actions/mealActions';
 import { getMenus } from './actions/menuActions';
+import { getOrders } from './actions/orderActions';
 import './styles/style.scss';
 
 
@@ -27,6 +28,9 @@ if (localStorage.jwtToken) {
   if (user.accountType === 'caterer' || user.accountType === 'admin') {
     store.dispatch(getMeals());
     store.dispatch(getMenus());
+  }
+  if (user.accountType === 'customer') {
+    store.dispatch(getOrders());
   }
 }
 
