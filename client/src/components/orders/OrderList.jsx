@@ -83,10 +83,14 @@ class OrderList extends React.Component {
               .map((order, k) => (
                 <OrderItem key={k} order={order}
                   handleDelete={this.props.handleDelete}
+                  handleApprove={this.props.handleApprove}
+                  handleDecline={this.props.handleDecline}
                   showEdit={this.props.showEdit}
                   showDelete={this.props.showDelete}
                   showCustomer={this.props.showCustomer}
-                  showStatus={this.props.showStatus} />
+                  showStatus={this.props.showStatus}
+                  showApprove={this.props.showApprove}
+                  showDecline={this.props.showDecline} />
               ))}
           </div>
         ))}
@@ -113,21 +117,29 @@ class OrderList extends React.Component {
 OrderList.propTypes = {
   orders: PropTypes.array.isRequired,
   handleDelete: PropTypes.func,
+  handleApprove: PropTypes.func,
+  handleDecline: PropTypes.func,
   perPage: PropTypes.number,
   showEdit: PropTypes.bool,
   showDelete: PropTypes.bool,
   showCustomer: PropTypes.bool,
   showStatus: PropTypes.bool,
+  showDecline: PropTypes.bool,
+  showApprove: PropTypes.bool,
 };
 
 // default props
 OrderList.defaultProps = {
   perPage: 4,
   handleDelete: () => Promise.resolve(),
+  handleApprove: () => Promise.resolve(),
+  handleDecline: () => Promise.resolve(),
   showEdit: false,
   showDelete: false,
   showCustomer: false,
   showStatus: false,
+  showDecline: false,
+  showApprove: false,
 };
 
 export default OrderList;

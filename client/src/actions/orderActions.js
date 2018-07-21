@@ -17,11 +17,6 @@ const saveOrder = orderDetails => (dispatch) => {
   if (!orderDetails.id) {
     return axios.post(api.orders.post, orderDetails)
       .then((response) => {
-        // add the meal object to the order object so it can be saved in the state.
-        response.data.order = {
-          ...response.data.order,
-          meal: orderDetails.meal,
-        };
         dispatch(saveOrderSuccess(response.data));
         dispatch(hideLoading());
       })
@@ -32,11 +27,6 @@ const saveOrder = orderDetails => (dispatch) => {
   }
   return axios.put(api.orders.put(orderDetails.id), orderDetails)
     .then((response) => {
-      // add the meal object to the order object so it can be saved in the state.
-      response.data.order = {
-        ...response.data.order,
-        meal: orderDetails.meal,
-      };
       dispatch(saveOrderSuccess(response.data));
       dispatch(hideLoading());
     })

@@ -7,6 +7,8 @@ const setup = () => {
   const props = {
     order: getOrdersResponse.orders[0],
     handleDelete: () => Promise.resolve(),
+    handleApprove: () => Promise.resolve(),
+    handleDecline: () => Promise.resolve(),
   };
   return shallow(<OrderItem {...props} />);
 };
@@ -31,6 +33,8 @@ describe('Test suite for Order Item', () => {
       showDelete: true,
       order: getOrdersResponse.orders[0],
       handleDelete: () => Promise.resolve(),
+      handleApprove: () => Promise.resolve(),
+      handleDecline: () => Promise.resolve(),
     };
     const wrapper = shallow(<OrderItem {...props} />);
     expect(wrapper.find('a').length).toBe(1);
@@ -43,10 +47,38 @@ describe('Test suite for Order Item', () => {
       showDelete: false,
       order: getOrdersResponse.orders[0],
       handleDelete: () => Promise.resolve(),
+      handleApprove: () => Promise.resolve(),
+      handleDecline: () => Promise.resolve(),
     };
     const wrapper = shallow(<OrderItem {...props} />);
     expect(wrapper.find('a').length).toBe(0);
     expect(wrapper.find('NavLink').length).toBe(0);
+  });
+
+  it('should display only approve and decline link', () => {
+    const props = {
+      showApprove: true,
+      showDecline: true,
+      order: getOrdersResponse.orders[0],
+      handleDelete: () => Promise.resolve(),
+      handleApprove: () => Promise.resolve(),
+      handleDecline: () => Promise.resolve(),
+    };
+    const wrapper = shallow(<OrderItem {...props} />);
+    expect(wrapper.find('a').length).toBe(2);
+  });
+
+  it('should not display approve and decline links', () => {
+    const props = {
+      showApprove: false,
+      showDecline: false,
+      order: getOrdersResponse.orders[0],
+      handleDelete: () => Promise.resolve(),
+      handleApprove: () => Promise.resolve(),
+      handleDecline: () => Promise.resolve(),
+    };
+    const wrapper = shallow(<OrderItem {...props} />);
+    expect(wrapper.find('a').length).toBe(0);
   });
 
   it('should display customer name', () => {

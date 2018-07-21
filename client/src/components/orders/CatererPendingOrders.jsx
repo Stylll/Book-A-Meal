@@ -10,29 +10,50 @@ import Main from '../Main';
 import OrderList from '../orders/OrderList';
 import { getOrders, saveOrder } from '../../actions/orderActions';
 
-export class MyPendingOrders extends React.Component {
+export class CatererPendingOrders extends React.Component {
   constructor(props) {
     super(props);
 
-    this.deleteItem = this.deleteItem.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
+    this.declineItem = this.declineItem.bind(this);
+    this.approveItem = this.approveItem.bind(this);
+    this.handleDecline = this.handleDecline.bind(this);
+    this.handleApprove = this.handleApprove.bind(this);
   }
 
   componentDidMount() {
     this.props.actions.getOrders();
   }
 
-  deleteItem(order) {
-    /* eslint-disable no-param-reassign */
+  /**
+   * sets the status of the order to canceled
+   * @param {object} order
+   */
+  declineItem(order) {
     const updateOrder = {
       status: 'canceled',
       id: order.id,
-      meal: order.meal,
     };
     this.props.actions.saveOrder(updateOrder);
   }
 
-  handleDelete(event, order) {
+  /**
+   * sets the status of the order to complete
+   * @param {object} order
+   */
+  approveItem(order) {
+    const updateOrder = {
+      status: 'complete',
+      id: order.id,
+    };
+    this.props.actions.saveOrder(updateOrder);
+  }
+
+  /**
+   * displays a confirmation popup to confirm order decline
+   * @param {object} event
+   * @param {object} order
+   */
+  handleDecline(event, order) {
     event.preventDefault();
     confirmAlert({
       customUI: ({ onClose }) => (
@@ -47,10 +68,40 @@ export class MyPendingOrders extends React.Component {
                 { /* eslint-disable react/jsx-no-bind */}
                 <button
                   className="btn btn-danger" onClick={() => {
-                    this.deleteItem(order);
+                    this.declineItem(order);
                     onClose();
-                  }}>Yes, Cancel it!
+                  }}>Yes, decline it!
                 </button>
+            </div>
+          </div>
+      ),
+    });
+  }
+
+  /**
+   * displays a confirmation popup to confirm order approval
+   * @param {object} event
+   * @param {object} order
+   */
+  handleApprove(event, order) {
+    event.preventDefault();
+    confirmAlert({
+      customUI: ({ onClose }) => (
+          <div className="custom-ui">
+            <div className="text-center">
+              <img src="../../assets/error.png" alt="success" className="img-responsive img-popup" />
+            </div>
+            <h1 className="red-text text-center">Are you sure?</h1>
+            <div className="row text-center">
+                { /* eslint-disable react/jsx-no-bind */}
+                <button
+                  className="btn btn-secondary" onClick={() => {
+                    this.approveItem(order);
+                    onClose();
+                  }}>Yes, approve it!
+                </button>
+                &nbsp;&nbsp;
+                <button className="btn btn-danger" onClick={onClose}>No</button>
             </div>
           </div>
       ),
@@ -59,7 +110,7 @@ export class MyPendingOrders extends React.Component {
 
   render() {
     return (
-      <Main allowCustomer>
+      <Main allowCaterer>
         <div className="container text-center black-text">
           <h1 className="secondary-text-color">Pending Orders</h1>
           {/* Date Filter Box Starts */}
@@ -71,9 +122,11 @@ export class MyPendingOrders extends React.Component {
         </div>
         <OrderList
           orders={this.props.orders.filter(order => order.status === 'pending')}
-          handleDelete={this.handleDelete}
-          showEdit
-          showDelete
+          handleDecline={this.handleDecline}
+          handleApprove={this.handleApprove}
+          showApprove
+          showDecline
+          showCustomer
           perPage={4} />
       </Main>
     );
@@ -81,7 +134,7 @@ export class MyPendingOrders extends React.Component {
 }
 
 // proptypes
-MyPendingOrders.propTypes = {
+CatererPendingOrders.propTypes = {
   actions: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   orders: PropTypes.array.isRequired,
@@ -94,8 +147,8 @@ MyPendingOrders.propTypes = {
  */
 const mapStateToProps = state => (
   {
-    errors: state.orders.customerOrders.errors,
-    orders: state.orders.customerOrders.orders,
+    errors: state.orders.catererOrders.errors,
+    orders: state.orders.catererOrders.orders,
   }
 );
 
@@ -110,4 +163,4 @@ const mapDispatchToProps = dispatch => (
   }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(MyPendingOrders);
+export default connect(mapStateToProps, mapDispatchToProps)(CatererPendingOrders);

@@ -12,6 +12,8 @@ import CurrentMenu from './components/menu/CurrentMenu';
 import EditOrder from './components/orders/EditOrder';
 import ViewOrders from './components/orders/ViewOrders';
 import MyPendingOrders from './components/orders/MyPendingOrders';
+import CatererViewOrders from './components/orders/CatererViewOrders';
+import CatererPendingOrders from './components/orders/CatererPendingOrders';
 
 export default (
   <div>
@@ -32,6 +34,8 @@ export default (
       <Route exact path="/customer/orders/edit/:id" component={EditOrder} />
       <Route exact path="/customer/orders" component={ViewOrders} />
       <Route exact path="/customer/orders/pending" component={MyPendingOrders} />
+      <Route exact path="/caterer/orders" component={CatererViewOrders} />
+      <Route exact path="/caterer/orders/pending" component={CatererPendingOrders} />
     </Switch>
   </div>
 );

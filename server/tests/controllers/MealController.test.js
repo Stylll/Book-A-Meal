@@ -434,10 +434,10 @@ describe('Test Suite for Meal Controller', () => {
           expect(resp.body.meals[0])
             .to.have.all.deep.keys('id', 'name', 'price', 'image', 'userId');
           expect(resp.body.meals.length).to.equal(2);
-          expect(resp.body.meals[0].name).to.equal(existingMeal.name);
-          expect(resp.body.meals[1].name).to.equal(validMeal1.name);
+          expect(resp.body.meals[0].name).to.equal(validMeal1.name);
+          expect(resp.body.meals[1].name).to.equal(existingMeal.name);
           expect(resp.body.meals[1].userId).to.equal(1);
-          expect(resp.body.meals[1].price).to.equal(validMeal1.price);
+          expect(resp.body.meals[1].price).to.equal(existingMeal.price);
           done();
         });
     });
@@ -454,12 +454,12 @@ describe('Test Suite for Meal Controller', () => {
           expect(resp.body.meals[0])
             .to.have.all.deep.keys('id', 'name', 'price', 'image', 'userId');
           expect(resp.body.meals.length).to.equal(3);
-          expect(resp.body.meals[0].name).to.equal(existingMeal.name);
+          expect(resp.body.meals[0].name).to.equal(validMeal2.name);
           expect(resp.body.meals[1].name).to.equal(validMeal1.name);
-          expect(resp.body.meals[2].name).to.equal(validMeal2.name);
-          expect(resp.body.meals[0].price).to.equal(existingMeal.price);
+          expect(resp.body.meals[2].name).to.equal(existingMeal.name);
+          expect(resp.body.meals[0].price).to.equal(validMeal2.price);
           expect(resp.body.meals[1].price).to.equal(validMeal1.price);
-          expect(resp.body.meals[2].price).to.equal(validMeal2.price);
+          expect(resp.body.meals[2].price).to.equal(existingMeal.price);
           done();
         });
     });

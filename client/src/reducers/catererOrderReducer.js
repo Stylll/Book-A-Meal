@@ -1,43 +1,37 @@
 import initialState from './initialState';
 import * as types from '../actions/actionTypes';
-import catererOrderReducer from './catererOrderReducer';
 
 const orderReducer = (state = initialState.orders, action) => {
   if (action.type === types.SIGNIN_SUCCESS || action.type === types.SIGNUP_SUCCESS) {
-    if (action.user.accountType === 'customer') {
+    if (action.user.accountType === 'caterer') {
       return {
         ...state,
-        isCustomer: true,
-        isCaterer: false,
+        isCustomer: false,
+        isCaterer: true,
       };
     }
-    return {
-      ...state,
-      isCustomer: false,
-      isCaterer: true,
-    };
   }
 
-  if (state.isCustomer) {
+  if (state.isCaterer) {
     switch (action.type) {
       case types.SAVE_ORDER_SUCCESS:
         return {
           ...state,
-          customerOrders: {
+          catererOrders: {
             orders:
                 [
-                  ...state.customerOrders
+                  ...state.catererOrders
                     .orders.filter(m => m.id !== action.order.id), action.order,
                 ],
-            errors: state.customerOrders.errors,
+            errors: state.catererOrders.errors,
           },
         };
 
       case types.SAVE_ORDER_FAILED:
         return {
           ...state,
-          customerOrders: {
-            orders: state.customerOrders.orders,
+          catererOrders: {
+            orders: state.catererOrders.orders,
             errors: action.errors,
           },
         };
@@ -45,7 +39,7 @@ const orderReducer = (state = initialState.orders, action) => {
       case types.GET_ORDERS_SUCCESS:
         return {
           ...state,
-          customerOrders: {
+          catererOrders: {
             orders: action.orders,
             errors: {},
           },
@@ -54,8 +48,8 @@ const orderReducer = (state = initialState.orders, action) => {
       case types.GET_ORDERS_FAILED:
         return {
           ...state,
-          customerOrders: {
-            orders: state.customerOrders.orders,
+          catererOrders: {
+            orders: state.catererOrders.orders,
             errors: action.errors,
           },
         };
@@ -63,8 +57,8 @@ const orderReducer = (state = initialState.orders, action) => {
       case types.DELETE_ORDER_SUCCESS:
         return {
           ...state,
-          customerOrders: {
-            orders: state.customerOrders.orders.filter(m => m.id !== action.orderId),
+          catererOrders: {
+            orders: state.catererOrders.orders.filter(m => m.id !== action.orderId),
             errors: {},
           },
         };
@@ -73,28 +67,11 @@ const orderReducer = (state = initialState.orders, action) => {
         return {
           ...state,
         };
-
-      case types.LOGOUT:
-        return {
-          ...state,
-          isCustomer: false,
-          isCaterer: false,
-          customerOrders: {
-            orders: [],
-            errors: {},
-          },
-          catererOrders: {
-            orders: [],
-            errors: {},
-          },
-        };
-
       default:
         return state;
     }
   }
-
-  return catererOrderReducer(state, action);
+  return state;
 };
 
 export default orderReducer;
