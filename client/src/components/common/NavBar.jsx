@@ -61,7 +61,7 @@ const NavBar = ({
             <a href="#" onClick="toggleNav(this); return false;" className="navlink">Orders</a>
             <div className="dropdown-content">
               <NavLink to="/caterer/orders/pending">Pending Orders</NavLink>
-              <NavLink to="/caterer/orders/history">Order History</NavLink>
+              <NavLink to="/caterer/orders">Order History</NavLink>
               <NavLink to="/caterer/orders/summary">Order Summary</NavLink>
             </div>
           </div>

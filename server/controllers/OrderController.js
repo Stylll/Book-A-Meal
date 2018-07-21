@@ -27,7 +27,8 @@ class OrderController {
     };
 
     // save the order object
-    const newOrder = await orders.add(order);
+    const rawOrder = await orders.add(order);
+    const newOrder = await OrderUtils.buildOrder(rawOrder);
 
     if (newOrder && !newOrder.err) {
       return response.status(201).json({ order: newOrder, message: 'Created successfully' });
@@ -67,7 +68,8 @@ class OrderController {
       order.status = request.body.status || order.status;
       order.cost = parseInt(order.quantity, 10) * parseFloat(order.price, 10);
 
-      const newOrder = await orders.update(order);
+      const rawOrder = await orders.update(order);
+      const newOrder = await OrderUtils.buildOrder(rawOrder);
 
       return response.status(200).json({ order: newOrder, message: 'Updated successfully' });
     }

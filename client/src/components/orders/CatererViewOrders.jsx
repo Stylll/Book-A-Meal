@@ -8,16 +8,16 @@ import Main from '../Main';
 import OrderList from '../orders/OrderList';
 import { getOrders, deleteOrder } from '../../actions/orderActions';
 
-export class ViewOrders extends React.Component {
+export class CatererViewOrders extends React.Component {
   componentDidMount() {
     this.props.actions.getOrders();
   }
 
   render() {
     return (
-      <Main allowCustomer>
+      <Main allowCaterer>
         <div className="container text-center black-text">
-          <h1 className="secondary-text-color">My Order History</h1>
+          <h1 className="secondary-text-color">Customer Order History</h1>
           {/* Date Filter Box Starts */}
           <h3 className="black-text normal-text">Filter orders by date
           <form>
@@ -27,8 +27,8 @@ export class ViewOrders extends React.Component {
         </div>
         <OrderList
           orders={this.props.orders}
-          handleDelete={this.handleDelete}
           showStatus
+          showCustomer
           perPage={8} />
       </Main>
     );
@@ -36,7 +36,7 @@ export class ViewOrders extends React.Component {
 }
 
 // proptypes
-ViewOrders.propTypes = {
+CatererViewOrders.propTypes = {
   actions: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   orders: PropTypes.array.isRequired,
@@ -49,8 +49,8 @@ ViewOrders.propTypes = {
  */
 const mapStateToProps = state => (
   {
-    errors: state.orders.customerOrders.errors,
-    orders: state.orders.customerOrders.orders,
+    errors: state.orders.catererOrders.errors,
+    orders: state.orders.catererOrders.orders,
   }
 );
 
@@ -61,8 +61,8 @@ const mapStateToProps = state => (
  */
 const mapDispatchToProps = dispatch => (
   {
-    actions: bindActionCreators({ getOrders, deleteOrder }, dispatch),
+    actions: bindActionCreators({ getOrders }, dispatch),
   }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(ViewOrders);
+export default connect(mapStateToProps, mapDispatchToProps)(CatererViewOrders);

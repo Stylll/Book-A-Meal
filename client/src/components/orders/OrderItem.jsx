@@ -10,6 +10,7 @@ import { beautifyDate } from '../../utils/utils';
  */
 const OrderItem = ({
   order, handleDelete, showEdit, showDelete, showCustomer, showStatus,
+  handleApprove, handleDecline, showApprove, showDecline,
 }) => (
     <div className="card flex-display">
           <div className="card-img-container">
@@ -32,20 +33,32 @@ const OrderItem = ({
               <h4
                 className="black-text light-text success-text">Status: {order.status}</h4>
               }
-              &nbsp;&nbsp;
-              {showEdit &&
-              <NavLink to={`/customer/orders/edit/${order.id}`} className="btn btn-secondary">Edit</NavLink>
-              }
-              &nbsp;&nbsp;
-              { /* eslint-disable react/jsx-no-bind */}
-              {showDelete &&
-              <a href="" onClick={e => handleDelete(e, order)} className="btn btn-danger">Cancel</a>
-              }
               {showCustomer &&
-              <h4 className="black-text light-text">Order By: {order.user.username}</h4>
+              <h4 className="black-text light-text">Order by: {order.user.username}</h4>
               }
-              <br />
-              <br />
+              { (showEdit || showDelete) &&
+                <div className="padding-bottom padding-top">
+                  {showEdit &&
+                    <NavLink to={`/customer/orders/edit/${order.id}`} className="btn btn-secondary">Edit</NavLink>
+                  }
+                  &nbsp;&nbsp;
+                  { /* eslint-disable react/jsx-no-bind */}
+                  {showDelete &&
+                    <a href="" onClick={e => handleDelete(e, order)} className="btn btn-danger">Cancel</a>
+                  }
+                </div>
+              }
+              { (showApprove || showDecline) &&
+                <div className="padding-bottom padding-top">
+                  {showApprove &&
+                    <a href="" onClick={e => handleApprove(e, order)} className="btn btn-secondary">Approve</a>
+                  }
+                  &nbsp;&nbsp;
+                  {showDecline &&
+                    <a href="" onClick={e => handleDecline(e, order)} className="btn btn-danger">Decline</a>
+                  }
+                </div>
+              }
             </div>
           </div>
         </div>
@@ -54,10 +67,14 @@ const OrderItem = ({
 OrderItem.propTypes = {
   order: PropTypes.object.isRequired,
   handleDelete: PropTypes.func.isRequired,
+  handleDecline: PropTypes.func.isRequired,
+  handleApprove: PropTypes.func.isRequired,
   showEdit: PropTypes.bool,
   showDelete: PropTypes.bool,
   showCustomer: PropTypes.bool,
   showStatus: PropTypes.bool,
+  showDecline: PropTypes.bool,
+  showApprove: PropTypes.bool,
 };
 
 OrderItem.defaultProps = {
@@ -65,6 +82,8 @@ OrderItem.defaultProps = {
   showDelete: false,
   showCustomer: false,
   showStatus: false,
+  showDecline: false,
+  showApprove: false,
 };
 
 export default OrderItem;

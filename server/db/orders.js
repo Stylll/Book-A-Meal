@@ -145,7 +145,7 @@ class Orders {
   static getAll() {
     return OrderModel.findAll({
       raw: true,
-      order: [['updatedAt', 'DESC']],
+      order: [['createdAt', 'DESC']],
     })
       .then((returnedOrder) => {
         if (isEmpty(returnedOrder)) {
@@ -168,7 +168,7 @@ class Orders {
           mealId,
         },
         raw: true,
-        order: [['updatedAt', 'DESC']],
+        order: [['createdAt', 'DESC']],
       })
         .then((returnedOrder) => {
           if (isEmpty(returnedOrder)) {
@@ -192,7 +192,7 @@ class Orders {
         status,
       },
       raw: true,
-      order: [['updatedAt', 'DESC']],
+      order: [['createdAt', 'DESC']],
     })
       .then((returnedOrder) => {
         if (isEmpty(returnedOrder)) {
@@ -215,7 +215,7 @@ class Orders {
         userId,
       },
       raw: true,
-      order: [['updatedAt', 'DESC']],
+      order: [['createdAt', 'DESC']],
     })
       .then((returnedOrder) => {
         if (isEmpty(returnedOrder)) {
@@ -245,7 +245,7 @@ class Orders {
         },
       },
       raw: true,
-      order: [['updatedAt', 'DESC']],
+      order: [['createdAt', 'DESC']],
     })
       .then((returnedOrder) => {
         if (isEmpty(returnedOrder)) {

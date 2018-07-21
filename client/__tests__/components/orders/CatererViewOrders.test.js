@@ -4,14 +4,14 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import ReactRouterEnzymeContext from 'react-router-enzyme-context';
-import ConnectedViewOrders, { ViewOrders } from '../../../src/components/orders/ViewOrders';
+import ConnectedCatererViewOrders, { CatererViewOrders } from '../../../src/components/orders/CatererViewOrders';
 import { getOrdersResponse } from '../../helpers/mockOrders';
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 const store = mockStore({
   orders: {
-    customerOrders: {
+    catererOrders: {
       orders: [],
       errors: {},
     },
@@ -26,20 +26,20 @@ const setup = () => {
       getOrders: () => Promise.resolve(),
     },
   };
-  return shallow(<ViewOrders {...props} />);
+  return shallow(<CatererViewOrders {...props} />);
 };
 
 describe('Test Suite for Manage Order Component', () => {
   it('should render properly', () => {
     const wrapper = setup();
     expect(wrapper.find('div').length).toBe(1);
-    expect(wrapper.find('h1').first().text()).toBe('My Order History');
+    expect(wrapper.find('h1').first().text()).toBe('Customer Order History');
     expect(wrapper.find('OrderList').length).toBe(1);
   });
 
   it('should render connected component properly', () => {
     const props = {};
-    const wrapper = shallow(<ConnectedViewOrders {...props} store={store} />);
+    const wrapper = shallow(<ConnectedCatererViewOrders {...props} store={store} />);
     expect(wrapper.length).toBe(1);
   });
 });
