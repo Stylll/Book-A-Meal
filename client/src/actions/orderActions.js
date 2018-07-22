@@ -164,6 +164,50 @@ const deleteOrderFailed = (data) => {
   };
 };
 
+/**
+ * action to retrieve customer orders summary from the server
+ * @returns dispatch function
+ */
+const getOrderSummary = () => (dispatch) => {
+  dispatch(showLoading());
+  return axios.get(api.orders.summary)
+    .then((response) => {
+      dispatch(getOrderSummarySuccess(response.data));
+      dispatch(hideLoading());
+    })
+    .catch((error) => {
+      dispatch(getOrderSummaryFailed(error.response.data));
+      dispatch(hideLoading());
+    });
+};
+
+/**
+ * action to handle successful orders summary get request
+ * @param {object} data
+ * @returns {object} action object for reducer
+ */
+const getOrderSummarySuccess = data => ({
+  type: types.GET_ORDER_SUMMARY_SUCCESS,
+  summary: data.orders,
+});
+
+/**
+ * action to handle failed orders summary get request
+ * @param {object} data
+ * @returns {object} action object for reducer
+ */
+const getOrderSummaryFailed = (data) => {
+  const errors = {
+    message: data.message,
+  };
+  toastr.error('Unexpected Error', data.message || 'Could not get orders');
+  return {
+    type: types.GET_ORDER_SUMMARY_FAILED,
+    errors,
+  };
+};
+
+
 export {
   saveOrder,
   saveOrderSuccess,
@@ -174,4 +218,7 @@ export {
   deleteOrder,
   deleteOrderSuccess,
   deleteOrderFailed,
+  getOrderSummary,
+  getOrderSummarySuccess,
+  getOrderSummaryFailed,
 };

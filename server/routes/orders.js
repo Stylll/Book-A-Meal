@@ -35,6 +35,11 @@ const orders = (router) => {
    * order router to handle get requests
    */
   router.get('/orders', validateAccount.user, AsyncWrapper(OrderController.get));
+
+  /**
+   * order router to handle order summary requests
+   */
+  router.get('/orders/summary', validateAccount.user, validateAccount.caterer, AsyncWrapper(OrderController.summary));
 };
 
 export default orders;

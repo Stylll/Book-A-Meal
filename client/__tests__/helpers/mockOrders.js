@@ -155,6 +155,30 @@ const deleteOrderFailedResponseB = {
   },
 };
 
+const getOrderSummaryResponse = {
+  orders: [
+    {
+      totalOrder: '1',
+      totalQuantity: '2',
+      totalSale: 4200,
+      totalCustomer: '1',
+      orderDate: '2018-07-21',
+    },
+    {
+      totalOrder: '1',
+      totalQuantity: '2',
+      totalSale: 2400,
+      totalCustomer: '1',
+      orderDate: '2018-07-17',
+    },
+  ],
+};
+
+const getOrderSummaryFailedResponse = {
+  status: 401,
+  message: 'Unauthorized Access',
+};
+
 export {
   saveOrderResponse,
   saveOrderFailedResponse,
@@ -164,4 +188,6 @@ export {
   deleteOrderResponse,
   deleteOrderFailedResponse,
   deleteOrderFailedResponseB,
+  getOrderSummaryResponse,
+  getOrderSummaryFailedResponse,
 };

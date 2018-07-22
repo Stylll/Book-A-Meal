@@ -7,6 +7,7 @@ import {
   saveOrderSuccess, saveOrderFailed,
   getOrders, getOrdersSuccess, getOrdersFailed,
   deleteOrder, deleteOrderSuccess, deleteOrderFailed,
+  getOrderSummarySuccess, getOrderSummaryFailed,
 } from '../../src/actions/orderActions';
 import {
   SAVE_ORDER_SUCCESS, SAVE_ORDER_FAILED,
@@ -19,6 +20,7 @@ import {
   saveOrderFailedResponse, saveOrderFailedResponseB,
   getOrdersResponse, getOrdersFailedResponse,
   deleteOrderResponse, deleteOrderFailedResponse, deleteOrderFailedResponseB,
+  getOrderSummaryResponse, getOrderSummaryFailedResponse,
 } from '../helpers/mockOrders';
 
 describe('Test Suite for Order Reducer for caterer - SAVE', () => {
@@ -95,5 +97,24 @@ describe('Test Suite for order reducer for caterer - DELETE', () => {
     const newState = orderReducer(initialState.orders, action);
     expect(newState.isCaterer).toBe(true);
     expect(newState.isCustomer).toBe(false);
+  });
+});
+
+describe('Test Suite for order reducer for caterer - GET SUMMARY', () => {
+  it('should update state with order summary if request is successful', () => {
+    initialState.orders.isCaterer = true;
+    const action = getOrderSummarySuccess(getOrderSummaryResponse);
+    const state = orderReducer(initialState.orders, action);
+    const newState = state.catererOrders;
+    expect(newState.summary.length).toBe(2);
+    expect(newState.summary[0]).toEqual(getOrderSummaryResponse.orders[0]);
+  });
+
+  it('should not update state if request failed', () => {
+    initialState.orders.isCaterer = true;
+    const action = getOrderSummaryFailed(getOrderSummaryFailedResponse);
+    const state = orderReducer(initialState.orders, action);
+    const newState = state.catererOrders;
+    expect(newState).toEqual(initialState.orders.catererOrders);
   });
 });

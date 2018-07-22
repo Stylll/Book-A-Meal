@@ -1,12 +1,13 @@
 import moxios from 'moxios';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { saveOrder, getOrders, deleteOrder } from '../../src/actions/orderActions';
+import { saveOrder, getOrders, deleteOrder, getOrderSummary } from '../../src/actions/orderActions';
 import {
   saveOrderResponse,
   saveOrderFailedResponse, saveOrderFailedResponseB,
   getOrdersResponse, getOrdersFailedResponse,
   deleteOrderResponse, deleteOrderFailedResponse, deleteOrderFailedResponseB,
+  getOrderSummaryResponse, getOrderSummaryFailedResponse,
 } from '../helpers/mockOrders';
 import * as types from '../../src/actions/actionTypes';
 import localStorage from '../helpers/mockLocalStorage';
@@ -180,6 +181,42 @@ describe('Test Suite for Order Actions - DELETE', () => {
       response: deleteOrderFailedResponseB,
     });
     const result = store.dispatch(deleteOrder(saveOrderResponse.order.id))
+      .then(() => {
+        const actions = store.getActions();
+        expect(actions[1]).toEqual(expectedAction);
+      });
+  });
+});
+
+describe('Test Suite for Order Actions - GET SUMMARY', () => {
+  it('should return proper payload and action type if request is successful', () => {
+    const store = mockStore(initialState);
+    const expectedAction = {
+      type: types.GET_ORDER_SUMMARY_SUCCESS,
+      summary: getOrderSummaryResponse.orders,
+    };
+    moxios.stubRequest(api.orders.summary, {
+      status: 200,
+      response: getOrderSummaryResponse,
+    });
+    const result = store.dispatch(getOrderSummary({}))
+      .then(() => {
+        const actions = store.getActions();
+        expect(actions[1]).toEqual(expectedAction);
+      });
+  });
+
+  it('should return proper payload and action type if request failed', () => {
+    const store = mockStore(initialState);
+    const expectedAction = {
+      type: types.GET_ORDER_SUMMARY_FAILED,
+      errors: { message: getOrderSummaryFailedResponse.message },
+    };
+    moxios.stubRequest(api.orders.summary, {
+      status: 401,
+      response: getOrderSummaryFailedResponse,
+    });
+    const result = store.dispatch(getOrderSummary({}))
       .then(() => {
         const actions = store.getActions();
         expect(actions[1]).toEqual(expectedAction);

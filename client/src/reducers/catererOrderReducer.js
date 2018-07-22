@@ -23,6 +23,7 @@ const orderReducer = (state = initialState.orders, action) => {
                   ...state.catererOrders
                     .orders.filter(m => m.id !== action.order.id), action.order,
                 ],
+            summary: state.catererOrders.summary,
             errors: state.catererOrders.errors,
           },
         };
@@ -33,6 +34,7 @@ const orderReducer = (state = initialState.orders, action) => {
           catererOrders: {
             orders: state.catererOrders.orders,
             errors: action.errors,
+            summary: state.catererOrders.summary,
           },
         };
 
@@ -42,6 +44,7 @@ const orderReducer = (state = initialState.orders, action) => {
           catererOrders: {
             orders: action.orders,
             errors: {},
+            summary: state.catererOrders.summary,
           },
         };
 
@@ -51,6 +54,7 @@ const orderReducer = (state = initialState.orders, action) => {
           catererOrders: {
             orders: state.catererOrders.orders,
             errors: action.errors,
+            summary: state.catererOrders.summary,
           },
         };
 
@@ -60,6 +64,7 @@ const orderReducer = (state = initialState.orders, action) => {
           catererOrders: {
             orders: state.catererOrders.orders.filter(m => m.id !== action.orderId),
             errors: {},
+            summary: state.catererOrders.summary,
           },
         };
 
@@ -67,6 +72,22 @@ const orderReducer = (state = initialState.orders, action) => {
         return {
           ...state,
         };
+
+      case types.GET_ORDER_SUMMARY_SUCCESS:
+        return {
+          ...state,
+          catererOrders: {
+            orders: state.catererOrders.orders,
+            errors: {},
+            summary: action.summary,
+          },
+        };
+
+      case types.GET_ORDER_SUMMARY_FAILED:
+        return {
+          ...state,
+        };
+
       default:
         return state;
     }

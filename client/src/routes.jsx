@@ -14,6 +14,7 @@ import ViewOrders from './components/orders/ViewOrders';
 import MyPendingOrders from './components/orders/MyPendingOrders';
 import CatererViewOrders from './components/orders/CatererViewOrders';
 import CatererPendingOrders from './components/orders/CatererPendingOrders';
+import OrderSummary from './components/orders/OrderSummary';
 
 export default (
   <div>
@@ -36,6 +37,7 @@ export default (
       <Route exact path="/customer/orders/pending" component={MyPendingOrders} />
       <Route exact path="/caterer/orders" component={CatererViewOrders} />
       <Route exact path="/caterer/orders/pending" component={CatererPendingOrders} />
+      <Route exact path="/caterer/orders/summary" component={OrderSummary} />
     </Switch>
   </div>
 );
