@@ -24,6 +24,7 @@ export default {
     catererOrders: {
       orders: [],
       errors: {},
+      summary: [],
     },
   },
 };

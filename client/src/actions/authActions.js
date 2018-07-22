@@ -68,8 +68,10 @@ const signin = signinDetails => function (dispatch) {
       localStorage.setItem('jwtToken', resp.data.token);
       setAuthorizationToken(resp.data.token);
       dispatch(signinSuccess(resp.data.user));
-      dispatch(getMeals());
       dispatch(getMenus());
+      if (resp.data.user.accountType !== 'customer') {
+        dispatch(getMeals());
+      }
       dispatch(hideLoading());
     })
     .catch((err) => {

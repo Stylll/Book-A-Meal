@@ -1,8 +1,10 @@
 /* eslint-disable no-unused-vars */
 import dotenv from 'dotenv';
 import moment from 'moment';
+import { isEmpty } from 'lodash';
 import orders from '../db/orders';
 import meals from '../db/meals';
+import db from '../models';
 import OrderUtils from '../utils/orders/orderUtils';
 
 dotenv.config();
@@ -114,6 +116,83 @@ class OrderController {
       return response.status(200).json({ orders: orderArray });
     }
     return response.status(500).json({ message: 'Internal Server Error' });
+  }
+
+  /**
+   * Static method to handle order summary requests
+   * @param {object} request
+   * @param {object} response
+   * @returns {object} {orders} | {message}
+   */
+  static async summary(request, response) {
+    if (request.decoded.user.accountType === 'admin') {
+      /**
+       * get order summary for all completed orders
+       */
+      const orderSummary = await db.Orders.findAll({
+        group: [
+          [db.sequelize.fn('to_char', db.sequelize.col('createdAt'), 'YYYY-MM-DD')],
+        ],
+        order: [
+          [db.sequelize.fn('to_char', db.sequelize.col('createdAt'), 'YYYY-MM-DD'), 'DESC'],
+        ],
+        attributes: [
+          [db.sequelize.fn('COUNT', db.sequelize.col('id')), 'totalOrder'],
+          [db.sequelize.fn('sum', db.sequelize.col('quantity')), 'totalQuantity'],
+          [db.sequelize.fn('sum', db.sequelize.col('cost')), 'totalSale'],
+          [db.sequelize.fn('count', db.sequelize.fn('distinct', db.sequelize.col('userId'))), 'totalCustomer'],
+          [db.sequelize.fn('to_char', db.sequelize.col('createdAt'), 'YYYY-MM-DD'), 'orderDate'],
+        ],
+        where: {
+          status: 'complete',
+        },
+      });
+      if (isEmpty(orderSummary)) {
+        return response.status(200).json({ orders: [] });
+      }
+      return response.status(200).json({ orders: orderSummary });
+    }
+
+    /**
+     * for normal caterers,
+     * get caterers meals,
+     * use meals to get order summary
+     */
+    let catererMeals = await db.Meals.findAll({
+      where: {
+        userId: request.decoded.user.id,
+      },
+      raw: true,
+      attributes: ['id'],
+    });
+
+    catererMeals = catererMeals.map(meal => meal.id);
+
+    const orderSummary = await db.Orders.findAll({
+      group: [
+        [db.sequelize.fn('to_char', db.sequelize.col('createdAt'), 'YYYY-MM-DD')],
+      ],
+      order: [
+        [db.sequelize.fn('to_char', db.sequelize.col('createdAt'), 'YYYY-MM-DD'), 'DESC'],
+      ],
+      attributes: [
+        [db.sequelize.fn('COUNT', db.sequelize.col('id')), 'totalOrder'],
+        [db.sequelize.fn('sum', db.sequelize.col('quantity')), 'totalQuantity'],
+        [db.sequelize.fn('sum', db.sequelize.col('cost')), 'totalSale'],
+        [db.sequelize.fn('count', db.sequelize.fn('distinct', db.sequelize.col('userId'))), 'totalCustomer'],
+        [db.sequelize.fn('to_char', db.sequelize.col('createdAt'), 'YYYY-MM-DD'), 'orderDate'],
+      ],
+      where: {
+        status: 'complete',
+        mealId: {
+          [db.sequelize.Op.in]: catererMeals,
+        },
+      },
+    });
+    if (isEmpty(orderSummary)) {
+      return response.status(200).json({ orders: [] });
+    }
+    return response.status(200).json({ orders: orderSummary });
   }
 }
 

@@ -13,7 +13,7 @@ fs.readFile('client/src/index.html', 'utf8', (err, markup) => {
   const $ = cheerio.load(markup);
 
   // dynamically prepend the style ref to the head
-  $('head').prepend('<link rel="stylesheet" href="style.css"/>');
+  $('head').prepend('<link rel="stylesheet" href="/style.css"/>');
 
   fs.writeFile('client/dist/index.html', $.html(), 'utf8', (err) => {
     if (err) {

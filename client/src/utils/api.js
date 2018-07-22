@@ -22,6 +22,7 @@ const api = {
     put: id => (`/api/v1/orders/${id}`),
     get: '/api/v1/orders',
     delete: id => (`/api/v1/orders/${id}`),
+    summary: '/api/v1/orders/summary',
   },
 };
 

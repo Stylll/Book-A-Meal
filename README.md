@@ -87,4 +87,4 @@ https://stylll.github.io/Book-A-Meal/UI/index.html
 https://bookamealapp.herokuapp.com/api-docs
 
 ## Frontend
-Frontend application is still in development. Please check again later.
+https://bookamealapp.herokuapp.com/

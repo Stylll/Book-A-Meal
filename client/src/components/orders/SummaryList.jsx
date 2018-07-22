@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import CreateArray from 'create-array';
 import ReactPaginate from 'react-paginate';
-import OrderItem from './OrderItem';
+import SummaryItem from './SummaryItem';
 import Display from '../common/Display';
 
-class OrderList extends React.Component {
+class SummaryList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,7 +14,7 @@ class OrderList extends React.Component {
       pageNo: 0,
       pageCount: 0,
       rows: [],
-      orders: [],
+      summary: [],
     };
 
     this.initializeState = this.initializeState.bind(this);
@@ -39,8 +39,8 @@ class OrderList extends React.Component {
    * Adds pageCount value to state.
    */
   initializeState(props = this.props) {
-    const { perPage, orders } = props;
-    const pageCount = Math.ceil(orders.length / perPage);
+    const { perPage, summary } = props;
+    const pageCount = Math.ceil(summary.length / perPage);
     this.setState({
       pageCount,
     });
@@ -55,19 +55,19 @@ class OrderList extends React.Component {
     const { selected } = paginationData;
     const start = selected * props.perPage;
     const end = (selected + 1) * props.perPage;
-    const orders = props.orders.filter((m, i) => i >= start && i < end);
-    const rowCount = Math.ceil((orders.length / this.state.rowLength));
+    const summary = props.summary.filter((m, i) => i >= start && i < end);
+    const rowCount = Math.ceil((summary.length / this.state.rowLength));
     this.setState({
       rowCount,
       rows: CreateArray(rowCount, 'item'),
-      orders,
+      summary,
       pageNo: selected + 1,
     });
   }
 
   render() {
     return (
-      <div className="container">
+      <div id="summary" className="container">
       {!this.state.pageCount && <h3 className="light-text text-center">
       No Records Found
       </h3>}
@@ -75,20 +75,11 @@ class OrderList extends React.Component {
       Page {this.state.pageNo} of {this.state.pageCount}
       </h4>}
       {this.state.pageCount > 0 && this.state.rows.map((row, i) => (
-          <div key={i} className="card-container">
-            {this.state.orders.filter((x, j) => (j >= (i * this.state.rowLength) &&
+          <div key={i} className="row container">
+            {this.state.summary.filter((x, j) => (j >= (i * this.state.rowLength) &&
             j < ((i + 1) * this.state.rowLength)))
-              .map((order, k) => (
-                <OrderItem key={k} order={order}
-                  handleDelete={this.props.handleDelete}
-                  handleApprove={this.props.handleApprove}
-                  handleDecline={this.props.handleDecline}
-                  showEdit={this.props.showEdit}
-                  showDelete={this.props.showDelete}
-                  showCustomer={this.props.showCustomer}
-                  showStatus={this.props.showStatus}
-                  showApprove={this.props.showApprove}
-                  showDecline={this.props.showDecline} />
+              .map((item, k) => (
+                <SummaryItem key={k} item={item} />
               ))}
           </div>
         ))}
@@ -112,32 +103,13 @@ class OrderList extends React.Component {
 }
 
 // prop-types
-OrderList.propTypes = {
-  orders: PropTypes.array.isRequired,
-  handleDelete: PropTypes.func,
-  handleApprove: PropTypes.func,
-  handleDecline: PropTypes.func,
-  perPage: PropTypes.number,
-  showEdit: PropTypes.bool,
-  showDelete: PropTypes.bool,
-  showCustomer: PropTypes.bool,
-  showStatus: PropTypes.bool,
-  showDecline: PropTypes.bool,
-  showApprove: PropTypes.bool,
+SummaryList.propTypes = {
+  summary: PropTypes.array.isRequired,
 };
 
 // default props
-OrderList.defaultProps = {
+SummaryList.defaultProps = {
   perPage: 4,
-  handleDelete: () => Promise.resolve(),
-  handleApprove: () => Promise.resolve(),
-  handleDecline: () => Promise.resolve(),
-  showEdit: false,
-  showDelete: false,
-  showCustomer: false,
-  showStatus: false,
-  showDecline: false,
-  showApprove: false,
 };
 
-export default OrderList;
+export default SummaryList;
