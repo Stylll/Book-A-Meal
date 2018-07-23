@@ -117,6 +117,7 @@ class Menus {
         attributes: { exclude: ['createdAt', 'updatedAt', 'MenuMeals'] },
       }],
       attributes: { exclude: ['createdAt', 'updatedAt'] },
+      order: [['createdAt', 'DESC']],
     }).then((result) => {
       if (isEmpty(result)) {
         return undefined;
@@ -173,6 +174,7 @@ class Menus {
         where: {
           userId,
         },
+        required: false,
         attributes: { exclude: ['createdAt', 'updatedAt', 'MenuMeals'] },
       }],
       attributes: { exclude: ['createdAt', 'updatedAt'] },

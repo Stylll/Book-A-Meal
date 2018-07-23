@@ -1,18 +1,18 @@
 .overall {
   display: flex;
   flex-direction: row;
+  background-color: #4CAF50;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image:
+        linear-gradient(rgba(37, 42, 48, 0.7), rgba(37, 42, 48, 0.7)),
+        url("../assets/kitchen.jpg");
 }
 
 .intro {
   padding: 20px;
   width: 50%;
   margin-right: auto;
-  background-color: #700353;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-image:
-        linear-gradient(rgba(37, 42, 48, 0.7), rgba(37, 42, 48, 0.7)),
-        url("../assets/jollof.jpg");
 }
 
 .intro-content {
@@ -26,6 +26,8 @@
   padding: 20px;
   width: 50%;
   height: 100%;
+  background-color: white;
+  opacity: 0.85;
 }
 
 .title {

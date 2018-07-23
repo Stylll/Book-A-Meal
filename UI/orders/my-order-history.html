@@ -12,14 +12,22 @@
   <main>
     <!-- Navigation bar Starts -->
     <nav class="navbar primary-bg-color flex-display-nav">
-      <div class="navitem flexleft"><a href="../orders/order-menu.html" class="navlink logo-text navicon">Book-A-Meal</a></div>
-      <div class="navitem"><a href="../orders/order-menu.html" class="navlink">View Menu</a></div>
-      <div class="navitem"><a href="../orders/my-pending.html" class="navlink">My Pending Orders</a></div>
-      <div class="navitem"><a href="./my-order-history.html" class="navlink">My Orders</a></div>
-      <div class="navitem"><a href="../users/profile.html" class="navlink">My Profile</a></div>
-      <div class="navitem"><a href="../users/signin.html" class="navlink">Logout</a></div>
-      <div class="navitem flexright breadcrumb"><a id='nav-trigger' href="javascript:void(0);" onclick="expandNav();" class="navlink">&#9776;</a></div>
-    </nav>
+        <div class="navitem flexleft"><a href="../orders/order-menu.html" class="navlink logo-text navicon">Book-A-Meal</a></div>
+        <div class="navitem"><a href="../orders/order-menu.html" class="navlink">View Menu</a></div>
+        <div class="navitem dropdown"><a href="#" onclick="toggleNav(this); return false;" class="navlink active">Orders</a>
+          <div class="dropdown-content">
+              <a href="../orders/my-pending.html">Pending Orders</a>
+              <a href="../orders/my-order-history.html">Order History</a>
+          </div>
+        </div>
+        <div class="navitem dropdown"><a href="#" onclick="toggleNav(this); return false;" class="navlink">Welcome, Alex</a>
+          <div class="dropdown-content">
+              <a href="../users/profile.html">My Profile</a>
+              <a href="../users/signin.html">Logout</a>
+          </div>
+        </div>
+        <div class="navitem flexright breadcrumb"><a id='nav-trigger' href="javascript:void(0);" onclick="expandNav();" class="navlink">&#9776;</a></div>
+      </nav>
     <!-- Navigation bar Ends -->
     <!-- Header Content Starts -->
     <div class="container text-center black-text">
@@ -46,7 +54,7 @@
               <div class="card-text black-text">
                 <h4 class="black-text light-text">#1122 - Friday, 13 April 2018</h4>
                 <h3 class="black-text bold-text">Spaghetti and Meat Balls with crayfish</h3>
-                <h4 class="black-text light-text">Price: &#8358;1500 x 4</h4>
+                <h4 class="black-text light-text">Price: &#8358;1500 x QTY: 4</h4>
                 <h4 class="black-text normal-text">Cost: &#8358;6000</h4>
               </div>
             </div>
@@ -60,7 +68,7 @@
               <div class="card-text black-text">
                 <h4 class="black-text light-text">#1101 - Thursday, 12 April 2018</h4>
                 <h3 class="black-text bold-text">Baked chicken with fries on the side</h3>
-                <h4 class="black-text light-text">Price: &#8358;3000 x 1</h4>
+                <h4 class="black-text light-text">Price: &#8358;3000 x QTY: 1</h4>
                 <h4 class="black-text normal-text">Cost: &#8358;3000</h4>
               </div>
             </div>
@@ -75,7 +83,7 @@
               <div class="card-text black-text">
                 <h4 class="black-text light-text">#1099 - Wednesday, 13 April 2018</h4>
                 <h3 class="black-text bold-text">Basmati rice and pepper sauce</h3>
-                <h4 class="black-text light-text">Price: &#8358;1000 x 4</h4>
+                <h4 class="black-text light-text">Price: &#8358;1000 x QTY: 4</h4>
                 <h4 class="black-text normal-text">Cost: &#8358;4000</h4>
               </div>
             </div>
@@ -90,7 +98,7 @@
               <div class="card-text black-text">
                 <h4 class="black-text light-text">#1080 - Monday, 11 April 2018</h4>
                 <h3 class="black-text bold-text">Spaghetti and Meat Balls with crayfish</h3>
-                <h4 class="black-text light-text">Price: &#8358;1500 x 4</h4>
+                <h4 class="black-text light-text">Price: &#8358;1500 x QTY: 4</h4>
                 <h4 class="black-text normal-text">Cost: &#8358;6000</h4>
               </div>
             </div>
@@ -99,6 +107,20 @@
         </div>
     </div>
     <!-- Order List Ends -->
+    <!-- Navigation links Starts-->
+    <div class="container">
+        <div class="text-center pagination">
+            <a href="#">&laquo;</a>
+            <a href="#">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+            <a href="#">4</a>
+            <a href="#">5</a>
+            <a href="#">&raquo;</a>
+        </div>
+      </div>
+      <!-- Navigation links Ends-->
+      <br /><br />
     
 
   </main>

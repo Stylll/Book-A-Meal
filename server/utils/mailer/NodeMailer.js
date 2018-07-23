@@ -100,7 +100,7 @@ const menuSetNotification = (url, meals) => (
     <br />
     More meals may be added as the day goes.
     <br /><br />
-    We hope you will <a href='http://${url}/users/login'>logon</a> and place an order.
+    We hope you will <a href='http://${url}/users/signin'>logon</a> and place an order.
     <br /><br />
     Happy eating.
     </p>

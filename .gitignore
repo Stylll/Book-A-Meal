@@ -1,7 +1,11 @@
 node_modules
 .env
 server/temp
+client/dist
 .nyc_output
 coverage
 .coveralls.yml
 .vscode
+.DS_Store
+UI/.DS_Store
+client/src/.DS_Store

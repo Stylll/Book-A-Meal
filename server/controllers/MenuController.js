@@ -2,6 +2,7 @@ import { isEmpty } from 'lodash';
 import menus from '../db/menus';
 import { getNormalDate } from '../utils/dateBeautifier';
 import Notifications from '../utils/mailer/Notifications';
+import { processMealIds } from '../utils/controllerUtils';
 
 /**
  * Controller Class to handle user Menu requests
@@ -38,13 +39,18 @@ class MenuController {
    */
   static async put(request, response) {
     const oldMenu = await menus.get(parseInt(request.params.id, 10));
-    let ids = [...oldMenu, ...request.body.mealIds];
+    let ids = [...oldMenu.dataValues.mealIds, ...request.body.mealIds];
     /**
      * if the user is an admin, then he can remove and add meal options
-     * else, caterers can only add meal options
+     * else, caterers can only remove and add meals created by him.
      */
     if (request.decoded.user.accountType === 'admin') {
       ids = [...request.body.mealIds];
+    } else {
+      ids = processMealIds(
+        oldMenu.dataValues,
+        request.body.mealIds, request.decoded.user.id,
+      );
     }
 
     const uniqueIds = new Set(ids.sort());

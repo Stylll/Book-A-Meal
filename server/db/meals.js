@@ -95,6 +95,7 @@ class Meals {
   static get(id) {
     return MealModel.findById(id, {
       attributes: { exclude: ['createdAt', 'updatedAt'] },
+      order: [['createdAt', 'DESC']],
     })
       .then((returnedMeal) => {
         if (isEmpty(returnedMeal)) {
@@ -116,6 +117,7 @@ class Meals {
         name,
       },
       attributes: { exclude: ['createdAt', 'updatedAt'] },
+      order: [['createdAt', 'DESC']],
     })
       .then((returnedMeal) => {
         if (isEmpty(returnedMeal)) {
@@ -133,6 +135,7 @@ class Meals {
   static getAll() {
     return MealModel.findAll({
       attributes: { exclude: ['createdAt', 'updatedAt'] },
+      order: [['createdAt', 'DESC']],
     })
       .then((returnedMeal) => {
         if (isEmpty(returnedMeal)) {
@@ -154,6 +157,7 @@ class Meals {
         userId,
       },
       attributes: { exclude: ['createdAt', 'updatedAt'] },
+      order: [['createdAt', 'DESC']],
     })
       .then((returnedMeal) => {
         if (isEmpty(returnedMeal)) {
