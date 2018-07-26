@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
+import ReactTooltip from 'react-tooltip';
 import { beautifyDate } from '../../utils/utils';
 
 /**
@@ -19,8 +20,14 @@ const OrderItem = ({
           <div className="card-content">
             <div className="card-text black-text">
               <h4 className="black-text light-text">{`#${order.id} - ${beautifyDate(order.createdAt)}`}</h4>
-              <h3 className="black-text bold-text">{order.meal.name}</h3>
-              <h4 className="black-text light-text">Price: &#8358;{order.price} x QTY: {order.quantity} = &#8358;{order.cost}</h4>
+              <h3 data-for="title"
+                data-tip={order.meal.name}
+                className="black-text bold-text wrap-text">
+                  {order.meal.name}</h3>
+              <h4 data-for="price"
+                data-tip={`${order.price} x ${order.quantity} = ${order.cost}`}
+                className="black-text light-text">
+              Price: &#8358;{order.price} x QTY: {order.quantity} = &#8358;{order.cost}</h4>
               {showStatus && order.status === 'canceled' &&
               <h4
                 className="black-text light-text error-text">Status: {order.status}</h4>
@@ -34,7 +41,9 @@ const OrderItem = ({
                 className="black-text light-text success-text">Status: {order.status}</h4>
               }
               {showCustomer &&
-              <h4 className="black-text light-text">Order by: {order.user.username}</h4>
+              <h4 data-for="customer"
+                data-tip={order.user.username}
+                className="black-text light-text card-title">Order by: {order.user.username}</h4>
               }
               { (showEdit || showDelete) &&
                 <div className="padding-bottom padding-top">
@@ -61,6 +70,9 @@ const OrderItem = ({
               }
             </div>
           </div>
+          <ReactTooltip id="title" delayShow={400} className="tooltip" />
+          <ReactTooltip id="customer" delayShow={400} className="tooltip" />
+          <ReactTooltip id="price" delayShow={400} className="tooltip" />
         </div>
 );
 

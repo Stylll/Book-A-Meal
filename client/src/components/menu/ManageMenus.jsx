@@ -24,6 +24,10 @@ export class ManageMenus extends React.Component {
           </div>
         </div>
         </div>
+        <br/><br />
+        <div className="container text-center create-menu">
+          <NavLink to="/caterer/menus/edit" className="btn btn-secondary">Create Menu</NavLink>
+        </div>
         <MenuList menus={this.props.menus} perPage={4} />
       </Main>
     );

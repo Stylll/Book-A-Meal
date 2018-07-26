@@ -16,7 +16,6 @@ const setup = (isAuthenticated = false, isCaterer = false) => {
     isCaterer,
     logout: jest.fn(),
     expandNav: jest.fn(),
-    toggleNav: jest.fn(),
   };
   return shallow(<NavBar {...props} />);
 };
@@ -24,7 +23,7 @@ const setup = (isAuthenticated = false, isCaterer = false) => {
 describe('Test Suite for NavBar component', () => {
   it('should render properly', () => {
     const wrapper = setup();
-    expect(wrapper.find('NavLink').length).to.equal(22);
-    expect(wrapper.find('a').length).to.equal(6);
+    expect(wrapper.find('NavLink').length).to.equal(21);
+    expect(wrapper.find('a').length).to.equal(5);
   });
 });

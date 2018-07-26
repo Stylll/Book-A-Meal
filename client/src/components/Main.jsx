@@ -100,7 +100,6 @@ export class Main extends React.Component {
         <LoadingBar className="loadingBar" />
         <NavBar user={this.props.user} isAuthenticated={this.props.isAuthenticated}
           isCaterer={this.props.isCaterer} logout={this.logout} expandNav={this.expandNav}
-          toggleNav={this.toggleNav}
         />
         {this.props.children}
       </div>

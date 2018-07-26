@@ -38,7 +38,7 @@ const setup = () => {
 describe('Test suite for ManageMenus Component', () => {
   it('should render unconnected component properly', () => {
     const wrapper = setup();
-    expect(wrapper.find('div').length).toBe(3);
+    expect(wrapper.find('div').length).toBe(4);
     expect(wrapper.find('MenuList').length).toBe(1);
   });
 
