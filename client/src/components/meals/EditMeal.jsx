@@ -8,6 +8,7 @@ import Main from '../Main';
 import TextInput from '../common/TextInput';
 import { validateMealInput } from '../../utils/validateInput';
 import { saveMeal } from '../../actions/mealActions';
+import spinnerGif from '../../assets/spinner.gif';
 
 export class EditMeal extends React.Component {
   constructor(props) {
@@ -16,6 +17,7 @@ export class EditMeal extends React.Component {
       name: '',
       price: '',
       errors: {},
+      loading: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -90,6 +92,9 @@ export class EditMeal extends React.Component {
    */
   handleSubmit(event) {
     event.preventDefault();
+    this.setState({
+      loading: true,
+    });
     if (this.isValid()) {
       this.props.actions.saveMeal(this.state)
         .then(() => {
@@ -98,9 +103,14 @@ export class EditMeal extends React.Component {
           } else {
             this.setState({
               errors: this.props.errors,
+              loading: false,
             });
           }
         });
+    } else {
+      this.setState({
+        loading: false,
+      });
     }
   }
 
@@ -113,7 +123,7 @@ export class EditMeal extends React.Component {
         </div>
         {/* <!-- Header Content Ends --> */}
         {/* <!-- Form Content Starts --> */}
-        <div className="container text-center">
+        <div className="container text-center meal-form">
             <div>
               <h3 className="black-text bold-text">Meal Name</h3>
               <TextInput
@@ -142,14 +152,20 @@ export class EditMeal extends React.Component {
             </div>
             <div>
               <h3 className="black-text bold-text">Upload Image</h3>
-              <input type="file" name="imageUpload" className="meal-textbox textbox" onChange={this.handleChange} />
+              <input type="file" name="imageUpload" className="meal-textbox textbox center" onChange={this.handleChange} />
             </div>
             <br /><br />
+            {this.state.loading &&
+            <img src={spinnerGif} alt="loading" className="spinner" />
+            }
+            {!this.state.loading &&
             <div>
               <input type="button" onClick={this.handleSubmit} className="btn btn-secondary" value="Save" />
               &nbsp;&nbsp;
               <NavLink to="/caterer/meals">Cancel</NavLink>
             </div>
+            }
+            <br />
         </div>
         {/* <!-- Form Content Ends --> */}
 

@@ -7,6 +7,7 @@ import Main from '../Main';
 import TextInput from '../common/TextInput';
 import { validateSigninInput } from '../../utils/validateInput';
 import { signin } from '../../actions/authActions';
+import spinnerGif from '../../assets/spinner.gif';
 
 export class Signin extends React.Component {
   constructor(props) {
@@ -15,6 +16,7 @@ export class Signin extends React.Component {
       email: '',
       password: '',
       errors: {},
+      loading: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -54,13 +56,21 @@ export class Signin extends React.Component {
    */
   handleSubmit(event) {
     event.preventDefault();
+    this.setState({
+      loading: true,
+    });
     if (this.isValid()) {
       this.props.actions.signin(this.state)
         .then((resp) => {
           this.setState({
             errors: this.props.errors,
+            loading: false,
           });
         });
+    } else {
+      this.setState({
+        loading: false,
+      });
     }
   }
 
@@ -140,7 +150,12 @@ export class Signin extends React.Component {
                  </div>
                 <br /><br />
                 <div className="container text-center">
+                  {this.state.loading &&
+                    <img src={spinnerGif} alt="loading" className="spinner text-center" />
+                  }
+                  {!this.state.loading &&
                   <input type="button" onClick={this.handleSubmit} className="btn btn-secondary" value="Sign In" />
+                  }
                 </div>
                 <br />
                 <div className="container text-center">

@@ -7,6 +7,7 @@ import { isEmpty } from 'lodash';
 import Main from '../Main';
 import { saveMenu } from '../../actions/menuActions';
 import { validateMenuInput } from '../../utils/validateInput';
+import spinnerGif from '../../assets/spinner.gif';
 
 export class EditMenu extends React.Component {
   constructor() {
@@ -15,6 +16,7 @@ export class EditMenu extends React.Component {
       errors: {},
       mealIds: [],
       mealOption: null,
+      loading: false,
     };
 
     this.handleAdd = this.handleAdd.bind(this);
@@ -124,6 +126,9 @@ export class EditMenu extends React.Component {
    * @param {object} event
    */
   handleSubmit(event) {
+    this.setState({
+      loading: true,
+    });
     if (this.isValid()) {
       const menuDetails = {
         id: this.state.id || null,
@@ -136,9 +141,14 @@ export class EditMenu extends React.Component {
           } else {
             this.setState({
               errors: this.props.errors,
+              loading: false,
             });
           }
         });
+    } else {
+      this.setState({
+        loading: false,
+      });
     }
   }
 
@@ -151,8 +161,32 @@ export class EditMenu extends React.Component {
     </div>
     {/* Header Content Ends */ }
     {/* Form Content Start */ }
-    <div className="container text-center black-text">
+    <div className="container text-center black-text menu-form">
       <h2 className="black-text bold-text">Menu for Today</h2>
+      <div>
+            <h3 className="black-text light-text">Meal Options</h3>
+            {this.state.errors.mealIds
+              && <span className="red-text errors" id="mealOption-error">{this.state.errors.mealIds}</span>}
+            <select name="mealOption" className="select" onChange={this.updateOption}>
+            <option>Select a meal</option>
+              {this.props.meals.map(meal => (
+                  <option key={meal.id} value={meal.id}>{meal.name}</option>
+                ))}
+            </select>
+          </div>
+          <br />
+          {this.state.loading &&
+          <img src={spinnerGif} alt="loading" className="spinner" />
+          }
+          {!this.state.loading &&
+          <div>
+            <input type="button" className="btn btn-secondary" onClick={this.handleAdd} value="Add to Menu" />
+            &nbsp; &nbsp;
+            <input type="button" className="btn btn-secondary" onClick={this.handleSubmit} value="Save" />
+            &nbsp; &nbsp;
+            <NavLink to="/caterer/menus" className="btn btn-danger"><span>Cancel</span></NavLink>
+          </div>
+          }
         {this.state.errors.menu
           && <span className="red-text errors" id="mealOption-error">{this.state.errors.menu}</span>}
         <div>
@@ -168,28 +202,8 @@ export class EditMenu extends React.Component {
               ))}
           </div>
         </div>
-          <div>
-            <h3 className="black-text light-text">Meal Options</h3>
-            {this.state.errors.mealIds
-              && <span className="red-text errors" id="mealOption-error">{this.state.errors.mealIds}</span>}
-            <select name="mealOption" className="select" onChange={this.updateOption}>
-            <option>Select a meal</option>
-              {this.props.meals.map(meal => (
-                  <option key={meal.id} value={meal.id}>{meal.name}</option>
-                ))}
-            </select>
-          </div>
-          <br />
-          <div>
-            <input type="button" className="btn btn-secondary" onClick={this.handleAdd} value="Add to Menu" />
-            &nbsp; &nbsp;
-            <input type="button" className="btn btn-secondary" onClick={this.handleSubmit} value="Save" />
-            &nbsp; &nbsp;
-            <NavLink to="/caterer/menus" className="btn btn-danger">Cancel</NavLink>
-          </div>
-        <br /><br />
-
     </div>
+    <br />
     {/* Form Content Ends */ }
       </Main>
     );

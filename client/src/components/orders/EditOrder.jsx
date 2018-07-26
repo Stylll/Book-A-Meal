@@ -5,9 +5,11 @@ import { NavLink, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import Main from '../Main';
+import TextInput from '../common/TextInput';
 import { saveOrder } from '../../actions/orderActions';
 import { getMenu } from '../../actions/menuActions';
 import successImage from '../../assets/success.png';
+import spinnerGif from '../../assets/spinner.gif';
 
 export class EditOrder extends React.Component {
   constructor(props) {
@@ -20,6 +22,7 @@ export class EditOrder extends React.Component {
       cost: 0,
       complete: false,
       errors: {},
+      loading: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -107,6 +110,7 @@ export class EditOrder extends React.Component {
         errors: {
           quantity: 'Quantity must be greater than zero',
         },
+        loading: false,
       });
       return false;
     }
@@ -138,11 +142,13 @@ export class EditOrder extends React.Component {
           this.setState({
             complete: true,
             errors: {},
+            loading: true,
           });
         } else {
           this.setState({
             complete: false,
             errors: this.props.errors,
+            loading: false,
           });
         }
       });
@@ -155,6 +161,9 @@ export class EditOrder extends React.Component {
    */
   handleSubmit(event) {
     event.preventDefault();
+    this.setState({
+      loading: true,
+    });
     if (this.isValid()) {
       this.sendOrder(this.state);
     }
@@ -172,31 +181,32 @@ export class EditOrder extends React.Component {
           {/* Header Content End */}
           {/* Main Content Start */}
           <div className="container text-center black-text">
-            <div className="profile-card">
+            <div className="order-form">
               <div className="container">
                 <img src={this.state.image} alt="meal-image" className="img-responsive" />
               </div>
               <div className="card-content">
                 <div className="card-text black-text">
                   <form>
-                    <h1 className="black-text bold-text">{this.state.name}</h1>
-                    <h3 className="black-text normal-text">Price: &#8358;{this.state.price}</h3>
-                    <h3>Quantity (plates):</h3>
-                      <select className="textbox order-textbox" name="quantity"
-                        onChange={this.handleChange} value={this.state.quantity}>
-                      <option value="0">select quantity</option>
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                      <option value="5">5</option>
-                      </select>
-                    {this.state.errors.quantity &&
-                    <span className="red-text">{this.state.errors.quantity}</span>
-                    }
+                    <h2 className="black-text bold-text">{this.state.name}</h2>
+                    <h4 className="black-text normal-text">Price: &#8358;{this.state.price}</h4>
+                    <h4>Select Quantity (plates):</h4>
+                    <TextInput
+                      name="quantity"
+                      type="number"
+                      value={this.state.quantity}
+                      required
+                      className="order-textbox textbox"
+                      onChange={this.handleChange}
+                      error={this.state.errors.quantity}
+                    />
                     <h3 className="black-text light-text">Cost: &#8358;{this.state.cost}</h3>
-                    <br />
+                    {!this.state.loading &&
                     <input type="button" onClick={this.handleSubmit} className="btn btn-secondary" value="Confirm" />
+                    }
+                    {this.state.loading &&
+                    <img src={spinnerGif} alt="loading" className="spinner" />
+                    }
                   </form>
                   <br />
                   <NavLink to="/customer/menu">Back to menu</NavLink>
@@ -204,6 +214,7 @@ export class EditOrder extends React.Component {
               </div>
             </div>
           </div>
+          <br />
           {/* Main Content End */}
         </div>
         }

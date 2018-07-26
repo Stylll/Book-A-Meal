@@ -7,6 +7,7 @@ import Main from '../Main';
 import TextInput from '../common/TextInput';
 import { validateSignupInput } from '../../utils/validateInput';
 import { signup } from '../../actions/authActions';
+import spinnerGif from '../../assets/spinner.gif';
 
 export class Signup extends React.Component {
   constructor(props) {
@@ -18,6 +19,7 @@ export class Signup extends React.Component {
       confirmPassword: '',
       accountType: 'customer',
       errors: {},
+      loading: false,
     };
 
     // bind class methods
@@ -58,13 +60,21 @@ export class Signup extends React.Component {
    */
   handleSubmit(event) {
     event.preventDefault();
+    this.setState({
+      loading: true,
+    });
     if (this.isValid()) {
       this.props.actions.signup(this.state)
         .then((resp) => {
           this.setState({
             errors: this.props.errors,
+            loading: false,
           });
         });
+    } else {
+      this.setState({
+        loading: false,
+      });
     }
   }
 
@@ -173,8 +183,14 @@ export class Signup extends React.Component {
                 <br />
                 <br />
                 <div className="container text-center">
+                  {this.state.loading &&
+                    <img src={spinnerGif} alt="loading" className="spinner text-center" />
+                  }
+                  {!this.state.loading &&
                   <input type="button" onClick={this.handleSubmit} className="btn btn-secondary" value="Sign Up" />
+                  }
                 </div>
+
                 <br />
                 <div className="container text-center">
                 <NavLink to="/users/signin" className="secondary-text-color">

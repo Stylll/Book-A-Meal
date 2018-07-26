@@ -35,7 +35,7 @@ export class ManageMeals extends React.Component {
             </div>
             <h1 className="red-text text-center">Are you sure?</h1>
             <div className="row text-center">
-                <button className="btn btn-secondary" onClick={onClose}>No</button>
+                <button className="btn btn-secondary" onClick={onClose}>No, Keep it</button>
                 &nbsp;&nbsp;
                 { /* eslint-disable react/jsx-no-bind */}
                 <button

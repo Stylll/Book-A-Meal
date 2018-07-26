@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
+import ReactTooltip from 'react-tooltip';
 
 /**
  * stateless component to render meal item
@@ -16,8 +17,10 @@ const MealItem = ({
           </div>
           <div className="card-content">
             <div className="card-text black-text">
-              <h3 className="black-text bold-text">{meal.name}</h3>
-              <h4 className="black-text light-text">Price: &#8358;{meal.price}</h4>
+              <h3 data-for="title" data-tip={meal.name} className="black-text bold-text wrap-text">{meal.name}</h3>
+              <h4 data-for="price"
+                data-tip={meal.price}
+                className="black-text light-text wrap-text">Price: &#8358;{meal.price}</h4>
               {showOrder &&
               <NavLink to={`/customer/orders/confirm/${meal.id}`} className="btn btn-secondary">Order</NavLink>
               }
@@ -33,6 +36,8 @@ const MealItem = ({
               <br />
               <br />
             </div>
+            <ReactTooltip id="title" delayShow={400} className="tooltip" />
+            <ReactTooltip id="price" delayShow={400} className="tooltip" />
           </div>
         </div>
 );

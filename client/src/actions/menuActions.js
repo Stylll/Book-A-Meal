@@ -146,7 +146,7 @@ const getMenuSuccess = data => (
  * @return {object} action object
  */
 const getMenuFailed = (data) => {
-  toastr.error('Unexpected Error', data.message || 'Could not get menus');
+  toastr.warning('', data.message || 'Could not get menus');
   return {
     type: types.GET_CURR_MENU_FAILED,
     errors: data,

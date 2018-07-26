@@ -50,7 +50,7 @@
       "!client/src/reducers/{index,initialState}.js"
     ],
     "moduleNameMapper": {
-      "\\.(css|less|scss|png|jpg|svg)$": "<rootDir>./client/__tests__/__mocks__/importMock.js"
+      "\\.(css|less|scss|png|jpg|svg|gif)$": "<rootDir>./client/__tests__/__mocks__/importMock.js"
     },
     "testPathIgnorePatterns": [
       "client/__tests__/setup.js",
@@ -123,6 +123,7 @@
     "react-redux-toastr": "^7.2.6",
     "react-router-dom": "^4.2.2",
     "react-router-enzyme-context": "^1.2.0",
+    "react-tooltip": "^3.6.1",
     "redux": "^4.0.0",
     "redux-mock-store": "^1.5.1",
     "redux-thunk": "^2.2.0",

@@ -78,11 +78,11 @@ const setupC = () => {
 describe('Test suite for EditOrder component', () => {
   it('should render unconnected component properly', () => {
     const wrapper = setup();
-    expect(wrapper.find('select').length).toBe(1);
+    expect(wrapper.find('TextInput').length).toBe(1);
     expect(wrapper.find('NavLink').length).toBe(1);
     expect(wrapper.find('h1').first().text()).toBe('Confirm your order');
-    expect(wrapper.find('h1').last().text()).toBe(saveMenuResponse.menu.meals[0].name);
-    expect(wrapper.find('h3').first().text()).toContain(saveMenuResponse.menu.meals[0].price);
+    expect(wrapper.find('h2').first().text()).toBe(saveMenuResponse.menu.meals[0].name);
+    expect(wrapper.find('h4').first().text()).toContain(saveMenuResponse.menu.meals[0].price);
     expect(wrapper.find('input').last().prop('type')).toBe('button');
   });
 

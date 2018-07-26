@@ -38,7 +38,7 @@
     <!-- Header Content End -->
     <!-- Main Content Start -->
     <div class="container text-center black-text">
-      <div class="profile-card">
+      <div class="order-form">
         <div class="container">
           <img src="../assets/spaghetti.jpg" alt="meal-image" class="img-responsive" />
         </div>
@@ -47,13 +47,11 @@
             <form onsubmit="redirectTo('./order-complete.html'); return false;">
               <h1 class="black-text bold-text">Spaghetti and Meat Balls with crayfish</h1>
               <h3 class="black-text normal-text">Price: &#8358;1500</h3>
-              <h3>Quantity (plates): <select>
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-              </select> </h3>
+              <h3>Quantity (plates): 
+                <div>
+                <input type="number" />
+                </div>
+              </h3>
               <h3 class="black-text light-text">Cost: &#8358;1500</h3>
               <br />
               <input type="submit" class="btn btn-secondary" value="Confirm" />
