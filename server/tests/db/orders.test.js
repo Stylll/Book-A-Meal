@@ -137,10 +137,10 @@ describe('Test Suite for orders', () => {
 
   it('should return an array of orders', async () => {
     const result = await orders.getAll();
-    expect(result).to.be.an('array');
-    expect(result[0].mealId).to.equal(existingOrder.mealId);
-    expect(result[0].price).to.equal(existingOrder.price);
-    expect(result[0].quantity).to.equal(existingOrder.quantity);
+    expect(result.orders).to.be.an('array');
+    expect(result.orders[0].mealId).to.equal(existingOrder.mealId);
+    expect(result.orders[0].price).to.equal(existingOrder.price);
+    expect(result.orders[0].quantity).to.equal(existingOrder.quantity);
   });
 
   it('should get order by valid order id', async () => {
@@ -166,23 +166,23 @@ describe('Test Suite for orders', () => {
 
   it('should get array of orders by meal id', async () => {
     const result = await orders.getByMealId(1);
-    expect(result).to.be.an('array');
+    expect(result.orders).to.be.an('array');
   });
 
   it('should get array of orders by status', async () => {
     const result = await orders.getByStatus('pending');
-    expect(result).to.be.an('array');
+    expect(result.orders).to.be.an('array');
   });
 
   it('should get array of orders by user id', async () => {
     const result = await orders.getByUserId(1);
-    expect(result).to.be.an('array');
+    expect(result.orders).to.be.an('array');
   });
 
   it('should truncate orders in the db', async () => {
     await orders.truncate();
     const result = await orders.getAll();
-    expect(result).to.be.an('array');
-    expect(result.length).to.equal(0);
+    expect(result.orders).to.be.an('array');
+    expect(result.orders.length).to.equal(0);
   });
 });

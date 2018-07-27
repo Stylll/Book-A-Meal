@@ -34,7 +34,7 @@ export default (sequelize, DataTypes) => {
         },
       },
     },
-  }, {});
+  }, { paranoid: 'true' });
   Meals.associate = (models) => {
     // associations can be defined here
     Meals.belongsTo(models.Users, {

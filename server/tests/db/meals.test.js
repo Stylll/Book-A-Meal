@@ -120,18 +120,18 @@ describe('Test suite for meals model', () => {
   it('should get all meals', async () => {
     await meals.add(validMeal1);
     const result = await meals.getAll();
-    expect(result.length).to.equal(2);
+    expect(result.meals.length).to.equal(2);
   });
 
   it('should get meal by name', async () => {
     const result = await meals.getByName(existingMeal.name);
-    expect(result.name).to.equal(existingMeal.name);
+    expect(result.meals[0].name).to.equal(existingMeal.name);
   });
 
   it('should truncate meal db', async () => {
     await meals.truncate();
     const result = await meals.getAll();
-    expect(result).to.be.an('array');
-    expect(result.length).to.equal(0);
+    expect(result.meals).to.be.an('array');
+    expect(result.meals.length).to.equal(0);
   });
 });

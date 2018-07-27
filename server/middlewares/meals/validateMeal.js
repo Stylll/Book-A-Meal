@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import meals from '../../db/meals';
 
 /**
@@ -8,6 +9,8 @@ class ValidateMeal {
   /**
    * static method to check if a meal id exists
    * @param {object} request
+   * @param {object} response
+   * @param {function} next
    * @returns {object} Error message and status code
    */
   static async idExists(request, response, next) {
@@ -33,6 +36,8 @@ class ValidateMeal {
    * static method to check if the meal name is provided
    * throws an error if name is not provided
    * @param {object} request
+   * @param {object} response
+   * @param {function} next
    * @throws {object} Error message and status code
    */
   static validateName(request, response, next) {
@@ -50,12 +55,14 @@ class ValidateMeal {
    * static method to validate that a meal name exists
    * throws an error if name exists
    * @param {object} request
+   * @param {object} response
+   * @param {function} next
    * @throws {object} Error message and status code
    */
   static async nameExists(request, response, next) {
     if (request.body.name) {
       const result = await meals.getByName(request.body.name.trim());
-      if (result && result.id !== parseInt(request.params.id, 10)) {
+      if (!isEmpty(result.meals)) {
         request.errors.name = {
           message: 'Meal name already exists',
           statusCode: 409,
@@ -77,6 +84,8 @@ class ValidateMeal {
    * if price is valid.
    * if price is greater than 1.
    * @param {object} request
+   * @param {object} response
+   * @param {function} next
    * @throws {object} Error message and status code
    */
   static priceValid(request, response, next) {
@@ -118,6 +127,8 @@ class ValidateMeal {
   /**
    * static method to validate CRUD access
    * @param {object} request
+   * @param {object} response
+   * @param {function} next
    * @throws {object} Error message and status code
    */
   static async validateAccess(request, response, next) {

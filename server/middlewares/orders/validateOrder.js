@@ -85,7 +85,8 @@ class order {
   static isOpen(request, response, next) {
     const currentHour = moment.duration(new Date().getTime()).hours();
     if (currentHour > process.env.CLOSINGHOUR || currentHour < process.env.OPENINGHOUR) {
-      return response.status(403).json({ message: 'Sorry. We are closed for the day. Please come back between 7:00AM and 5:00PM.' });
+      return response.status(403)
+        .json({ message: 'Sorry. We are closed for the day. Please come back between 7:00AM and 5:00PM.' });
     }
     return next();
   }
@@ -131,10 +132,11 @@ class order {
    * @returns {object} Error message and status code
    */
   static async mealInMenu(request, response, next) {
-    const menu = await menus.getByDate(new Date());
+    const menuResponse = await menus.getByDate(new Date());
     const mealId = parseInt(request.body.mealId, 10);
+    const { menu } = menuResponse;
 
-    if (!menu) {
+    if (isEmpty(menu)) {
       request.errors.menu = {
         message: 'No menu is set',
         statusCode: 400,
@@ -166,10 +168,11 @@ class order {
    */
   static async mealInMenuIfPassed(request, response, next) {
     if (!request.body.mealId) return next();
-    const menu = await menus.getByDate(new Date());
+    const menuResponse = await menus.getByDate(new Date());
     const mealId = parseInt(request.body.mealId, 10);
+    const { menu } = menuResponse;
 
-    if (!menu) {
+    if (isEmpty(menu)) {
       request.errors.menu = {
         message: 'No menu is set',
         statusCode: 400,
@@ -287,7 +290,9 @@ class order {
     }
 
     // check if order status is valid
-    if (!(request.body.status === 'pending') && !(request.body.status === 'complete') && !(request.body.status === 'canceled')) {
+    if (!(request.body.status === 'pending') &&
+      !(request.body.status === 'complete') &&
+      !(request.body.status === 'canceled')) {
       request.errors.status = {
         message: 'Status is invalid',
         statusCode: 400,
@@ -328,7 +333,8 @@ class order {
     const mId = request.body.mealId || existingOrder.mealId;
     const meal = await meals.get(parseInt(mId, 10));
 
-    // check if user is not an admin and not the owner of the meal id present in the order
+    // check if user is not an admin and not the owner of the meal id
+    // present in the order
     if (request.decoded.user.accountType !== 'admin' &&
         request.decoded.user.id !== meal.userId) {
       request.errors.access = {

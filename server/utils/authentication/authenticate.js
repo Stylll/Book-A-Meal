@@ -24,7 +24,7 @@ class Authenticate {
       },
       process.env.SECRET,
       {
-        expiresIn: Number(Date.now() + 30),
+        expiresIn: Number(Date.now() + 5),
       },
     );
     return token;
