@@ -1,5 +1,6 @@
 import { isEmpty } from 'lodash';
 import { Meals as MealModel } from '../models';
+import paginator from '../utils/paginator';
 
 
 class Meals {
@@ -21,7 +22,9 @@ class Meals {
     }
 
     // check if price is less than one
-    if (meal.price <= 1) return { err: new Error('Price must be greater than 1') };
+    if (meal.price <= 1) {
+      return { err: new Error('Price must be greater than 1') };
+    }
 
     // check if image link exists
     if (!meal.image.trim()) return { err: new Error('Image link is required') };
@@ -52,7 +55,9 @@ class Meals {
     }
 
     // check if price is less than one
-    if (meal.price && meal.price <= 1) return { err: new Error('Price must be greater than 1') };
+    if (meal.price && meal.price <= 1) {
+      return { err: new Error('Price must be greater than 1') };
+    }
 
     // get meal record and update it
     return MealModel.findById(meal.id)
@@ -90,12 +95,14 @@ class Meals {
   /**
    * static method to get meal by meal id
    * @param {integer} id
+   * @param {bool} paranoid default = true
    * @returns {object|null} meal
    */
-  static get(id) {
+  static get(id, paranoid = true) {
     return MealModel.findById(id, {
-      attributes: { exclude: ['createdAt', 'updatedAt'] },
+      attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
       order: [['createdAt', 'DESC']],
+      paranoid,
     })
       .then((returnedMeal) => {
         if (isEmpty(returnedMeal)) {
@@ -109,39 +116,59 @@ class Meals {
   /**
    * static method to get meal by meal name
    * @param {string} name
+   * @param {bool} paranoid default = true
    * @returns {object|null} meal | null
    */
-  static getByName(name) {
-    return MealModel.findAll({
+  static getByName(name, paranoid = true, limit = 10, offset = 0) {
+    return MealModel.findAndCountAll({
       where: {
         name,
       },
-      attributes: { exclude: ['createdAt', 'updatedAt'] },
+      attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
       order: [['createdAt', 'DESC']],
+      paranoid,
+      limit,
+      offset,
     })
       .then((returnedMeal) => {
         if (isEmpty(returnedMeal)) {
-          return null;
+          return {
+            meals: [],
+            pagination: paginator(limit, offset, 0),
+          };
         }
-        return returnedMeal[0].dataValues;
+        return {
+          meals: returnedMeal.rows,
+          pagination: paginator(limit, offset, returnedMeal.count),
+        };
       })
       .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
 
   /**
    * get all meals in the meals table
+   * @param {bool} paranoid default = true
    * @returns [array] meals
    */
-  static getAll() {
-    return MealModel.findAll({
-      attributes: { exclude: ['createdAt', 'updatedAt'] },
+  static getAll(paranoid = true, limit = 10, offset = 0) {
+    return MealModel.findAndCountAll({
+      attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
       order: [['createdAt', 'DESC']],
+      paranoid,
+      limit,
+      offset,
     })
       .then((returnedMeal) => {
         if (isEmpty(returnedMeal)) {
-          return [];
+          return {
+            meals: [],
+            pagination: paginator(limit, offset, 0),
+          };
         }
-        return returnedMeal;
+        return {
+          meals: returnedMeal.rows,
+          pagination: paginator(limit, offset, returnedMeal.count),
+        };
       })
       .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
@@ -149,21 +176,31 @@ class Meals {
   /**
    * get all meals using the user id
    * @param {integer} userId
+   * @param {bool} paranoid default = true
    * @returns {array | null} [meals]
    */
-  static getByUserId(userId) {
-    return MealModel.findAll({
+  static getByUserId(userId, paranoid = true, limit = 10, offset = 0) {
+    return MealModel.findAndCountAll({
       where: {
         userId,
       },
-      attributes: { exclude: ['createdAt', 'updatedAt'] },
+      attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
       order: [['createdAt', 'DESC']],
+      paranoid,
+      limit,
+      offset,
     })
       .then((returnedMeal) => {
         if (isEmpty(returnedMeal)) {
-          return [];
+          return {
+            meals: [],
+            pagination: paginator(limit, offset, 0),
+          };
         }
-        return returnedMeal;
+        return {
+          meals: returnedMeal.rows,
+          pagination: paginator(limit, offset, returnedMeal.count),
+        };
       })
       .catch(error => ({ err: new Error(error.errors[0].message) }));
   }

@@ -83,12 +83,16 @@ class MealController {
    * @returns {object} {meals} | {message}
    */
   static async get(request, response) {
+    const limit = request.query.limit || 10;
+    const offset = request.query.offset || 0;
     if (request.decoded.user.accountType === 'admin') {
-      const mealArray = await meals.getAll();
-      return response.status(200).send({ meals: mealArray });
+      const mealArray = await meals.getAll(true, limit, offset);
+      return response.status(200)
+        .json({ meals: mealArray.meals, pagination: mealArray.pagination });
     }
-    const mealArray = await meals.getByUserId(request.decoded.user.id);
-    return response.status(200).send({ meals: mealArray });
+    const mealArray = await meals.getByUserId(request.decoded.user.id, true, limit, offset);
+    return response.status(200)
+      .json({ meals: mealArray.meals, pagination: mealArray.pagination });
   }
 
   /**

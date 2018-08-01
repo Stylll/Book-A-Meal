@@ -6,6 +6,7 @@ import orders from '../db/orders';
 import meals from '../db/meals';
 import db from '../models';
 import OrderUtils from '../utils/orders/orderUtils';
+import paginator from '../utils/paginator';
 
 dotenv.config();
 
@@ -33,7 +34,8 @@ class OrderController {
     const newOrder = await OrderUtils.buildOrder(rawOrder);
 
     if (newOrder && !newOrder.err) {
-      return response.status(201).json({ order: newOrder, message: 'Created successfully' });
+      return response.status(201)
+        .json({ order: newOrder, message: 'Created successfully' });
     }
     return response.status(500).json({ message: 'Internal Server Error' });
   }
@@ -50,30 +52,22 @@ class OrderController {
 
     // if order exists
     if (order && !order.err) {
-      // check if user is a customer and the create time has passed 2 hours
-      if (request.decoded.user.accountType === 'customer') {
-        if (OrderUtils.getHourDiff(order) >= process.env.ORDERTIMEOUT) {
-          return response.status(403).json({
-            message: 'Sorry. You no longer have the permission to make changes to this order.',
-          });
-        }
-      }
-
-
       // update order, save order and return new order
-      order.mealId = (request.body.mealId) ? parseInt(request.body.mealId, 10) : order.mealId;
+      order.mealId = (request.body.mealId)
+        ? parseInt(request.body.mealId, 10) : order.mealId;
       order.quantity = (request.body.quantity)
         ? parseInt(request.body.quantity, 10) : order.quantity;
       const meal = await meals.get(order.mealId);
-      order.price = (request.body.mealId) ? meal.price
-        : order.price;
+      order.price = (request.body.mealId)
+        ? meal.price : order.price;
       order.status = request.body.status || order.status;
       order.cost = parseInt(order.quantity, 10) * parseFloat(order.price, 10);
 
       const rawOrder = await orders.update(order);
       const newOrder = await OrderUtils.buildOrder(rawOrder);
 
-      return response.status(200).json({ order: newOrder, message: 'Updated successfully' });
+      return response.status(200)
+        .json({ order: newOrder, message: 'Updated successfully' });
     }
     return response.status(500).json({ message: 'Internal Server Error' });
   }
@@ -85,15 +79,19 @@ class OrderController {
    * @returns {object} {orders} | {message}
    */
   static async get(request, response) {
+    const limit = request.query.limit || 10;
+    const offset = request.query.offset || 0;
+    const status = request.query.status || null;
     if (request.decoded.user.accountType === 'admin') {
       /**
        * get all orders from the db
        * pass it through the builder to attach meal and user objects
        * return the order array
        */
-      const rawOrders = await orders.getAll();
-      const orderArray = await OrderUtils.buildOrders(rawOrders);
-      return response.status(200).json({ orders: orderArray });
+      const rawOrders = await orders.getAll(limit, offset, status);
+      const orderArray = await OrderUtils.buildOrders(rawOrders.orders);
+      return response.status(200)
+        .json({ orders: orderArray, pagination: rawOrders.pagination });
     }
     if (request.decoded.user.accountType === 'caterer') {
       /**
@@ -101,9 +99,13 @@ class OrderController {
        * pass it through the builder to attach meal and user objects
        * return the order array
        */
-      const rawOrders = await orders.getByCatererId(request.decoded.user.id);
-      const orderArray = await OrderUtils.buildOrders(rawOrders);
-      return response.status(200).json({ orders: orderArray });
+      const rawOrders = await orders.getByCatererId(
+        request.decoded.user.id, limit,
+        offset, status,
+      );
+      const orderArray = await OrderUtils.buildOrders(rawOrders.orders);
+      return response.status(200)
+        .json({ orders: orderArray, pagination: rawOrders.pagination });
     }
     if (request.decoded.user.accountType === 'customer') {
       /**
@@ -111,9 +113,13 @@ class OrderController {
        * pass it through the builder to attach meal and user objects
        * return the order array
        */
-      const rawOrders = await orders.getByUserId(request.decoded.user.id);
-      const orderArray = await OrderUtils.buildOrders(rawOrders);
-      return response.status(200).json({ orders: orderArray });
+      const rawOrders = await orders.getByUserId(
+        request.decoded.user.id, limit,
+        offset, status,
+      );
+      const orderArray = await OrderUtils.buildOrders(rawOrders.orders);
+      return response.status(200)
+        .json({ orders: orderArray, pagination: rawOrders.pagination });
     }
     return response.status(500).json({ message: 'Internal Server Error' });
   }
@@ -125,32 +131,58 @@ class OrderController {
    * @returns {object} {orders} | {message}
    */
   static async summary(request, response) {
+    const limit = request.query.limit || 10;
+    const offset = request.query.offset || 0;
     if (request.decoded.user.accountType === 'admin') {
       /**
        * get order summary for all completed orders
        */
-      const orderSummary = await db.Orders.findAll({
+      const orderSummary = await db.Orders.findAndCountAll({
         group: [
-          [db.sequelize.fn('to_char', db.sequelize.col('createdAt'), 'YYYY-MM-DD')],
+          [db.sequelize.fn(
+            'to_char',
+            db.sequelize.col('createdAt'), 'YYYY-MM-DD',
+          )],
         ],
         order: [
-          [db.sequelize.fn('to_char', db.sequelize.col('createdAt'), 'YYYY-MM-DD'), 'DESC'],
+          [db.sequelize.fn(
+            'to_char',
+            db.sequelize.col('createdAt'), 'YYYY-MM-DD',
+          ), 'DESC'],
         ],
         attributes: [
           [db.sequelize.fn('COUNT', db.sequelize.col('id')), 'totalOrder'],
-          [db.sequelize.fn('sum', db.sequelize.col('quantity')), 'totalQuantity'],
+          [db.sequelize.fn(
+            'sum',
+            db.sequelize.col('quantity'),
+          ), 'totalQuantity'],
           [db.sequelize.fn('sum', db.sequelize.col('cost')), 'totalSale'],
-          [db.sequelize.fn('count', db.sequelize.fn('distinct', db.sequelize.col('userId'))), 'totalCustomer'],
-          [db.sequelize.fn('to_char', db.sequelize.col('createdAt'), 'YYYY-MM-DD'), 'orderDate'],
+          [db.sequelize.fn(
+            'count',
+            db.sequelize.fn('distinct', db.sequelize.col('userId')),
+          ), 'totalCustomer'],
+          [db.sequelize.fn(
+            'to_char',
+            db.sequelize.col('createdAt'), 'YYYY-MM-DD',
+          ), 'orderDate'],
         ],
         where: {
           status: 'complete',
         },
+        limit,
+        offset,
       });
-      if (isEmpty(orderSummary)) {
-        return response.status(200).json({ orders: [] });
+      if (isEmpty(orderSummary.rows)) {
+        return response.status(200).json({
+          orders: [],
+          pagination: paginator(limit, offset, 0),
+        });
       }
-      return response.status(200).json({ orders: orderSummary });
+      return response.status(200)
+        .json({
+          orders: orderSummary.rows,
+          pagination: paginator(limit, offset, orderSummary.count),
+        });
     }
 
     /**
@@ -163,24 +195,37 @@ class OrderController {
         userId: request.decoded.user.id,
       },
       raw: true,
+      paranoid: false,
       attributes: ['id'],
     });
 
     catererMeals = catererMeals.map(meal => meal.id);
 
-    const orderSummary = await db.Orders.findAll({
+    const orderSummary = await db.Orders.findAndCountAll({
       group: [
-        [db.sequelize.fn('to_char', db.sequelize.col('createdAt'), 'YYYY-MM-DD')],
+        [db.sequelize.fn(
+          'to_char',
+          db.sequelize.col('createdAt'), 'YYYY-MM-DD',
+        )],
       ],
       order: [
-        [db.sequelize.fn('to_char', db.sequelize.col('createdAt'), 'YYYY-MM-DD'), 'DESC'],
+        [db.sequelize.fn(
+          'to_char',
+          db.sequelize.col('createdAt'), 'YYYY-MM-DD',
+        ), 'DESC'],
       ],
       attributes: [
         [db.sequelize.fn('COUNT', db.sequelize.col('id')), 'totalOrder'],
         [db.sequelize.fn('sum', db.sequelize.col('quantity')), 'totalQuantity'],
         [db.sequelize.fn('sum', db.sequelize.col('cost')), 'totalSale'],
-        [db.sequelize.fn('count', db.sequelize.fn('distinct', db.sequelize.col('userId'))), 'totalCustomer'],
-        [db.sequelize.fn('to_char', db.sequelize.col('createdAt'), 'YYYY-MM-DD'), 'orderDate'],
+        [db.sequelize.fn(
+          'count',
+          db.sequelize.fn('distinct', db.sequelize.col('userId')),
+        ), 'totalCustomer'],
+        [db.sequelize.fn(
+          'to_char',
+          db.sequelize.col('createdAt'), 'YYYY-MM-DD',
+        ), 'orderDate'],
       ],
       where: {
         status: 'complete',
@@ -188,11 +233,20 @@ class OrderController {
           [db.sequelize.Op.in]: catererMeals,
         },
       },
+      limit,
+      offset,
     });
-    if (isEmpty(orderSummary)) {
-      return response.status(200).json({ orders: [] });
+    if (isEmpty(orderSummary.rows)) {
+      return response.status(200).json({
+        orders: [],
+        pagination: paginator(limit, offset, 0),
+      });
     }
-    return response.status(200).json({ orders: orderSummary });
+    return response.status(200)
+      .json({
+        orders: orderSummary.rows,
+        pagination: paginator(limit, offset, orderSummary.count.length),
+      });
   }
 }
 

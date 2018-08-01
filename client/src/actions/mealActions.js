@@ -143,7 +143,7 @@ const deleteMeal = mealId => function (dispatch) {
  * @returns {object} action object for reducer
  */
 const deleteMealSuccess = (mealId) => {
-  toastr.success('Deletion', 'Meal deleted successfully');
+  toastr.success('Meal deleted successfully');
   return {
     type: types.DELETE_MEAL_SUCCESS,
     mealId,
@@ -162,8 +162,8 @@ const deleteMealFailed = (data) => {
     errors = {
       message: data.message,
     };
-    toastr.error('Unexpected Error', data.message || 'Could not delete meal');
   }
+  toastr.error('Error', errors.meal || data.message || 'Could not delete meal');
   return {
     type: types.DELETE_MEAL_FAILED,
   };

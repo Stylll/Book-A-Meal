@@ -36,7 +36,7 @@ class OrderUtils {
     };
 
     // get meal using meal id and add it to the order object
-    const meal = await meals.get(orderObject.mealId);
+    const meal = await meals.get(orderObject.mealId, false);
     if (meal) order.meal = meal;
 
     // get user using user id and add to the order object
@@ -61,20 +61,9 @@ class OrderUtils {
    */
   static async buildOrders(orderArray) {
     let orderList = [...orderArray];
-    orderList = await Promise.all(orderList.map(order => this.buildOrder(order)));
+    orderList = await Promise.all(orderList
+      .map(order => this.buildOrder(order)));
     return orderList;
-  }
-
-  /**
-   * Static method to get the difference in hour between order date and current date
-   * @param {object} order
-   * @returns {integer} difference
-   */
-  static getHourDiff(order) {
-    const orderDate = new Moment(order.createdAt);
-    const currentDate = new Moment(new Date());
-    const diff = Moment.duration(currentDate.diff(orderDate)).asHours();
-    return diff;
   }
 }
 

@@ -2,6 +2,7 @@ import { isEmpty } from 'lodash';
 import { Op } from 'sequelize';
 import meals from './meals';
 import { Orders as OrderModel } from '../models';
+import paginator from '../utils/paginator';
 
 /**
  * Menu model class
@@ -18,7 +19,9 @@ class Orders {
     if (!order.mealId) return { err: new Error('Meal id is required') };
 
     // check if meal id is valid
-    if (!Number.isInteger(order.mealId)) return { err: new Error('Meal id is invalid') };
+    if (!Number.isInteger(order.mealId)) {
+      return { err: new Error('Meal id is invalid') };
+    }
 
     // check if meal id exists
     const existingMeal = await meals.get(order.mealId);
@@ -33,19 +36,25 @@ class Orders {
     }
 
     // check if price is less than or equal to 1
-    if (order.price <= 1) return { err: new Error('Price must be greater than one') };
+    if (order.price <= 1) {
+      return { err: new Error('Price must be greater than one') };
+    }
 
     // check if quantity is provided
     if (!order.quantity) return { err: new Error('Quantity is required') };
 
     // check if quantity is valid
-    if (!Number.isInteger(order.quantity)) return { err: new Error('Quantity is invalid') };
+    if (!Number.isInteger(order.quantity)) {
+      return { err: new Error('Quantity is invalid') };
+    }
 
     // check if user id is provided
     if (!order.userId) return { err: new Error('User id is required') };
 
     // check if user id is valid
-    if (!Number.isInteger(order.userId)) return { err: new Error('User id is invalid') };
+    if (!Number.isInteger(order.userId)) {
+      return { err: new Error('User id is invalid') };
+    }
 
     // create and populate new order object
     const newOrder = {
@@ -77,14 +86,20 @@ class Orders {
     if (!order.id) return { err: new Error('Order id is required') };
 
     // check if order id is valid
-    if (!Number.isInteger(order.id)) return { err: new Error('Order id is invalid') };
+    if (!Number.isInteger(order.id)) {
+      return { err: new Error('Order id is invalid') };
+    }
 
     // check if meal id is valid if provided
-    if (order.mealId && !Number.isInteger(order.mealId)) return { err: new Error('Meal id is invalid') };
+    if (order.mealId && !Number.isInteger(order.mealId)) {
+      return { err: new Error('Meal id is invalid') };
+    }
 
     // check if meal id exists if provided
     const existingMeal = await meals.get(order.mealId);
-    if (order.mealId && !existingMeal) return { err: new Error('Meal does not exist') };
+    if (order.mealId && !existingMeal) {
+      return { err: new Error('Meal does not exist') };
+    }
 
     // check if price is a number if provided
     if (order.price && /[^0-9.]/gi.test(order.price) === true) {
@@ -92,14 +107,19 @@ class Orders {
     }
 
     // check if price is less than or equal to 1 if provided
-    if (order.price && order.price <= 1) return { err: new Error('Price must be greater than one') };
+    if (order.price && order.price <= 1) {
+      return { err: new Error('Price must be greater than one') };
+    }
 
     // check if quantity is valid if provided
-    if (order.quantity && !Number.isInteger(order.quantity)) return { err: new Error('Quantity is invalid') };
+    if (order.quantity && !Number.isInteger(order.quantity)) {
+      return { err: new Error('Quantity is invalid') };
+    }
 
     // check if status is valid if provided
     if (order.status) {
-      if (!(order.status === 'pending') && !(order.status === 'complete') && !(order.status === 'canceled')) {
+      if (!(order.status === 'pending') && !(order.status === 'complete')
+        && !(order.status === 'canceled')) {
         return { err: new Error('Status is invalid') };
       }
     }
@@ -142,16 +162,27 @@ class Orders {
    * Static method to return all orders in the db
    * @returns {array} Orders
    */
-  static getAll() {
-    return OrderModel.findAll({
+  static getAll(limit = 10, offset = 0, status = null) {
+    const where = {};
+    if (status) where.status = status;
+    return OrderModel.findAndCountAll({
+      where,
       raw: true,
       order: [['createdAt', 'DESC']],
+      limit,
+      offset,
     })
       .then((returnedOrder) => {
-        if (isEmpty(returnedOrder)) {
-          return [];
+        if (isEmpty(returnedOrder.rows)) {
+          return {
+            orders: [],
+            pagination: paginator(limit, offset, 0),
+          };
         }
-        return returnedOrder;
+        return {
+          orders: returnedOrder.rows,
+          pagination: paginator(limit, offset, returnedOrder.count),
+        };
       });
   }
 
@@ -160,21 +191,31 @@ class Orders {
    * @param {integer} id
    * @returns {array|null} orders
    */
-  static getByMealId(mealId) {
+  static getByMealId(mealId, limit = 10, offset = 0, status = false) {
     const id = parseInt(mealId, 10);
+    const where = {
+      mealId,
+    };
+    if (status) where.status = status;
     if (Number.isInteger(id)) {
-      return OrderModel.findAll({
-        where: {
-          mealId,
-        },
+      return OrderModel.findAndCountAll({
+        where,
         raw: true,
         order: [['createdAt', 'DESC']],
+        limit,
+        offset,
       })
         .then((returnedOrder) => {
-          if (isEmpty(returnedOrder)) {
-            return [];
+          if (isEmpty(returnedOrder.rows)) {
+            return {
+              orders: [],
+              pagination: paginator(limit, offset, 0),
+            };
           }
-          return returnedOrder;
+          return {
+            orders: returnedOrder.rows,
+            pagination: paginator(limit, offset, returnedOrder.count),
+          };
         });
     }
     return null;
@@ -185,20 +226,28 @@ class Orders {
    * @param {string} status
    * @returns {array|null} orders
    */
-  static getByStatus(status) {
+  static getByStatus(status, limit = 10, offset = 0) {
     if (!status) return null;
-    return OrderModel.findAll({
+    return OrderModel.findAndCountAll({
       where: {
         status,
       },
       raw: true,
       order: [['createdAt', 'DESC']],
+      limit,
+      offset,
     })
       .then((returnedOrder) => {
-        if (isEmpty(returnedOrder)) {
-          return [];
+        if (isEmpty(returnedOrder.rows)) {
+          return {
+            orders: [],
+            pagination: paginator(limit, offset, 0),
+          };
         }
-        return returnedOrder;
+        return {
+          orders: returnedOrder.rows,
+          pagination: paginator(limit, offset, returnedOrder.count),
+        };
       });
   }
 
@@ -207,51 +256,86 @@ class Orders {
    * @param {integer} userId
    * @returns {array|null} orders | null
    */
-  static getByUserId(userId) {
+  static getByUserId(userId, limit = 10, offset = 0, status = null) {
     const id = parseInt(userId, 10);
+    const where = {
+      userId,
+    };
+    if (status) where.status = status;
     if (!Number.isInteger(id)) return null;
-    return OrderModel.findAll({
-      where: {
-        userId,
-      },
+    return OrderModel.findAndCountAll({
+      where,
       raw: true,
       order: [['createdAt', 'DESC']],
+      limit,
+      offset,
     })
       .then((returnedOrder) => {
-        if (isEmpty(returnedOrder)) {
-          return [];
+        if (isEmpty(returnedOrder.rows)) {
+          return {
+            orders: [],
+            pagination: paginator(limit, offset, 0),
+          };
         }
-        return returnedOrder;
+        return {
+          orders: returnedOrder.rows,
+          pagination: paginator(limit, offset, returnedOrder.count),
+        };
       });
   }
 
   /**
    * static method to get orders using caterer id
    * @param {integer} catererId
+   * @param {integer} limit
+   * @param {integer} offset
    * @return {array|null} orders
    */
-  static async getByCatererId(catererId) {
+  static async getByCatererId(
+    catererId,
+    limit = 10, offset = 0, status = null,
+  ) {
     const id = parseInt(catererId, 10);
-    if (!Number.isInteger(id)) return null;
-    const catererMeals = await meals.getByUserId(id);
+    if (!Number.isInteger(id)) {
+      return {
+        orders: [],
+        pagination: paginator(limit, offset, 0),
+      };
+    }
+    const catererMeals = await meals.getByUserId(id, false);
     const mealIds = [];
-    if (isEmpty(catererMeals)) return [];
-    catererMeals.forEach(meal => mealIds.push(meal.id));
+    if (isEmpty(catererMeals)) {
+      return {
+        orders: [],
+        pagination: paginator(limit, offset, 0),
+      };
+    }
+    catererMeals.meals.forEach(meal => mealIds.push(meal.id));
 
-    return OrderModel.findAll({
-      where: {
-        mealId: {
-          [Op.in]: mealIds,
-        },
+    const where = {
+      mealId: {
+        [Op.in]: mealIds,
       },
+    };
+    if (status) where.status = status;
+    return OrderModel.findAndCountAll({
+      where,
       raw: true,
       order: [['createdAt', 'DESC']],
+      limit,
+      offset,
     })
       .then((returnedOrder) => {
-        if (isEmpty(returnedOrder)) {
-          return [];
+        if (isEmpty(returnedOrder.rows)) {
+          return {
+            orders: [],
+            pagination: paginator(limit, offset, 0),
+          };
         }
-        return returnedOrder;
+        return {
+          orders: returnedOrder.rows,
+          pagination: paginator(limit, offset, returnedOrder.count),
+        };
       });
   }
 

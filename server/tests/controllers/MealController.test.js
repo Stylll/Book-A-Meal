@@ -565,4 +565,83 @@ describe('Test Suite for Meal Controller', () => {
         });
     });
   });
+
+  describe('Test for meal pagination A - GET', () => {
+    beforeEach(async () => {
+      await clearMeals();
+      await insertSeedMeal(existingMeal);
+      await insertSeedMeal(validMeal1);
+      await insertSeedMeal(validMeal2);
+      await insertSeedMeal({ ...validMeal2, name: 'Poundo Yam', userId: 4 });
+    });
+
+    it('should return paginated data for caterer', (done) => {
+      request(app)
+        .get('/api/v1/meals?limit=1&offset=0')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(200);
+          expect(resp.body.meals).to.be.an('array');
+          expect(resp.body.meals.length).to.equal(1);
+          expect(resp.body.meals[0].id).to.equal(3);
+          expect(resp.body.meals[0].name).to.equal(validMeal2.name);
+          expect(resp.body.pagination.totalCount).to.equal(3);
+          expect(resp.body.pagination.limit).to.equal(1);
+          expect(resp.body.pagination.offset).to.equal(0);
+          expect(resp.body.pagination.noPage).to.equal(3);
+          expect(resp.body.pagination.pageNo).to.equal(1);
+          done();
+        });
+    });
+  });
+
+  describe('Test for meal pagination B - GET', () => {
+    beforeEach(async () => {
+      await clearMeals();
+      await insertSeedMeal(existingMeal);
+      await insertSeedMeal(validMeal1);
+      await insertSeedMeal({ ...validMeal2, name: 'Poundo Yam', userId: 4 });
+      await insertSeedMeal(validMeal2);
+    });
+
+    it('should return paginated data for admin caterer', (done) => {
+      request(app)
+        .get('/api/v1/meals?limit=1&offset=0')
+        .set({
+          'x-access-token': adminToken,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(200);
+          expect(resp.body.meals).to.be.an('array');
+          expect(resp.body.meals.length).to.equal(1);
+          expect(resp.body.meals[0].id).to.equal(4);
+          expect(resp.body.meals[0].name).to.equal(validMeal2.name);
+          expect(resp.body.pagination.totalCount).to.equal(4);
+          expect(resp.body.pagination.limit).to.equal(1);
+          expect(resp.body.pagination.offset).to.equal(0);
+          expect(resp.body.pagination.noPage).to.equal(4);
+          expect(resp.body.pagination.pageNo).to.equal(1);
+          done();
+        });
+    });
+  });
+
+  describe('Limit and Offset Validation', () => {
+    it('should return error if limit or offset is invalid', (done) => {
+      request(app)
+        .get('/api/v1/meals?limit=abc&offset=xyz')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .end((err, resp) => {
+          expect(resp.body.errors.limit.statusCode).to.equal(400);
+          expect(resp.body.errors.limit.message).to.equal('Limit is invalid');
+          expect(resp.body.errors.offset.statusCode).to.equal(400);
+          expect(resp.body.errors.offset.message).to.equal('Offset is invalid');
+          done();
+        });
+    });
+  });
 });

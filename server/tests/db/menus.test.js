@@ -132,23 +132,23 @@ describe('Test Suite for Menu Model', () => {
 
   it('should get menu by date', async () => {
     const result = await menus.getByDate(existingMenu.date);
-    expect(result.name).to.equal(existingMenu.name);
+    expect(result.menu.name).to.equal(existingMenu.name);
   });
 
   it('should get all menus', async () => {
     await menus.add(validMenu1);
     await menus.add(validMenu2);
     const result = await menus.getAll();
-    expect(result).to.be.an('array');
-    expect(result.length).to.equal(3);
-    expect(result[0].name).to.equal(validMenu2.name);
-    expect(result[0].date).to.equal(validMenu2.date);
-    expect(result[0].id).to.equal(3);
+    expect(result.menus).to.be.an('array');
+    expect(result.menus.length).to.equal(3);
+    expect(result.menus[0].name).to.equal(validMenu2.name);
+    expect(result.menus[0].date).to.equal(validMenu2.date);
+    expect(result.menus[0].id).to.equal(3);
   });
 
   it('should delete all menu from the menu data store', async () => {
     await menus.truncate();
     const result = await menus.getAll();
-    expect(result.length).to.equal(0);
+    expect(result.menus.length).to.equal(0);
   });
 });

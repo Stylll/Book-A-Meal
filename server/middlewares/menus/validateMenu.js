@@ -1,5 +1,7 @@
+import { isEmpty } from 'lodash';
 import menus from '../../db/menus';
 import meals from '../../db/meals';
+
 
 /**
  * Menu Middleware validators
@@ -55,7 +57,7 @@ class ValidateMenu {
    */
   static async existsForDay(request, response, next) {
     const result = await menus.getByDate(new Date());
-    if (result) {
+    if (!isEmpty(result.menu)) {
       request.errors.menu = {
         message: 'Menu for the day already exists',
         statusCode: 409,

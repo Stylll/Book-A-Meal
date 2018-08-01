@@ -65,7 +65,8 @@ describe('Test Suite for Order Controller', () => {
         .send({})
         .end((err, resp) => {
           expect(resp.status).to.equal(401);
-          expect(resp.body.message).to.equal('Authentication failed. No token provided');
+          expect(resp.body.message)
+            .to.equal('Authentication failed. No token provided');
           done();
         });
     });
@@ -141,7 +142,8 @@ describe('Test Suite for Order Controller', () => {
         })
         .end((err, resp) => {
           expect(resp.body.errors.meal.statusCode).to.equal(400);
-          expect(resp.body.errors.meal.message).to.equal('Meal does not exist in menu');
+          expect(resp.body.errors.meal.message)
+            .to.equal('Meal does not exist in menu');
           done();
         });
     });
@@ -158,7 +160,8 @@ describe('Test Suite for Order Controller', () => {
         })
         .end((err, resp) => {
           expect(resp.body.errors.quantity.statusCode).to.equal(400);
-          expect(resp.body.errors.quantity.message).to.equal('Quantity is required');
+          expect(resp.body.errors.quantity.message)
+            .to.equal('Quantity is required');
           done();
         });
     });
@@ -175,7 +178,8 @@ describe('Test Suite for Order Controller', () => {
         })
         .end((err, resp) => {
           expect(resp.body.errors.quantity.statusCode).to.equal(400);
-          expect(resp.body.errors.quantity.message).to.equal('Quantity is invalid');
+          expect(resp.body.errors.quantity.message)
+            .to.equal('Quantity is invalid');
           done();
         });
     });
@@ -194,33 +198,38 @@ describe('Test Suite for Order Controller', () => {
           expect(resp.body.order.mealId).to.equal(validOrder1.mealId);
           expect(resp.body.order.price).to.equal(existingMeal.price);
           expect(resp.body.order.quantity).to.equal(validOrder1.quantity);
-          expect(resp.body.order.cost).to.equal(existingMeal.price * validOrder1.quantity);
+          expect(resp.body.order.cost)
+            .to.equal(existingMeal.price * validOrder1.quantity);
           done();
         });
     });
 
-    it('should return proper response data and status code after creating', (done) => {
-      request(app)
-        .post('/api/v1/orders')
-        .set({
-          'x-access-token': customerToken,
-        })
-        .send(validOrder1)
-        .end((err, resp) => {
-          expect(resp.status).to.equal(201);
-          expect(resp.body.order).to.be.an('object');
-          expect(resp.body.order.id).to.equal(2);
-          expect(resp.body.order.mealId).to.equal(validOrder1.mealId);
-          expect(resp.body.order.price).to.equal(existingMeal.price);
-          expect(resp.body.order.quantity).to.equal(validOrder1.quantity);
-          expect(resp.body.order.status).to.equal('pending');
-          expect(resp.body.order.userId).to.equal(2);
-          expect(resp.body.order.cost).to.equal(existingMeal.price * validOrder1.quantity);
-          expect(resp.body.order).to.haveOwnProperty('createdAt');
-          expect(resp.body.order).to.haveOwnProperty('updatedAt');
-          done();
-        });
-    });
+    it(
+      'should return proper response data and status code after creating',
+      (done) => {
+        request(app)
+          .post('/api/v1/orders')
+          .set({
+            'x-access-token': customerToken,
+          })
+          .send(validOrder1)
+          .end((err, resp) => {
+            expect(resp.status).to.equal(201);
+            expect(resp.body.order).to.be.an('object');
+            expect(resp.body.order.id).to.equal(2);
+            expect(resp.body.order.mealId).to.equal(validOrder1.mealId);
+            expect(resp.body.order.price).to.equal(existingMeal.price);
+            expect(resp.body.order.quantity).to.equal(validOrder1.quantity);
+            expect(resp.body.order.status).to.equal('pending');
+            expect(resp.body.order.userId).to.equal(2);
+            expect(resp.body.order.cost)
+              .to.equal(existingMeal.price * validOrder1.quantity);
+            expect(resp.body.order).to.haveOwnProperty('createdAt');
+            expect(resp.body.order).to.haveOwnProperty('updatedAt');
+            done();
+          });
+      },
+    );
   });
 
   describe('PUT: Update Order - /api/orders/:id', () => {
@@ -754,6 +763,132 @@ describe('Test Suite for Order Controller', () => {
           expect(resp.status).to.equal(200);
           expect(resp.body.orders).to.be.an('array');
           expect(resp.body.orders.length).to.equal(0);
+          done();
+        });
+    });
+  });
+
+  describe('Test for order pagination A - GET', () => {
+    // before each hook to clean and insert data to the db
+    beforeEach(async () => {
+      await clearMeals();
+      await clearOrders();
+      await insertSeedMeal(existingMeal);
+      await insertSeedOrder({ ...existingOrder, userId: 2 });
+      await insertSeedOrder({ ...existingOrder, userId: 2 });
+      await insertSeedOrder({ ...validOrder2, userId: 2 });
+      await insertSeedOrder({ ...validOrder1, userId: 2 });
+    });
+
+    it('should return paginated data for customer', (done) => {
+      request(app)
+        .get('/api/v1/orders?limit=1&offset=0')
+        .set({
+          'x-access-token': customerToken,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(200);
+          expect(resp.body.orders).to.be.an('array');
+          expect(resp.body.orders.length).to.equal(1);
+          expect(resp.body.orders[0].id).to.equal(4);
+          expect(resp.body.orders[0].mealId).to.equal(1);
+          expect(resp.body.orders[0].meal.name).to.equal('Curry Rice');
+          expect(resp.body.orders[0].status).to.equal('pending');
+          expect(resp.body.orders[0].image).to.not.equal(null);
+          expect(resp.body.pagination.totalCount).to.equal(4);
+          expect(resp.body.pagination.limit).to.equal(1);
+          expect(resp.body.pagination.offset).to.equal(0);
+          expect(resp.body.pagination.noPage).to.equal(4);
+          expect(resp.body.pagination.pageNo).to.equal(1);
+          done();
+        });
+    });
+  });
+
+  describe('Test for order pagination B - GET', () => {
+    beforeEach(async () => {
+      await clearMeals();
+      await clearOrders();
+      await insertSeedMeal({ ...existingMeal, userId: 3 });
+      await insertSeedOrder({ ...existingOrder, userId: 2 });
+      await insertSeedOrder({ ...existingOrder, userId: 2 });
+      await insertSeedOrder({ ...validOrder2, userId: 3 });
+      await insertSeedOrder({ ...validOrder1, userId: 3 });
+    });
+
+    it('should return paginated data for caterer', (done) => {
+      request(app)
+        .get('/api/v1/orders?limit=1&offset=0')
+        .set({
+          'x-access-token': catererToken2,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(200);
+          expect(resp.body.orders).to.be.an('array');
+          expect(resp.body.orders.length).to.equal(1);
+          expect(resp.body.orders[0].id).to.equal(4);
+          expect(resp.body.orders[0].mealId).to.equal(1);
+          expect(resp.body.orders[0].meal.name).to.equal('Curry Rice');
+          expect(resp.body.orders[0].status).to.equal('pending');
+          expect(resp.body.orders[0].image).to.not.equal(null);
+          expect(resp.body.pagination.totalCount).to.equal(4);
+          expect(resp.body.pagination.limit).to.equal(1);
+          expect(resp.body.pagination.offset).to.equal(0);
+          expect(resp.body.pagination.noPage).to.equal(4);
+          expect(resp.body.pagination.pageNo).to.equal(1);
+          done();
+        });
+    });
+  });
+
+  describe('Test for order pagination C - GET', () => {
+    beforeEach(async () => {
+      await clearMeals();
+      await clearOrders();
+      await insertSeedMeal({ ...existingMeal, userId: 3 });
+      await insertSeedOrder({ ...existingOrder, userId: 2 });
+      await insertSeedOrder({ ...existingOrder, userId: 2 });
+      await insertSeedOrder({ ...validOrder2, userId: 3 });
+      await insertSeedOrder({ ...validOrder1, userId: 3 });
+    });
+
+    it('should return paginated data for admin', (done) => {
+      request(app)
+        .get('/api/v1/orders?limit=2&offset=0')
+        .set({
+          'x-access-token': adminToken,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(200);
+          expect(resp.body.orders).to.be.an('array');
+          expect(resp.body.orders.length).to.equal(2);
+          expect(resp.body.orders[0].id).to.equal(4);
+          expect(resp.body.orders[0].mealId).to.equal(1);
+          expect(resp.body.orders[0].meal.name).to.equal('Curry Rice');
+          expect(resp.body.orders[0].status).to.equal('pending');
+          expect(resp.body.orders[0].image).to.not.equal(null);
+          expect(resp.body.pagination.totalCount).to.equal(4);
+          expect(resp.body.pagination.limit).to.equal(2);
+          expect(resp.body.pagination.offset).to.equal(0);
+          expect(resp.body.pagination.noPage).to.equal(2);
+          expect(resp.body.pagination.pageNo).to.equal(1);
+          done();
+        });
+    });
+  });
+
+  describe('Limit and Offset Validation', () => {
+    it('should return error if limit or offset is invalid', (done) => {
+      request(app)
+        .get('/api/v1/orders?limit=abc&offset=xyz')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .end((err, resp) => {
+          expect(resp.body.errors.limit.statusCode).to.equal(400);
+          expect(resp.body.errors.limit.message).to.equal('Limit is invalid');
+          expect(resp.body.errors.offset.statusCode).to.equal(400);
+          expect(resp.body.errors.offset.message).to.equal('Offset is invalid');
           done();
         });
     });

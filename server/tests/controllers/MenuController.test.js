@@ -10,6 +10,8 @@ import {
   currentMenu,
   insertSeedMenu,
   clearMenus,
+  validMenu1,
+  validMenu2,
 } from '../../utils/seeders/menuSeeder';
 
 import {
@@ -487,25 +489,6 @@ describe('Test Suite for Menu Controller', () => {
         });
     });
 
-    it('should contain meal objects for caterer', (done) => {
-      request(app)
-        .get('/api/v1/menu')
-        .set({
-          'x-access-token': catererToken,
-        })
-        .end((err, resp) => {
-          expect(resp.status).to.equal(200);
-          expect(resp.body.menus).to.be.an('array');
-          expect(resp.body.menus[0].meals).to.be.an('array');
-          expect(resp.body.menus[0].meals[0].id).to.equal(1);
-          expect(resp.body.menus[0].meals[0].name).to.equal(existingMeal.name);
-          expect(resp.body.menus[0].meals[0].price).to.equal(existingMeal.price);
-          expect(resp.body.menus[0].meals[0].image).to.equal(existingMeal.image);
-          expect(resp.body.menus[0].meals.length).to.be.greaterThan(1);
-          done();
-        });
-    });
-
     it('should contain meal objects for customer', (done) => {
       request(app)
         .get('/api/v1/menu')
@@ -521,6 +504,115 @@ describe('Test Suite for Menu Controller', () => {
           expect(resp.body.menu.meals[0].price).to.equal(existingMeal.price);
           expect(resp.body.menu.meals[0].image).to.equal(existingMeal.image);
           expect(resp.body.menu.meals.length).to.be.greaterThan(1);
+          done();
+        });
+    });
+
+    it('should contain meal objects for caterer when getting a single menu', (done) => {
+      request(app)
+        .get('/api/v1/menu/1')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(200);
+          expect(resp.body.menu).to.be.an('object');
+          expect(resp.body.menu.meals).to.be.an('array');
+          expect(resp.body.menu.meals[0].id).to.equal(1);
+          expect(resp.body.menu.meals[0].name).to.equal(existingMeal.name);
+          expect(resp.body.menu.meals[0].price).to.equal(existingMeal.price);
+          expect(resp.body.menu.meals[0].image).to.equal(existingMeal.image);
+          expect(resp.body.menu.meals.length).to.be.greaterThan(1);
+          done();
+        });
+    });
+  });
+
+  describe('Test suite for pagination', () => {
+    beforeEach(async () => {
+      await clearMenus();
+      await clearMeals();
+      await insertSeedMeal(existingMeal);
+      await insertSeedMeal(validMeal1);
+      await insertSeedMeal(validMeal2);
+      await insertSeedMenu(existingMenu);
+      await insertSeedMenu(validMenu1);
+      await insertSeedMenu(validMenu2);
+      await insertSeedMenu({ ...currentMenu, mealIds: [1, 2] });
+    });
+    it('should return paginated meals data for customer', (done) => {
+      request(app)
+        .get('/api/v1/menu?offset=0&limit=1')
+        .set({
+          'x-access-token': customerToken,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(200);
+          expect(resp.body.pagination).to.be.an('object');
+          expect(resp.body.pagination.totalCount).to.equal(2);
+          expect(resp.body.pagination.limit).to.equal(1);
+          expect(resp.body.pagination.offset).to.equal(0);
+          expect(resp.body.pagination.noPage).to.equal(2);
+          expect(resp.body.pagination.pageNo).to.equal(1);
+          expect(resp.body.menu.meals[0].id).to.equal(1);
+          expect(resp.body.menu.meals[0].name).to.equal(existingMeal.name);
+          expect(resp.body.menu.meals[0].price).to.equal(existingMeal.price);
+          expect(resp.body.menu.meals[0].image).to.equal(existingMeal.image);
+          done();
+        });
+    });
+    it('should return paginated data for caterer', (done) => {
+      request(app)
+        .get('/api/v1/menu?offset=0&limit=2')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(200);
+          expect(resp.body.pagination).to.be.an('object');
+          expect(resp.body.pagination.totalCount).to.equal(4);
+          expect(resp.body.pagination.limit).to.equal(2);
+          expect(resp.body.pagination.offset).to.equal(0);
+          expect(resp.body.pagination.noPage).to.equal(2);
+          expect(resp.body.pagination.pageNo).to.equal(1);
+          done();
+        });
+    });
+    it('should return paginated data for caterer when getting single menu', (done) => {
+      request(app)
+        .get('/api/v1/menu/4?offset=0&limit=1')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .end((err, resp) => {
+          expect(resp.status).to.equal(200);
+          expect(resp.body.pagination).to.be.an('object');
+          expect(resp.body.pagination.totalCount).to.equal(2);
+          expect(resp.body.pagination.limit).to.equal(1);
+          expect(resp.body.pagination.offset).to.equal(0);
+          expect(resp.body.pagination.noPage).to.equal(2);
+          expect(resp.body.pagination.pageNo).to.equal(1);
+          expect(resp.body.menu.meals[0].id).to.equal(1);
+          expect(resp.body.menu.meals[0].name).to.equal(existingMeal.name);
+          expect(resp.body.menu.meals[0].price).to.equal(existingMeal.price);
+          expect(resp.body.menu.meals[0].image).to.equal(existingMeal.image);
+          done();
+        });
+    });
+  });
+
+  describe('Limit and Offset Validation', () => {
+    it('should return error if limit or offset is invalid', (done) => {
+      request(app)
+        .get('/api/v1/menu?limit=abc&offset=xyz')
+        .set({
+          'x-access-token': catererToken,
+        })
+        .end((err, resp) => {
+          expect(resp.body.errors.limit.statusCode).to.equal(400);
+          expect(resp.body.errors.limit.message).to.equal('Limit is invalid');
+          expect(resp.body.errors.offset.statusCode).to.equal(400);
+          expect(resp.body.errors.offset.message).to.equal('Offset is invalid');
           done();
         });
     });

@@ -6,7 +6,7 @@ const mealReducer = (state = initialState.meals, action) => {
     case types.SAVE_MEAL_SUCCESS:
       return {
         ...state,
-        meals: [...state.meals.filter(m => m.id !== action.meal.id), action.meal],
+        meals: [action.meal, ...state.meals.filter(m => m.id !== action.meal.id)],
         errors: {},
       };
 

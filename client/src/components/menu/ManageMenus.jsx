@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux';
 import { NavLink, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Main from '../Main';
-import { getMenus } from '../../actions/menuActions';
 import MenuList from './MenuList';
 
 export class ManageMenus extends React.Component {
@@ -51,15 +50,5 @@ const mapStateToProps = state => (
   }
 );
 
-/**
- * Maps actions for component
- * @param {function} dispatch
- * @returns {object} actions retrieved from redux actions
- */
-const mapDispatchToProps = dispatch => (
-  {
-    actions: bindActionCreators({ getMenus }, dispatch),
-  }
-);
 
-export default connect(mapStateToProps, mapDispatchToProps)(ManageMenus);
+export default connect(mapStateToProps)(ManageMenus);

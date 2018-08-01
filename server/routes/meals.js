@@ -4,6 +4,7 @@ import 'babel-polyfill';
 import MealController from '../controllers/MealController';
 import validateAccount from '../middlewares/users/validateAccount';
 import ValidateMeal from '../middlewares/meals/validateMeal';
+import ValidateQuery from '../middlewares/validateQuery';
 import ErrorHandler from '../middlewares/ErrorHandler';
 import AsyncWrapper from '../utils/AsyncWrapper';
 
@@ -42,13 +43,17 @@ const meals = (router) => {
   );
 
   // meal router to handle get requests
-  router.get('/meals', validateAccount.user, validateAccount.caterer, AsyncWrapper(MealController.get));
+  router.get(
+    '/meals', validateAccount.user, validateAccount.caterer,
+    ValidateQuery.validateLimit, ValidateQuery.validateOffset,
+    ErrorHandler.handleErrors, AsyncWrapper(MealController.get),
+  );
 
   // meal router to handle delete requests
   router.delete(
     '/meals/:id', validateAccount.user, validateAccount.caterer,
-    ValidateMeal.idExists, ValidateMeal.validateAccess, ErrorHandler.handleErrors,
-    AsyncWrapper(MealController.delete),
+    ValidateMeal.idExists, ValidateMeal.validateAccess,
+    ErrorHandler.handleErrors, AsyncWrapper(MealController.delete),
   );
 };
 

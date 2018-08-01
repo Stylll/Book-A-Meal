@@ -1,7 +1,9 @@
 import { isEmpty } from 'lodash';
+import { Op, Sequelize } from 'sequelize';
 import { getNormalDate } from '../utils/dateBeautifier';
 import MealUtils from '../utils/meals/mealUtils';
 import { Menus as MenuModel, Meals as MealModel } from '../models';
+import paginator from '../utils/paginator';
 
 /**
  * Menu model class
@@ -18,7 +20,9 @@ class Menus {
     if (!menu.date.trim()) return { err: new Error('Menu date is required') };
 
     // check if date is valid
-    if (!getNormalDate(menu.date.trim())) return { err: new Error('Menu date is invalid') };
+    if (!getNormalDate(menu.date.trim())) {
+      return { err: new Error('Menu date is invalid') };
+    }
 
     // check if menu date exists
 
@@ -29,7 +33,9 @@ class Menus {
     if (!menu.mealIds) return { err: new Error('Meal Ids are required') };
 
     // check if mealIds are in an array
-    if (!Array.isArray(menu.mealIds)) return { err: new Error('Meal Ids should be in an array') };
+    if (!Array.isArray(menu.mealIds)) {
+      return { err: new Error('Meal Ids should be in an array') };
+    }
 
     // get list of real meals
     const realMeals = await MealUtils.getRealMeals(menu.mealIds);
@@ -59,16 +65,22 @@ class Menus {
     // check if menu exists
 
     // check if date is provided
-    if (menu.date && !menu.date.trim()) return { err: new Error('Menu date is required') };
+    if (menu.date && !menu.date.trim()) {
+      return { err: new Error('Menu date is required') };
+    }
 
     // check if date is valid
-    if (menu.date && !getNormalDate(menu.date.trim())) return { err: new Error('Menu date is invalid') };
+    if (menu.date && !getNormalDate(menu.date.trim())) {
+      return { err: new Error('Menu date is invalid') };
+    }
 
     // check if mealIds are provided
     if (!menu.mealIds) return { err: new Error('Meal Ids are required') };
 
     // check if mealIds are in an array
-    if (!Array.isArray(menu.mealIds)) return { err: new Error('Meal Ids should be in an array') };
+    if (!Array.isArray(menu.mealIds)) {
+      return { err: new Error('Meal Ids should be in an array') };
+    }
 
     // populate menu to be updated with new data
 
@@ -131,17 +143,18 @@ class Menus {
    * @param {date} date
    * @returns {array} [menus] | {err}
    */
-  static getByDate(date) {
+  static getByDate(date, offset = 0, limit = 10) {
     // get normal date format from date passed
     const normalDate = getNormalDate(date);
-
     // check if date is valid
     if (!normalDate) return { err: new Error('Menu date is invalid') };
 
     // filter for result by normalDate
-    return MenuModel.findAll({
+    return MenuModel.findAndCountAll({
       where: {
-        date: normalDate,
+        id: {
+          [Op.eq]: Sequelize.literal(`(select "id" from "Menus" where "date" = '${normalDate}')`),
+        },
       },
       order: [
         ['id', 'DESC'],
@@ -149,22 +162,36 @@ class Menus {
       include: [{
         model: MealModel,
         as: 'meals',
-        attributes: { exclude: ['createdAt', 'updatedAt', 'MenuMeals'] },
+        attributes: {
+          exclude: ['createdAt', 'updatedAt', 'MenuMeals', 'deletedAt'],
+        },
+        order: [
+          ['id', 'DESC'],
+        ],
       }],
       attributes: { exclude: ['createdAt', 'updatedAt'] },
+      offset,
+      limit,
+      subQuery: false,
     })
       .then((returnedMenu) => {
-        if (isEmpty(returnedMenu)) {
-          return null;
+        if (isEmpty(returnedMenu.rows)) {
+          return {
+            menu: {},
+            pagination: paginator(limit, offset, 0),
+          };
         }
-        return returnedMenu[0];
+        return {
+          menu: returnedMenu.rows[0],
+          pagination: paginator(limit, offset, returnedMenu.count),
+        };
       })
       .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
 
-  static getByUserId(userId) {
-    // filter for result by normalDate
-    return MenuModel.findAll({
+  static getByUserId(userId, offset = 0, limit = 10) {
+    // filter for result by user id
+    return MenuModel.findAndCountAll({
       order: [
         ['id', 'DESC'],
       ],
@@ -174,16 +201,23 @@ class Menus {
         where: {
           userId,
         },
-        required: false,
         attributes: { exclude: ['createdAt', 'updatedAt', 'MenuMeals'] },
       }],
       attributes: { exclude: ['createdAt', 'updatedAt'] },
+      limit,
+      offset,
     })
       .then((returnedMenu) => {
-        if (isEmpty(returnedMenu)) {
-          return [];
+        if (isEmpty(returnedMenu.rows)) {
+          return {
+            menus: [],
+            pagination: paginator(limit, offset, 0),
+          };
         }
-        return returnedMenu;
+        return {
+          menus: returnedMenu.rows,
+          pagination: paginator(limit, offset, returnedMenu.rows),
+        };
       })
       .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
@@ -192,23 +226,26 @@ class Menus {
    * static method to get all menus in the db
    * @returns {array} [menus]
    */
-  static getAll() {
-    return MenuModel.findAll({
+  static getAll(offset = 0, limit = 10) {
+    return MenuModel.findAndCountAll({
       order: [
         ['id', 'DESC'],
       ],
-      include: [{
-        model: MealModel,
-        as: 'meals',
-        attributes: { exclude: ['createdAt', 'updatedAt', 'MenuMeals'] },
-      }],
       attributes: { exclude: ['createdAt', 'updatedAt'] },
+      limit,
+      offset,
     })
       .then((returnedMenu) => {
-        if (isEmpty(returnedMenu)) {
-          return [];
+        if (isEmpty(returnedMenu.rows)) {
+          return {
+            menus: [],
+            pagination: paginator(limit, offset, 0),
+          };
         }
-        return returnedMenu;
+        return {
+          menus: returnedMenu.rows,
+          pagination: paginator(limit, offset, returnedMenu.count),
+        };
       })
       .catch(error => ({ err: new Error(error.errors[0].message) }));
   }
