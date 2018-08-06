@@ -26,6 +26,7 @@ const setup = () => {
     handleDelete: () => Promise.resolve(),
     actions: {
       deleteMeal: () => Promise.resolve(),
+      getMeals: () => Promise.resolve(),
     },
     deleteItem: () => Promise.resolve(),
     pageSize: 8,

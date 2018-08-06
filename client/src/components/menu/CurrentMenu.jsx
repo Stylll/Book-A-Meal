@@ -13,6 +13,8 @@ export class CurrentMenu extends React.Component {
     this.state = {
       currentMenu: {},
     };
+
+    this.fetchData = this.fetchData.bind(this);
   }
 
   /**
@@ -20,7 +22,7 @@ export class CurrentMenu extends React.Component {
    * it calls the action to get latest menu record from the server
    */
   componentDidMount() {
-    this.props.actions.getMenu();
+    this.fetchData(0, 10);
   }
 
   /**
@@ -32,6 +34,16 @@ export class CurrentMenu extends React.Component {
     this.setState({
       currentMenu: nextProps.currentMenu,
     });
+  }
+
+  /**
+   * method to call action to fetch data from the server
+   * it then updates the state
+   * @param {Number} offset
+   * @param {Number} limit
+   */
+  fetchData(offset, limit) {
+    this.props.actions.getMenu(limit, offset);
   }
 
   render() {
@@ -52,9 +64,11 @@ export class CurrentMenu extends React.Component {
         }
         {this.state.currentMenu.meals &&
         <MealList meals={this.state.currentMenu.meals}
-          perPage={8} showEdit={false}
+          pagination={this.props.pagination}
+          showEdit={false}
           showDelete={false}
-          showOrder />
+          showOrder
+          fetchData={this.fetchData} />
           }
       </Main>
     );
@@ -65,6 +79,7 @@ export class CurrentMenu extends React.Component {
 CurrentMenu.propTypes = {
   currentMenu: PropTypes.object,
   actions: PropTypes.object.isRequired,
+  pagination: PropTypes.object.isRequired,
 };
 
 // default props
@@ -80,6 +95,7 @@ CurrentMenu.defaultProps = {
 const mapStateToProps = state => (
   {
     currentMenu: state.menus.currentMenu,
+    pagination: state.menus.pagination,
   }
 );
 

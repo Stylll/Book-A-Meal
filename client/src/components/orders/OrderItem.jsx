@@ -26,7 +26,7 @@ const OrderItem = ({
                   {order.meal.name}</h3>
               <h4 data-for="price"
                 data-tip={`${order.price} x ${order.quantity} = ${order.cost}`}
-                className="black-text light-text">
+                className="black-text light-text wrap-text">
               Price: &#8358;{order.price} x QTY: {order.quantity} = &#8358;{order.cost}</h4>
               {showStatus && order.status === 'canceled' &&
               <h4
