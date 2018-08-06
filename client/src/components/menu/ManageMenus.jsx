@@ -5,8 +5,29 @@ import { NavLink, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Main from '../Main';
 import MenuList from './MenuList';
+import { getMenus } from '../../actions/menuActions';
 
 export class ManageMenus extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.fetchData = this.fetchData.bind(this);
+  }
+
+  componentDidMount() {
+    this.fetchData(0, 10);
+  }
+
+  /**
+   * method to call action to fetch data from the server
+   * it then updates the state
+   * @param {Number} offset
+   * @param {Number} limit
+   */
+  fetchData(offset, limit) {
+    this.props.actions.getMenus(limit, offset);
+  }
+
   render() {
     return (
       <Main allowCaterer>
@@ -27,7 +48,11 @@ export class ManageMenus extends React.Component {
         <div className="container text-center create-menu">
           <NavLink to="/caterer/menus/edit" className="btn btn-secondary">Create Menu</NavLink>
         </div>
-        <MenuList menus={this.props.menus} perPage={4} />
+        <MenuList
+          menus={this.props.menus}
+          pagination={this.props.pagination}
+          perPage={4}
+          fetchData={this.fetchData} />
       </Main>
     );
   }
@@ -36,7 +61,8 @@ export class ManageMenus extends React.Component {
 // proptypes
 ManageMenus.propTypes = {
   actions: PropTypes.object.isRequired,
-  menus: PropTypes.array.isRequired,
+  menus: PropTypes.object.isRequired,
+  pagination: PropTypes.object.isRequired,
 };
 
 /**
@@ -47,8 +73,20 @@ ManageMenus.propTypes = {
 const mapStateToProps = state => (
   {
     menus: state.menus.menus,
+    pagination: state.menus.pagination,
+  }
+);
+
+/**
+ * Maps actions for component
+ * @param {function} dispatch
+ * @returns {object} actions retrieved from redux actions
+ */
+const mapDispatchToProps = dispatch => (
+  {
+    actions: bindActionCreators({ getMenus }, dispatch),
   }
 );
 
 
-export default connect(mapStateToProps)(ManageMenus);
+export default connect(mapStateToProps, mapDispatchToProps)(ManageMenus);

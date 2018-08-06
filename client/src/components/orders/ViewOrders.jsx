@@ -9,8 +9,23 @@ import OrderList from '../orders/OrderList';
 import { getOrders, deleteOrder } from '../../actions/orderActions';
 
 export class ViewOrders extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.fetchData = this.fetchData.bind(this);
+  }
   componentDidMount() {
-    this.props.actions.getOrders();
+    this.fetchData(0, 10);
+  }
+
+  /**
+   * method to call action to fetch data from the server
+   * it then updates the state
+   * @param {Number} offset
+   * @param {Number} limit
+   */
+  fetchData(offset, limit) {
+    this.props.actions.getOrders(limit, offset);
   }
 
   render() {
@@ -27,9 +42,10 @@ export class ViewOrders extends React.Component {
         </div>
         <OrderList
           orders={this.props.orders}
+          pagination={this.props.pagination}
           handleDelete={this.handleDelete}
           showStatus
-          perPage={8} />
+          fetchData={this.fetchData} />
       </Main>
     );
   }
@@ -40,6 +56,7 @@ ViewOrders.propTypes = {
   actions: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   orders: PropTypes.array.isRequired,
+  pagination: PropTypes.array.isRequired,
 };
 
 /**
@@ -51,6 +68,7 @@ const mapStateToProps = state => (
   {
     errors: state.orders.customerOrders.errors,
     orders: state.orders.customerOrders.orders,
+    pagination: state.orders.customerOrders.pagination,
   }
 );
 

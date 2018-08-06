@@ -181,7 +181,7 @@ class OrderController {
       return response.status(200)
         .json({
           orders: orderSummary.rows,
-          pagination: paginator(limit, offset, orderSummary.count),
+          pagination: paginator(limit, offset, orderSummary.count.length),
         });
     }
 

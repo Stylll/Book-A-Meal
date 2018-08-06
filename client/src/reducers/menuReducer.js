@@ -20,12 +20,20 @@ const menuReducer = (state = initialState.menus, action) => {
       return {
         ...state,
         menus: action.menus,
+        pagination: action.pagination,
       };
 
     case types.GET_CURR_MENU_SUCCESS:
       return {
         ...state,
         currentMenu: action.menu,
+      };
+
+    case types.GET_SINGLE_MENU_SUCCESS:
+      return {
+        ...state,
+        menu: action.menu,
+        pagination: action.pagination,
       };
 
     case types.LOGOUT:

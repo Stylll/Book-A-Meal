@@ -5,49 +5,46 @@ import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import Main from '../Main';
 import MealList from '../meals/MealList';
+import { getMenuById } from '../../actions/menuActions';
 
 export class ViewMeals extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      menu: {
-        meals: [],
-      },
+      menu: {},
+      pagination: {},
     };
 
-    this.setup = this.setup.bind(this);
+    this.fetchData = this.fetchData.bind(this);
   }
 
   /**
    * this is called after the component is mounted
    */
   componentDidMount() {
-    this.setup(this.props.menus);
+    this.fetchData(0, 4);
   }
 
-  /**
-   * this is called when the component is about to receive new props
-   * @param {object} nextProps
-   */
   componentWillReceiveProps(nextProps) {
-    this.setup(nextProps.menus);
+    if (isEmpty(nextProps.menu)) {
+      this.props.history.push('/caterer/menus');
+    }
+    this.setState({
+      menu: nextProps.menu,
+      pagination: nextProps.pagination,
+    });
   }
 
   /**
-   * class method to load menu into state if it exists.
-   * @param {array} menu
-   * uses the id provided in the url to find a matching menu.
-   * then updates the state with the records.
+   * method to call action to fetch data from the server
+   * it then updates the state
+   * @param {Number} offset
+   * @param {Number} limit
    */
-  setup(menus) {
+  fetchData(offset, limit) {
     const { id } = this.props.match.params;
-    if (id && menus.length > 0) {
-      const menu = menus.find(m => m.id === Number.parseInt(id, 10));
-      if (menu) {
-        this.setState({
-          menu,
-        });
-      }
+    if (id) {
+      this.props.actions.getMenuById(id, limit, offset);
     }
   }
 
@@ -60,7 +57,12 @@ export class ViewMeals extends React.Component {
           <h2 className="black-text bold-text text-center">{this.state.menu.name}</h2>
         }
         </div>
-        <MealList meals={this.state.menu.meals} perPage={8} showEdit={false} showDelete={false} />
+        <MealList
+          meals={this.state.menu.meals}
+          pagination={this.state.pagination}
+          showEdit={false}
+          showDelete={false}
+          fetchData={this.fetchData} />
       </Main>
     );
   }
@@ -68,8 +70,11 @@ export class ViewMeals extends React.Component {
 
 // proptypes
 ViewMeals.propTypes = {
-  menus: PropTypes.array.isRequired,
+  menu: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
+  actions: PropTypes.object.isRequired,
+  pagination: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 /**
@@ -79,9 +84,21 @@ ViewMeals.propTypes = {
  */
 const mapStateToProps = state => (
   {
-    menus: state.menus.menus,
+    menu: state.menus.menu,
+    pagination: state.menus.pagination,
+  }
+);
+
+/**
+ * Maps actions for component
+ * @param {function} dispatch
+ * @returns {object} actions retrieved from redux actions
+ */
+const mapDispatchToProps = dispatch => (
+  {
+    actions: bindActionCreators({ getMenuById }, dispatch),
   }
 );
 
 
-export default connect(mapStateToProps)(ViewMeals);
+export default connect(mapStateToProps, mapDispatchToProps)(ViewMeals);

@@ -14,6 +14,7 @@ export class CatererPendingOrders extends React.Component {
   constructor(props) {
     super(props);
 
+    this.fetchData = this.fetchData.bind(this);
     this.declineItem = this.declineItem.bind(this);
     this.approveItem = this.approveItem.bind(this);
     this.handleDecline = this.handleDecline.bind(this);
@@ -21,7 +22,18 @@ export class CatererPendingOrders extends React.Component {
   }
 
   componentDidMount() {
-    this.props.actions.getOrders();
+    this.fetchData(0, 10);
+  }
+
+  /**
+   * method to call action to fetch data from the server
+   * it then updates the state
+   * @param {Number} offset
+   * @param {Number} limit
+   */
+  fetchData(offset, limit) {
+    const status = 'pending';
+    this.props.actions.getOrders(limit, offset, status);
   }
 
   /**
@@ -121,13 +133,14 @@ export class CatererPendingOrders extends React.Component {
           </form></h3>
         </div>
         <OrderList
-          orders={this.props.orders.filter(order => order.status === 'pending')}
+          orders={this.props.orders}
+          pagination={this.props.pagination}
           handleDecline={this.handleDecline}
           handleApprove={this.handleApprove}
           showApprove
           showDecline
           showCustomer
-          perPage={4} />
+          fetchData={this.fetchData} />
       </Main>
     );
   }
@@ -138,6 +151,7 @@ CatererPendingOrders.propTypes = {
   actions: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   orders: PropTypes.array.isRequired,
+  pagination: PropTypes.object.isRequired,
 };
 
 /**
@@ -149,6 +163,7 @@ const mapStateToProps = state => (
   {
     errors: state.orders.catererOrders.errors,
     orders: state.orders.catererOrders.orders,
+    pagination: state.orders.catererOrders.pagination,
   }
 );
 

@@ -9,8 +9,23 @@ import OrderList from '../orders/OrderList';
 import { getOrders, deleteOrder } from '../../actions/orderActions';
 
 export class CatererViewOrders extends React.Component {
+  constructor(props) {
+    super(props);
+    this.fetchData = this.fetchData.bind(this);
+  }
+
   componentDidMount() {
-    this.props.actions.getOrders();
+    this.fetchData(0, 10);
+  }
+
+  /**
+   * method to call action to fetch data from the server
+   * it then updates the state
+   * @param {Number} offset
+   * @param {Number} limit
+   */
+  fetchData(offset, limit) {
+    this.props.actions.getOrders(limit, offset);
   }
 
   render() {
@@ -21,15 +36,17 @@ export class CatererViewOrders extends React.Component {
           {/* Date Filter Box Starts */}
           <h3 className="black-text normal-text">Filter orders by date
           <form>
-            <input type="date" className="datepicker textbox order-textbox" placeholder="Click here to select by date..." />
+            <input type="date" className="datepicker textbox order-textbox"
+              placeholder="Click here to select by date..." />
             <input type="submit" value="GO" className="btn btn-secondary" />
           </form></h3>
         </div>
         <OrderList
           orders={this.props.orders}
+          pagination={this.props.pagination}
           showStatus
           showCustomer
-          perPage={8} />
+          fetchData={this.fetchData} />
       </Main>
     );
   }
@@ -40,6 +57,7 @@ CatererViewOrders.propTypes = {
   actions: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   orders: PropTypes.array.isRequired,
+  pagination: PropTypes.object.isRequired,
 };
 
 /**
@@ -51,6 +69,7 @@ const mapStateToProps = state => (
   {
     errors: state.orders.catererOrders.errors,
     orders: state.orders.catererOrders.orders,
+    pagination: state.orders.catererOrders.pagination,
   }
 );
 

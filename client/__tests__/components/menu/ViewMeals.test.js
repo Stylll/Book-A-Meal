@@ -20,6 +20,9 @@ const store = mockStore({
 
 const setup = () => {
   const props = {
+    actions: {
+      getMenuById: () => Promise.resolve(),
+    },
     match: {
       params: {
         id: 2,

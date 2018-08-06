@@ -28,6 +28,7 @@ const setup = () => {
     handleDelete: () => Promise.resolve(),
     actions: {
       deleteMenu: () => Promise.resolve(),
+      getMenus: () => Promise.resolve(),
     },
     deleteItem: () => Promise.resolve(),
     pageSize: 8,
