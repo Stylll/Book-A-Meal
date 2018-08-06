@@ -65,6 +65,7 @@ class MenuController {
     const newMenu = await menus.update({ id: oldMenu.id, mealIds });
 
     if (newMenu && !newMenu.err) {
+      Notifications.customerMenuNotifier(request.headers.host, newMenu);
       return response.status(200)
         .json({ menu: newMenu, message: 'Updated successfully' });
     }

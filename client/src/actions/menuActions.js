@@ -116,9 +116,9 @@ const getMenusFailed = (data) => {
 /**
  * action to handle get menu for customer
  */
-const getMenu = () => (dispatch) => {
+const getMenu = (limit = 10, offset = 0) => (dispatch) => {
   dispatch(showLoading());
-  return axios.get(api.menu.get)
+  return axios.get(api.menu.get(limit, offset))
     .then((resp) => {
       dispatch(getMenuSuccess(resp.data));
       dispatch(hideLoading());
@@ -138,6 +138,7 @@ const getMenuSuccess = data => (
   {
     type: types.GET_CURR_MENU_SUCCESS,
     menu: data.menu,
+    pagination: data.pagination,
   }
 );
 

@@ -13,13 +13,13 @@ import MealList from './MealList';
 export class ManageMeals extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-
-    };
-
     this.deleteItem = this.deleteItem.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.fetchData = this.fetchData.bind(this);
+  }
+
+  componentDidMount() {
+    this.fetchData(0, 10);
   }
 
   /**
