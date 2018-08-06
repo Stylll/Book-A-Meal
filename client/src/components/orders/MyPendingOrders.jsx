@@ -14,12 +14,24 @@ export class MyPendingOrders extends React.Component {
   constructor(props) {
     super(props);
 
+    this.fetchData = this.fetchData.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
   }
 
   componentDidMount() {
-    this.props.actions.getOrders();
+    this.fetchData(0, 10);
+  }
+
+  /**
+   * method to call action to fetch data from the server
+   * it then updates the state
+   * @param {Number} offset
+   * @param {Number} limit
+   */
+  fetchData(offset, limit) {
+    const status = 'pending';
+    this.props.actions.getOrders(limit, offset, status);
   }
 
   deleteItem(order) {
@@ -70,11 +82,12 @@ export class MyPendingOrders extends React.Component {
           </form></h3>
         </div>
         <OrderList
-          orders={this.props.orders.filter(order => order.status === 'pending')}
+          orders={this.props.orders}
+          pagination={this.props.pagination}
           handleDelete={this.handleDelete}
           showEdit
           showDelete
-          perPage={4} />
+          fetchData={this.fetchData} />
       </Main>
     );
   }
@@ -85,6 +98,7 @@ MyPendingOrders.propTypes = {
   actions: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   orders: PropTypes.array.isRequired,
+  pagination: PropTypes.object.isRequired,
 };
 
 /**
@@ -96,6 +110,7 @@ const mapStateToProps = state => (
   {
     errors: state.orders.customerOrders.errors,
     orders: state.orders.customerOrders.orders,
+    pagination: state.orders.customerOrders.pagination,
   }
 );
 

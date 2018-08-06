@@ -74,9 +74,9 @@ const saveMenuFailed = (errorData) => {
 /**
  * action to handle get menus for caterer
  */
-const getMenus = () => (dispatch) => {
+const getMenus = (limit = 10, offset = 0) => (dispatch) => {
   dispatch(showLoading());
-  return axios.get(api.menu.get)
+  return axios.get(api.menu.get(limit, offset))
     .then((resp) => {
       dispatch(getMenusSuccess(resp.data));
       dispatch(hideLoading());
@@ -96,6 +96,7 @@ const getMenusSuccess = data => (
   {
     type: types.GET_MENU_SUCCESS,
     menus: data.menus,
+    pagination: data.pagination,
   }
 );
 
@@ -105,7 +106,7 @@ const getMenusSuccess = data => (
  * @return {object} action object
  */
 const getMenusFailed = (data) => {
-  toastr.error('Unexpected Error', data.message || 'Could not get menus');
+  toastr.error('Error', data.message || 'Could not get menus');
   return {
     type: types.GET_MENU_FAILED,
     errors: data,
@@ -141,6 +142,48 @@ const getMenuSuccess = data => (
 );
 
 /**
+ * action to handle get menu by id
+ */
+const getMenuById = (id, limit = 10, offset = 0) => (dispatch) => {
+  dispatch(showLoading());
+  return axios.get(api.menu.getById(id, limit, offset))
+    .then((resp) => {
+      dispatch(getMenuByIdSuccess(resp.data));
+      dispatch(hideLoading());
+    })
+    .catch((err) => {
+      dispatch(getMenuByIdFailed(err.response.data));
+      dispatch(hideLoading());
+    });
+};
+
+/**
+ * Action handle successful get menu request
+ * @param {object} data
+ * @returns {object} action object
+ */
+const getMenuByIdSuccess = data => (
+  {
+    type: types.GET_SINGLE_MENU_SUCCESS,
+    menu: data.menu,
+    pagination: data.pagination,
+  }
+);
+
+/**
+ * action to handle failed menu get request
+ * @param {object} data
+ * @return {object} action object
+ */
+const getMenuByIdFailed = (data) => {
+  toastr.error('Error', data.message || 'Could not get menu');
+  return {
+    type: types.GET_SINGLE_MENU_FAILED,
+    errors: data,
+  };
+};
+
+/**
  * action to handle failed menu get request for customer
  * @param {object} data
  * @return {object} action object
@@ -163,4 +206,7 @@ export {
   getMenu,
   getMenuSuccess,
   getMenuFailed,
+  getMenuById,
+  getMenuByIdSuccess,
+  getMenuByIdFailed,
 };

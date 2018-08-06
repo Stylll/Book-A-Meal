@@ -74,9 +74,9 @@ const saveOrderFailed = (data) => {
  * action to retrieve customer orders from the server
  * @returns dispatch function
  */
-const getOrders = () => (dispatch) => {
+const getOrders = (limit = 10, offset = 0, status = '') => (dispatch) => {
   dispatch(showLoading());
-  return axios.get(api.orders.get)
+  return axios.get(api.orders.get(limit, offset, status))
     .then((response) => {
       dispatch(getOrdersSuccess(response.data));
       dispatch(hideLoading());
@@ -95,6 +95,7 @@ const getOrders = () => (dispatch) => {
 const getOrdersSuccess = data => ({
   type: types.GET_ORDERS_SUCCESS,
   orders: data.orders,
+  pagination: data.pagination,
 });
 
 /**
@@ -168,9 +169,9 @@ const deleteOrderFailed = (data) => {
  * action to retrieve customer orders summary from the server
  * @returns dispatch function
  */
-const getOrderSummary = () => (dispatch) => {
+const getOrderSummary = (limit, offset) => (dispatch) => {
   dispatch(showLoading());
-  return axios.get(api.orders.summary)
+  return axios.get(api.orders.summary(limit, offset))
     .then((response) => {
       dispatch(getOrderSummarySuccess(response.data));
       dispatch(hideLoading());
@@ -189,6 +190,7 @@ const getOrderSummary = () => (dispatch) => {
 const getOrderSummarySuccess = data => ({
   type: types.GET_ORDER_SUMMARY_SUCCESS,
   summary: data.orders,
+  pagination: data.pagination,
 });
 
 /**

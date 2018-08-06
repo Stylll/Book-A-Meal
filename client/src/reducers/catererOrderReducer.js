@@ -45,6 +45,7 @@ const orderReducer = (state = initialState.orders, action) => {
             orders: action.orders,
             errors: {},
             summary: state.catererOrders.summary,
+            pagination: action.pagination,
           },
         };
 
@@ -80,6 +81,7 @@ const orderReducer = (state = initialState.orders, action) => {
             orders: state.catererOrders.orders,
             errors: {},
             summary: action.summary,
+            pagination: action.pagination,
           },
         };
 

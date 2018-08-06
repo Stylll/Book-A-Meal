@@ -20,6 +20,7 @@ const mealReducer = (state = initialState.meals, action) => {
       return {
         ...state,
         meals: action.meals,
+        pagination: action.pagination,
       };
 
     case types.GET_MEAL_FAILED:

@@ -48,6 +48,7 @@ const orderReducer = (state = initialState.orders, action) => {
           customerOrders: {
             orders: action.orders,
             errors: {},
+            pagination: action.pagination,
           },
         };
 

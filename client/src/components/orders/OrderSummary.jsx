@@ -9,8 +9,23 @@ import SummaryList from '../orders/SummaryList';
 import { getOrderSummary } from '../../actions/orderActions';
 
 export class OrderSummary extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.fetchData = this.fetchData.bind(this);
+  }
   componentDidMount() {
-    this.props.actions.getOrderSummary();
+    this.fetchData(0, 1);
+  }
+
+  /**
+   * method to call action to fetch data from the server
+   * it then updates the state
+   * @param {Number} offset
+   * @param {Number} limit
+   */
+  fetchData(offset, limit) {
+    this.props.actions.getOrderSummary(limit, offset);
   }
 
   render() {
@@ -27,7 +42,8 @@ export class OrderSummary extends React.Component {
         </div>
         <SummaryList
           summary={this.props.summary}
-          perPage={4} />
+          pagination={this.props.pagination}
+          fetchData={this.fetchData} />
       </Main>
     );
   }
@@ -37,6 +53,7 @@ export class OrderSummary extends React.Component {
 OrderSummary.propTypes = {
   actions: PropTypes.object.isRequired,
   summary: PropTypes.array.isRequired,
+  pagination: PropTypes.array.isRequired,
 };
 
 /**
@@ -47,6 +64,7 @@ OrderSummary.propTypes = {
 const mapStateToProps = state => (
   {
     summary: state.orders.catererOrders.summary,
+    pagination: state.orders.catererOrders.pagination,
   }
 );
 

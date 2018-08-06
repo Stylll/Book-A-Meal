@@ -105,7 +105,7 @@ describe('Test suite for Meal get Actions', () => {
       meals: getMealsResponse.meals,
     };
 
-    moxios.stubRequest(api.meals.get, {
+    moxios.stubRequest(api.meals.get(10, 0), {
       status: 200,
       response: getMealsResponse,
     });
@@ -123,7 +123,7 @@ describe('Test suite for Meal get Actions', () => {
       type: types.GET_MEAL_FAILED,
       errors: { message: getMealsFailedResponse.message },
     };
-    moxios.stubRequest(api.meals.get, {
+    moxios.stubRequest(api.meals.get(10, 0), {
       status: 500,
       response: getMealsFailedResponse,
     });

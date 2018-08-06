@@ -81,9 +81,9 @@ const saveMealFailed = (data) => {
 /**
  * action to handle getting meals for a caterer.
  */
-const getMeals = () => function (dispatch) {
+const getMeals = (limit = 10, offset = 0) => function (dispatch) {
   dispatch(showLoading());
-  return axios.get(api.meals.get)
+  return axios.get(api.meals.get(limit, offset))
     .then((resp) => {
       dispatch(getMealsSuccess(resp.data));
       dispatch(hideLoading());
@@ -102,6 +102,7 @@ const getMeals = () => function (dispatch) {
 const getMealsSuccess = data => ({
   type: types.GET_MEAL_SUCCESS,
   meals: data.meals,
+  pagination: data.pagination,
 });
 
 /**

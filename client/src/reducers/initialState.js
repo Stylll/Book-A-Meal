@@ -8,11 +8,14 @@ export default {
   meals: {
     meals: [],
     errors: {},
+    pagination: {},
   },
   menus: {
     menus: [],
+    menu: {},
     currentMenu: {},
     errors: {},
+    pagination: {},
   },
   orders: {
     isCustomer: false,
@@ -20,11 +23,13 @@ export default {
     customerOrders: {
       orders: [],
       errors: {},
+      pagination: {},
     },
     catererOrders: {
       orders: [],
       errors: {},
       summary: [],
+      pagination: {},
     },
   },
 };

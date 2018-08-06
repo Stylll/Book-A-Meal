@@ -7,7 +7,7 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { isEmpty } from 'lodash';
 import Main from '../Main';
-import { deleteMeal } from '../../actions/mealActions';
+import { getMeals, deleteMeal } from '../../actions/mealActions';
 import MealList from './MealList';
 
 export class ManageMeals extends React.Component {
@@ -19,6 +19,17 @@ export class ManageMeals extends React.Component {
 
     this.deleteItem = this.deleteItem.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.fetchData = this.fetchData.bind(this);
+  }
+
+  /**
+   * method to call action to fetch data from the server
+   * it then updates the state
+   * @param {Number} offset
+   * @param {Number} limit
+   */
+  fetchData(offset, limit) {
+    this.props.actions.getMeals(limit, offset);
   }
 
   deleteItem(mealId) {
@@ -66,7 +77,12 @@ export class ManageMeals extends React.Component {
           </div>
         </div>
         </div>
-        <MealList meals={this.props.meals} handleDelete={this.handleDelete} perPage={4} />
+        <MealList
+          meals={this.props.meals}
+          handleDelete={this.handleDelete}
+          perPage={4}
+          pagination={this.props.pagination}
+          fetchData={this.fetchData} />
       </Main>
     );
   }
@@ -76,6 +92,7 @@ export class ManageMeals extends React.Component {
 ManageMeals.propTypes = {
   actions: PropTypes.object.isRequired,
   meals: PropTypes.array.isRequired,
+  pagination: PropTypes.object.isRequired,
 };
 
 /**
@@ -86,6 +103,7 @@ ManageMeals.propTypes = {
 const mapStateToProps = state => (
   {
     meals: state.meals.meals,
+    pagination: state.meals.pagination,
   }
 );
 
@@ -96,7 +114,7 @@ const mapStateToProps = state => (
  */
 const mapDispatchToProps = dispatch => (
   {
-    actions: bindActionCreators({ deleteMeal }, dispatch),
+    actions: bindActionCreators({ getMeals, deleteMeal }, dispatch),
   }
 );
 
