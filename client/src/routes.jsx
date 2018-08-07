@@ -16,6 +16,7 @@ import CatererViewOrders from './components/orders/CatererViewOrders';
 import CatererPendingOrders from './components/orders/CatererPendingOrders';
 import OrderSummary from './components/orders/OrderSummary';
 import NotFound from './components/common/NotFound';
+import Unauthorized from './components/common/Unauthorized';
 
 export default (
   <div>
@@ -39,6 +40,7 @@ export default (
       <Route exact path="/caterer/orders" component={CatererViewOrders} />
       <Route exact path="/caterer/orders/pending" component={CatererPendingOrders} />
       <Route exact path="/caterer/orders/summary" component={OrderSummary} />
+      <Route exact path="/unauthorized" component={Unauthorized} />
       <Route exact path="/*" component={NotFound} />
     </Switch>
   </div>
