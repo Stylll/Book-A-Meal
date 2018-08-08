@@ -6,6 +6,7 @@ import path from 'path';
 import compression from 'compression';
 import routes from '../server/routes';
 import trimmer from '../server/utils/trimmer';
+import { cancelPendingOrders } from '../server/utils/jobScheduler';
 
 /* eslint-disable no-console no-unused-vars */
 /* eslint-disable no-unused-vars */
@@ -55,6 +56,7 @@ app.listen(port, (err) => {
   if (err) {
     // log to file
   } else {
+    cancelPendingOrders();
     open(address);
   }
 });
