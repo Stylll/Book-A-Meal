@@ -5,7 +5,7 @@ import { NavLink, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import Main from '../Main';
-import OrderList from '../orders/OrderList';
+import OrderTable from '../orders/OrderTable';
 import { getOrders, deleteOrder } from '../../actions/orderActions';
 
 export class ViewOrders extends React.Component {
@@ -40,7 +40,7 @@ export class ViewOrders extends React.Component {
             <input type="submit" value="GO" className="btn btn-secondary" />
           </form></h3>
         </div>
-        <OrderList
+        <OrderTable
           orders={this.props.orders}
           pagination={this.props.pagination}
           handleDelete={this.handleDelete}

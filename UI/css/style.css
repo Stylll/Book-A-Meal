@@ -177,6 +177,36 @@ nav {
   font-size: 15px;
 }
 
+  /* Table Style Starts */
+  .table-container {
+    overflow-x:auto;
+  }
+  .table {
+    margin: auto;
+    width: 90%;
+    border-style: solid !important;
+    border-width: 1px;
+  }
+  .table tr td {
+    background-color: white;
+    padding: 5px;
+    max-width: 50px;
+    border: 1px solid #4CAF50;
+  }
+
+  .table tr th {
+    background-color: white;
+    padding: 5px;
+  }
+
+  /* Table Style Ends */
+
+  .wrap-text {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
 /* Card Style Starts */
 .card {
   min-height: 100px;

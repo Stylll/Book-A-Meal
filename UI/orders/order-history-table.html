@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../css/style.css" type="text/css" />
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <title>Order History</title>
+</head>
+<body>
+  <main>
+    <!-- Navigation bar Starts -->
+    <nav class="navbar primary-bg-color flex-display-nav">
+
+        <div class="navitem flexleft">
+          <a href="../orders/order-menu.html" class="navlink logo-text navicon">Book-A-Meal</a>
+        </div>
+        <div class="navitem dropdown">
+          <a href="#" onclick="toggleNav(this); return false;" class="navlink">Menus</a>
+          <div class="dropdown-content">
+              <a href="../menus/meals.html">New Menu</a>
+              <a href="../menus/manage.html">Manage Menu</a>
+          </div>
+        </div>
+        <div class="navitem dropdown">
+          <a href="#" onclick="toggleNav(this); return false;" class="navlink">Meals</a>
+          <div class="dropdown-content">
+              <a href="../meals/edit.html">New Meal</a>
+              <a href="../meals/manage.html">Manage Meals</a>
+          </div>
+        </div>
+        <div class="navitem dropdown">
+          <a href="#" onclick="toggleNav(this); return false;" class="navlink active">Orders</a>
+          <div class="dropdown-content">
+              <a href="../orders/pending.html">Pending Orders</a>
+              <a href="../orders/order-history.html">Order History</a>
+              <a href="../orders/summary.html">Order Summary</a>
+          </div>
+        </div>
+        <div class="navitem dropdown">
+          <a href="#" onclick="toggleNav(this); return false;" class="navlink">Welcome, Stephen</a>
+          <div class="dropdown-content">
+              <a href="../users/admin-profile.html">My Profile</a>
+              <a href="../users/signin.html">Logout</a>
+          </div>
+        </div>
+        <div class="navitem flexright breadcrumb">
+          <a id='nav-trigger' href="javascript:void(0);" onclick="expandNav();" class="navlink">&#9776;</a>
+        </div>
+      </nav>
+    <!-- Navigation bar Ends -->
+    <!-- Header Content Starts -->
+    <div class="container text-center black-text">
+      <h1 class="secondary-text-color">General Order History</h1>
+      <!-- Date Filter Box Starts -->
+      <h3 class="black-text normal-text">Filter orders by date
+        <form>
+          <input type="text" class="datepicker textbox" placeholder="Click here to select by date..." />
+          <input type="submit" value="GO" class="btn btn-secondary" />
+      </form></p>
+      <!-- Date Filter Box Ends -->
+    </div>
+    <!-- Header Content Ends -->
+    <!-- Order List Starts -->
+    <div class="table-container">
+      <table class="table text-center">
+        <tr>
+          <th>#</th>
+          <th>Order No</th>
+          <th>Meal Name</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Cost</th>
+          <th>Customer name</th>
+          <th>Status</th>
+          <th>Order Date</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td class="wrap-text">#1221</td>
+            <td class="wrap-text">
+              Breadandeggsrirtioriorioeroierioiortiotroiwioeriorioeiorioroireioerioerioerioeroierfjeriofjeofjoeioijoj
+            </td>
+            <td class="wrap-text">1500</td>
+            <td class="wrap-text">2</td>
+            <td class="wrap-text">1500</td>
+            <td class="wrap-text">StephenAribabadjdjduuieuieuiruireiuuieruiuieureiuwniduniuhfeuigiurheruihehiugueghrghiuergergergergerggrgegrrgrggrrgersjsioioi</td>
+            <td class="wrap-text">Completed</td>
+            <td class="wrap-text">15, August 2018</td>
+            <td><a href="#">Edit</a></td>
+            <td><a href="#">Delete</a></td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>#1223</td>
+            <td>Jollof rice</td>
+            <td>1200</td>
+            <td>3</td>
+            <td>3600</td>
+            <td>James Cole</td>
+            <td>Pending</td>
+            <td>16, August 2018</td>
+            <td><a href="#">Edit</a></td>
+            <td><a href="#">Delete</a></td>
+        </tr>
+      </table>
+
+    </div>
+    <br />
+    <!-- Order List Ends -->
+    <!-- Navigation links Starts-->
+    <div class="container">
+        <div class="text-center pagination">
+            <a href="#">&laquo;</a>
+            <a href="#">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+            <a href="#">4</a>
+            <a href="#">5</a>
+            <a href="#">&raquo;</a>
+        </div>
+      </div>
+      <br /><br />
+      <!-- Navigation links Ends-->
+    
+
+  </main>
+  <footer>
+    <div class="secondary-bg-color container">
+      <div class="text-center white-text">
+        Book-A-Meal &copy; 2018
+      </div>
+    </div>
+  </footer>
+  
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script type="text/javascript" src="../js/script.js"></script>
+</body>
+</html>

@@ -34,7 +34,7 @@ describe('Test Suite for Manage Order Component', () => {
     const wrapper = setup();
     expect(wrapper.find('div').length).toBe(1);
     expect(wrapper.find('h1').first().text()).toBe('Customer Order History');
-    expect(wrapper.find('OrderList').length).toBe(1);
+    expect(wrapper.find('OrderTable').length).toBe(1);
   });
 
   it('should render connected component properly', () => {
