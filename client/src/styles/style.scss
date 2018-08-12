@@ -346,6 +346,31 @@ a.btn {
   font-size: 15px !important;
 }
 
+  /* Table Style Starts */
+  .table-container {
+    overflow-x: auto;
+  }
+  .table {
+    margin: auto;
+    width: 90%;
+    border-style: solid !important;
+    border-width: 1px;
+
+    tr td {
+      background-color: $white;
+      padding: 5px;
+      max-width: 50px;
+      border: 1px solid $secondary-color;
+    }
+
+    tr th {
+      background-color: $white;
+    padding: 5px;
+    }
+  }
+
+  /* Table Style Ends */
+
 /* Text Variant Starts */
 
 .bold-text {
