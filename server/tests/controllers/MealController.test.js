@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import request from 'supertest';
 import app from '../../server';
 import meals from '../../db/meals';
+import CloudUpload from '../../utils/cloudUpload';
 import Authenticate from '../../utils/authentication/authenticate';
 import {
   defaultImage,
@@ -19,6 +20,10 @@ import {
   adminUser,
   clearUsers,
 } from '../../utils/seeders/userSeeder';
+
+/* Mock imageupload function */
+const originalUploadImage = CloudUpload.uploadImage;
+CloudUpload.uploadImage = source => 'https://mockimagefile.com';
 
 
 /* eslint-disable no-undef */
@@ -180,6 +185,32 @@ describe('Test Suite for Meal Controller', () => {
           expect(resp.body.meal.image).to.equal(defaultImage);
           done();
         });
+    });
+
+    it(
+      'should call upload image function and create meal with image link',
+      (done) => {
+        request(app)
+          .post('/api/v1/meals')
+          .set({
+            'x-access-token': catererToken,
+          })
+          .set('Content-Type', 'multipart/form-data')
+          .field('name', validMeal2.name)
+          .field('price', validMeal2.price)
+          .attach('image', `${__dirname}/../assets/alert.png`)
+          .end((err, resp) => {
+            expect(resp.status).to.equal(201);
+            expect(resp.body).to.haveOwnProperty('meal');
+            expect(resp.body.meal.image).to.equal('https://mockimagefile.com');
+            done();
+          });
+      },
+    );
+
+    after((done) => {
+      CloudUpload.uploadImage = originalUploadImage;
+      done();
     });
 
     it('should return meal with proper objects and proper status code', (done) => {
