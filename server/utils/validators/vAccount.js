@@ -21,9 +21,10 @@ class account extends BaseValidator {
     const decoded = Authenticate.verifyToken(token);
     if (!decoded) {
       this.throwError('Token is invalid or has expired', 401);
+    } else {
+      // put the decoded user object in the request
+      request.decoded = decoded;
     }
-    // put the decoded user object in the request
-    request.decoded = decoded;
   }
 
   /**

@@ -1,4 +1,5 @@
 import { isEmpty } from 'lodash';
+import { Sequelize } from 'sequelize';
 import { Meals as MealModel } from '../models';
 import paginator from '../utils/paginator';
 
@@ -121,9 +122,11 @@ class Meals {
    */
   static getByName(name, paranoid = true, limit = 10, offset = 0) {
     return MealModel.findAndCountAll({
-      where: {
-        name,
-      },
+      where: Sequelize
+        .where(
+          Sequelize.fn('lower', Sequelize.col('name')),
+          Sequelize.fn('lower', name),
+        ),
       attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
       order: [['createdAt', 'DESC']],
       paranoid,

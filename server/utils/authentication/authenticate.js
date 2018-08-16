@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import logger from '../../../config/winston';
 
 dotenv.config();
 /**
@@ -15,7 +16,6 @@ class Authenticate {
     const payload = {
       id: user.id,
       username: user.username,
-      email: user.email,
       accountType: user.accountType,
     };
     const token = jwt.sign(
@@ -39,13 +39,11 @@ class Authenticate {
     let decoded;
     try {
       decoded = jwt.verify(token, process.env.SECRET);
-    } catch (err) {
-      //
+    } catch (error) {
+      logger.error(error);
+      return null;
     }
-    if (decoded) {
-      return decoded;
-    }
-    return null;
+    return decoded;
   }
 }
 
