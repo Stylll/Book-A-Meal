@@ -96,7 +96,7 @@ const validateMealInput = (state) => {
 const validateMenuInput = (state) => {
   const errors = {};
   if (isEmpty(state.mealIds)) {
-    errors.mealIds = 'Please select atleast one meal';
+    errors.mealIds = 'Meal options cannot be empty';
   } else if (/[^0-9]/gi.test(state.mealIds.join(''))) {
     errors.mealIds = 'One or more of the meal options are invalid';
   }

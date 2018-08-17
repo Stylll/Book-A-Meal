@@ -138,6 +138,14 @@ If you are interested in contributing, follow the instructions below.
 * Does the application have an API ?
   - Yes. The api documentation can be found in the link provided in the API Documentation section above.
 
+## Bugs and Limitations
+
+  - Email notifications are only sent to users when the menu for the day is set.
+  - Caterers cannot search for meals using meal name.
+  - Caterers cannot search for menu records using a specific date.
+  - Social authentication is not integrated.
+
+
 ## License and Copyright
 
 &copy; Stephen Aribaba

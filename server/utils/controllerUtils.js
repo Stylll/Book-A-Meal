@@ -8,7 +8,6 @@
  * @param {array} newMealIds
  * @param {Number} userId
  * @returns {array} actualMealIds
- *
  * It gets the difference between the oldMealIds in the menu and the newMealIds and checks
  * if they belong to the user id passed in
  * before removing them from the actual meal Ids to return.

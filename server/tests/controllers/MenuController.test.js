@@ -203,7 +203,7 @@ describe('Test Suite for Menu Controller', () => {
           'x-access-token': caterer2Token,
         })
         .send({
-          mealIds: [1, 2],
+          mealIds: [3],
         })
         .end((err, resp) => {
           expect(resp.body.errors.access.statusCode).to.equal(403);

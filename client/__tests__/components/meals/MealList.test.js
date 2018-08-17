@@ -24,6 +24,7 @@ const setup = () => {
     meals,
     handleDelete: () => Promise.resolve(),
     pagination,
+    fetchData: () => (Promise.resolve()),
   };
   return shallow(<MealList {...props} />);
 };
@@ -63,5 +64,16 @@ describe('Test suite for Meal List', () => {
     expect(wrapper.find('ReactPaginate').length).toBe(0);
     expect(wrapper.find('h3').first().text()).toBe('No Records Found');
     expect(wrapper.state().pageCount).toBe(0);
+  });
+
+  it('should call fetchMore function and update state when triggered', () => {
+    const wrapper = setup();
+    const fetchMoreSpy = jest.spyOn(wrapper.instance(), 'fetchMore');
+    const event = {
+      preventDefault: jest.fn(),
+    };
+    wrapper.instance().fetchMore();
+    expect(wrapper.state().loading).toBe(true);
+    expect(fetchMoreSpy).toHaveBeenCalled();
   });
 });

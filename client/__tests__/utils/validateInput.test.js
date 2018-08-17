@@ -103,7 +103,7 @@ describe('Test suite for validateMealInput function', () => {
     it('should return error for empty input', () => {
       const result = validateMenuInput({ ...emptyMenu });
       expect(result.isValid).to.equal(false);
-      expect(result.errors.mealIds).to.equal('Please select atleast one meal');
+      expect(result.errors.mealIds).to.equal('Meal options cannot be empty');
     });
 
     it('should return error for invalid input', () => {
