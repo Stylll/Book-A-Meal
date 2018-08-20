@@ -4,6 +4,7 @@ server/temp
 client/dist
 .nyc_output
 coverage
+server-coverage
 .coveralls.yml
 .vscode
 .DS_Store

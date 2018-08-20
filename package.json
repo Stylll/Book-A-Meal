@@ -14,6 +14,7 @@
     "start:dev": "nodemon --inspect --watch server --exec babel-node ./server/server --trace-warnings",
     "start:app": "babel-node ./tools/srcServer.js",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "codecov": "codecov",
     "lint": "eslint \"server/**/*.js\" \"client/src/**/*.jsx\" \"client/src/**/*.js\" app.js --fix",
     "heroku:server": "babel-node ./server/server.js",
     "heroku-postbuild": "npm run build",
@@ -38,9 +39,11 @@
       "client/__tests__",
       "client/dist",
       "tools"
-    ]
+    ],
+    "report-dir": "./server-coverage"
   },
   "jest": {
+    "coverageDirectory": "./coverage/",
     "collectCoverage": true,
     "collectCoverageFrom": [
       "client/src/**/*.{js,jsx}",
