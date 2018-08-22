@@ -1,5 +1,5 @@
 import { isEmpty } from 'lodash';
-import { Sequelize } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 import { Meals as MealModel } from '../models';
 import paginator from '../utils/paginator';
 
@@ -153,13 +153,20 @@ class Meals {
    * @param {bool} paranoid default = true
    * @returns [array] meals
    */
-  static getAll(paranoid = true, limit = 10, offset = 0) {
+  static getAll(paranoid = true, limit = 10, offset = 0, mealName = '') {
     return MealModel.findAndCountAll({
       attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
       order: [['createdAt', 'DESC']],
       paranoid,
       limit,
       offset,
+      where: {
+        name: Sequelize
+          .where(Sequelize.fn(
+            'LOWER',
+            Sequelize.col('name'),
+          ), 'LIKE', `%${mealName.toLowerCase()}%`),
+      },
     })
       .then((returnedMeal) => {
         if (isEmpty(returnedMeal)) {
@@ -182,10 +189,15 @@ class Meals {
    * @param {bool} paranoid default = true
    * @returns {array | null} [meals]
    */
-  static getByUserId(userId, paranoid = true, limit = 10, offset = 0) {
+  static getByUserId(userId, paranoid = true, limit = 10, offset = 0, mealName = '') {
     return MealModel.findAndCountAll({
       where: {
         userId,
+        name: Sequelize
+          .where(Sequelize.fn(
+            'LOWER',
+            Sequelize.col('name'),
+          ), 'LIKE', `%${mealName.toLowerCase()}%`),
       },
       attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
       order: [['createdAt', 'DESC']],

@@ -97,11 +97,6 @@ class MenuController {
         .json({ menus: menuList.menus, pagination: menuList.pagination });
     }
 
-    /**
-     * if accounttype is caterer,
-     * then we get all menus in the db
-     * and show only meals created by the caterer
-     */
     if (accountType === 'caterer') {
       const menuList = await menus.getAll(offset, limit);
       return response.status(200)
@@ -152,6 +147,7 @@ class MenuController {
         model: db.Meals,
         as: 'meals',
         where,
+        required: false,
         attributes: {
           exclude: ['createdAt', 'updatedAt', 'MenuMeals', 'deletedAt'],
         },

@@ -4,8 +4,10 @@ import { bindActionCreators } from 'redux';
 import { NavLink, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
+import ReactPaginate from 'react-paginate';
 import Main from '../Main';
-import { saveMenu } from '../../actions/menuActions';
+import MealOptions from './MealOptions';
+import { saveMenu, getMenuById } from '../../actions/menuActions';
 import { validateMenuInput } from '../../utils/validateInput';
 import spinnerGif from '../../assets/spinner.gif';
 
@@ -13,10 +15,13 @@ export class EditMenu extends React.Component {
   constructor() {
     super();
     this.state = {
+      id: 0,
       errors: {},
       mealIds: [],
-      mealOption: null,
-      loading: false,
+      loading: true,
+      pageNo: 0,
+      pageCount: 0,
+      meals: [],
     };
 
     this.handleAdd = this.handleAdd.bind(this);
@@ -24,14 +29,16 @@ export class EditMenu extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateOption = this.updateOption.bind(this);
     this.removeMeal = this.removeMeal.bind(this);
-    this.setup = this.setup.bind(this);
+    this.fetchData = this.fetchData.bind(this);
+    this.handlePageChange = this.handlePageChange.bind(this);
   }
 
   /**
    * this is called after the component is mounted
+   * it fetchs the menu data to be rendered in the page
    */
   componentDidMount() {
-    this.setup(this.props.menus);
+    this.fetchData();
   }
 
   /**
@@ -39,32 +46,37 @@ export class EditMenu extends React.Component {
    * @param {object} nextProps
    */
   componentWillReceiveProps(nextProps) {
-    this.setup(nextProps.menus);
+    if (nextProps.match.params && nextProps.match.params.id) {
+      this.handlePageChange(nextProps);
+    }
   }
 
   /**
-   * class method to load menu into state if it exists.
-   * @param {array} menus
-   * uses the id provided in the url to find a matching menu.
-   * then updates the state with the records.
+   * @param {object} props
+   * loads specific menu into the state
    */
-  setup(menus) {
-    const { id } = this.props.match.params;
-    if (id && menus.length > 0) {
-      const menu = menus.find(m => m.id === Number.parseInt(id, 10));
-      /**
-       * get only the meals created by the caterer from the menu since we don't want a caterer
-       * to be able to delete another caterer's meal from the menu
-      */
-      const createdMealIdsInMenu = this.props.meals.filter(m => menu.mealIds.includes(m.id))
-        .map(meal => meal.id);
-      if (menu) {
-        this.setState({
-          id: menu.id,
-          mealIds: createdMealIdsInMenu,
-        });
-      }
-    }
+  handlePageChange(props = this.props) {
+    const menu = (props.menu) ? props.menu : {};
+    menu.meals = (props.menu.meals) ? props.menu.meals : [];
+    const perPage = (props.pagination && props.pagination.limit)
+      ? props.pagination.limit : 0;
+    const pageCount = (props.pagination && props.pagination.noPage)
+      ? props.pagination.noPage : 0;
+    const pageNo = (props.pagination && props.pagination.pageNo)
+      ? props.pagination.pageNo : 0;
+    const rowCount = Math.ceil((menu.meals.length / this.state.rowLength));
+    const mealIds = menu.mealIds || [];
+    this.setState({
+      pageCount,
+      perPage,
+      pageNo,
+      menu,
+      mealIds,
+      meals: menu.meals,
+      loading: false,
+      totalCount: props.pagination.totalCount,
+      mealOption: {},
+    });
   }
 
   /**
@@ -72,13 +84,11 @@ export class EditMenu extends React.Component {
    * @param {object} event
    */
   handleAdd(event) {
-    event.preventDefault();
-    if (this.state.mealOption && !this.state.mealIds.includes(this.state.mealOption)) {
-      const newMealIds = [...this.state.mealIds];
-      newMealIds.push(this.state.mealOption);
+    if (!isEmpty(this.state.mealOption)) {
+      const newIds = [...this.state.mealIds, this.state.mealOption.id];
       this.setState({
-        mealIds: newMealIds,
-      });
+        mealIds: newIds,
+      }, this.handleSubmit);
     }
   }
 
@@ -89,22 +99,20 @@ export class EditMenu extends React.Component {
   removeMeal(event) {
     event.preventDefault();
     const mealId = parseInt(event.target.id, 10);
+    const newIds = this.state.mealIds.filter(id => id !== mealId);
     this.setState({
-      mealIds: this.state.mealIds.filter(id => id !== mealId),
-    });
+      mealIds: newIds,
+    }, this.handleSubmit);
   }
 
   /**
    * method to update the selected option in the state
    * @param {object} event
    */
-  updateOption(event) {
-    event.preventDefault();
-    if (event.target.value) {
-      this.setState({
-        [event.target.name]: parseInt(event.target.value, 10),
-      });
-    }
+  updateOption(meal) {
+    this.setState({
+      mealOption: meal,
+    });
   }
 
   /**
@@ -125,7 +133,7 @@ export class EditMenu extends React.Component {
    * calls saveMenu action if form is valid.
    * @param {object} event
    */
-  handleSubmit(event) {
+  handleSubmit(newIds) {
     this.setState({
       loading: true,
     });
@@ -137,7 +145,10 @@ export class EditMenu extends React.Component {
       this.props.actions.saveMenu(menuDetails)
         .then(() => {
           if (isEmpty(this.props.errors)) {
-            this.props.history.push('/caterer/menus');
+            if (!this.state.id) {
+              this.props.history.push('/caterer/menus');
+            }
+            this.fetchData();
           } else {
             this.setState({
               errors: this.props.errors,
@@ -145,6 +156,28 @@ export class EditMenu extends React.Component {
             });
           }
         });
+    } else {
+      this.setState({
+        loading: false,
+      });
+    }
+  }
+
+  /**
+   * method to call action to fetch data from the server
+   * it then updates the state
+   * @param object - pagination data
+   */
+  fetchData(paginationData = { selected: 0 }) {
+    const { id } = this.props.match.params;
+    if (id) {
+      this.setState({
+        loading: true,
+        id,
+      });
+      const limit = this.state.perPage || 10;
+      const offset = paginationData.selected * limit;
+      this.props.actions.getMenuById(id, limit, offset);
     } else {
       this.setState({
         loading: false,
@@ -162,46 +195,53 @@ export class EditMenu extends React.Component {
     {/* Header Content Ends */ }
     {/* Form Content Start */ }
     <div className="container text-center black-text menu-form">
-      <h2 className="black-text bold-text">Menu for Today</h2>
-      <div>
-            <h3 className="black-text light-text">Meal Options</h3>
-            {this.state.errors.mealIds
-              && <span className="red-text errors" id="mealOption-error">{this.state.errors.mealIds}</span>}
-            <select name="mealOption" className="select" onChange={this.updateOption}>
-            <option>Select a meal</option>
-              {this.props.meals.map(meal => (
-                  <option key={meal.id} value={meal.id}>{meal.name}</option>
-                ))}
-            </select>
-          </div>
-          <br />
-          {this.state.loading &&
-          <img src={spinnerGif} alt="loading" className="spinner" />
-          }
-          {!this.state.loading &&
-          <div>
-            <input type="button" className="btn btn-secondary" onClick={this.handleAdd} value="Add to Menu" />
-            &nbsp; &nbsp;
-            <input type="button" className="btn btn-secondary" onClick={this.handleSubmit} value="Save" />
+      <h2 className="black-text bold-text">
+        {this.props.menu.name || 'Menu For Today'}
+      </h2>
+      <MealOptions updateOption={this.updateOption} />
+      <br />
+      {this.state.loading &&
+        <img src={spinnerGif} alt="loading" className="spinner" />
+      }
+      {!this.state.loading &&
+        <div>
+          <input type="button" className="btn btn-secondary" onClick={this.handleAdd} value="Add to Menu" />
             &nbsp; &nbsp;
             <NavLink to="/caterer/menus" className="btn btn-danger"><span>Cancel</span></NavLink>
-          </div>
-          }
+        </div>
+      }
         {this.state.errors.menu
           && <span className="red-text errors" id="mealOption-error">{this.state.errors.menu}</span>}
-        <div>
-          <p>Selected Options: ({this.state.mealIds.length})</p>
-          <div className="meal-options">
-            {this.state.mealIds.map(id => (
-                <div key={id}>
-                {this.props.meals.find(meal => meal.id === id) &&
-                <span>{this.props.meals.find(meal => meal.id === id).name}</span>} &nbsp; &nbsp;
-                <input id={id} type="button" onClick={this.removeMeal} className="btn btn-danger pull-right" value="Remove" />
-                <br /><br /><br />
-                </div>
-              ))}
+          {this.state.errors.mealIds
+          && <span className="red-text errors" id="mealOption-error">{this.state.errors.mealIds}</span>}
+        {this.state.meals.length > 0 &&
+          <div>
+            <p>Selected Options: ({this.state.totalCount})</p>
+            <div className="meal-options">
+              {this.state.meals.map(meal => (
+                  <div key={meal.id}>
+                    <span>{meal.name}</span> &nbsp; &nbsp;
+                    <input id={meal.id} type="button" onClick={this.removeMeal}
+                      className="btn btn-danger pull-right" value="Remove" />
+                    <br /><br /><br />
+                  </div>
+                ))}
+            </div>
+            {this.state.pageCount > 0 &&
+            <ReactPaginate previousLabel={'<'}
+                          nextLabel={'>'}
+                          breakLabel={<a href="">...</a>}
+                          breakClassName={'break-me'}
+                          pageCount={this.state.pageCount}
+                          marginPagesDisplayed={2}
+                          pageRangeDisplayed={5}
+                          onPageChange={this.fetchData}
+                          containerClassName={'pagination'}
+                          subContainerClassName={''}
+                          activeClassName={'active'} />
+            }
           </div>
-        </div>
+        }
     </div>
     <br />
     {/* Form Content Ends */ }
@@ -215,9 +255,10 @@ EditMenu.propTypes = {
   actions: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   meals: PropTypes.array.isRequired,
-  menus: PropTypes.array.isRequired,
+  menu: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
+  pagination: PropTypes.object.isRequired,
 };
 
 /**
@@ -229,8 +270,8 @@ const mapStateToProps = state => (
   {
     errors: state.menus.errors,
     meals: state.meals.meals,
-    menus: state.menus.menus,
-
+    menu: state.menus.menu,
+    pagination: state.menus.pagination,
   }
 );
 
@@ -241,7 +282,7 @@ const mapStateToProps = state => (
  */
 const mapDispatchToProps = dispatch => (
   {
-    actions: bindActionCreators({ saveMenu }, dispatch),
+    actions: bindActionCreators({ saveMenu, getMenuById }, dispatch),
   }
 );
 

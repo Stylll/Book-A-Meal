@@ -141,14 +141,24 @@ class ValidateMenu {
   /* eslint-disable consistent-return */
   static async validateMealOwner(request, response, next) {
     const { decoded } = request;
+    if (!isEmpty(request.errors.meals)) {
+      return next();
+    }
     if (!request.body.mealIds) {
       return next();
     }
     if (decoded.user.accountType !== 'admin') {
+      const menu = await menus.get(parseInt(request.params.id || 0, 10));
+      let { mealIds } = request.body;
+      if (menu) {
+        const menuMealIds = [...menu.mealIds];
+        mealIds = request.body.mealIds
+          .filter(id => !menuMealIds.includes(id));
+      }
       /* eslint-disable no-plusplus */
-      for (let i = 0; i < request.body.mealIds.length; i++) {
+      for (let i = 0; i < mealIds.length; i++) {
         /* eslint-disable no-await-in-loop */
-        const result = await meals.get(request.body.mealIds[i]);
+        const result = await meals.get(mealIds[i]);
         if (result && decoded.user.id !== result.userId) {
           request.errors.access = {
             message: 'Cannot add another caterers meal',

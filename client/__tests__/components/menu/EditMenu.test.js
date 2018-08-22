@@ -12,8 +12,12 @@ const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 const store = mockStore({
   menus: {
-    menus: [],
+    menu: {},
     errors: {},
+    pagination: {},
+  },
+  meals: {
+    meals: [],
   },
 });
 
@@ -21,13 +25,14 @@ const setup = () => {
   const props = {
     actions: {
       saveMenu: () => (Promise.resolve()),
+      getMenuById: () => (Promise.resolve()),
     },
-    menus: [saveMenuResponse.menu],
+    menu: saveMenuResponse.menu,
     meals: [saveMealResponse.meal],
     errors: {},
     match: {
       params: {
-        id: 1,
+        id: 0,
       },
     },
   };
@@ -37,12 +42,10 @@ const setup = () => {
 describe('Test Suite for EditMenu component', () => {
   it('should render unconnected component properly', () => {
     const wrapper = setup();
-
     expect(wrapper.find('h1').first().text()).toBe('Add Meals to Menu');
-    expect(wrapper.find('h2').first().text()).toBe('Menu for Today');
-    expect(wrapper.find('h3').first().text()).toBe('Meal Options');
-    expect(wrapper.find('select').length).toBe(1);
+    expect(wrapper.find('h2').first().text()).toBe(saveMenuResponse.menu.name);
     expect(wrapper.find('input').first().prop('type')).toBe('button');
+    expect(wrapper.find('input').length).toBe(1);
     expect(wrapper.find('NavLink').length).toBe(1);
   });
 
@@ -50,8 +53,10 @@ describe('Test Suite for EditMenu component', () => {
     const props = {
       actions: {
         saveMenu: () => (Promise.resolve()),
+        getMenuById: () => (Promise.resolve()),
       },
       meals: [],
+      menu: saveMenuResponse.menu,
       errors: {},
       match: {
         params: {
@@ -59,7 +64,7 @@ describe('Test Suite for EditMenu component', () => {
         },
       },
     };
-    const wrapper = shallow(<EditMenu store={store} {...props} />);
+    const wrapper = shallow(<ConnectedEditMenu store={store} {...props} />);
     expect(wrapper.length).toBe(1);
   });
 
@@ -73,7 +78,7 @@ describe('Test Suite for EditMenu component', () => {
       preventDefault: jest.fn(),
     };
     wrapper.instance().handleSubmit(event);
-    expect(wrapper.state().errors.mealIds).toBe('Please select atleast one meal');
+    expect(wrapper.state().errors.mealIds).toBe('Meal options cannot be empty');
     expect(handleSubmitSpy).toHaveBeenCalled();
   });
 
@@ -95,7 +100,7 @@ describe('Test Suite for EditMenu component', () => {
     const wrapper = setup();
     wrapper.setState({
       mealIds: [],
-      mealOption: 2,
+      mealOption: saveMealResponse.meal,
     });
     const handleAdd = jest.spyOn(wrapper.instance(), 'handleAdd');
     const event = {
@@ -103,7 +108,7 @@ describe('Test Suite for EditMenu component', () => {
     };
     wrapper.instance().handleAdd(event);
     expect(handleAdd).toHaveBeenCalled();
-    expect(wrapper.state().mealIds).toEqual([2]);
+    expect(wrapper.state().mealIds).toEqual([5]);
   });
 
   it('shouild call handleSubmit and call saveMenu action', () => {
@@ -123,17 +128,10 @@ describe('Test Suite for EditMenu component', () => {
 
   it('should call updateOption and update state', () => {
     const wrapper = setup();
-    const event = {
-      preventDefault: jest.fn(),
-      target: {
-        name: 'mealOption',
-        value: '1',
-      },
-    };
     const updateOptionSpy = jest.spyOn(wrapper.instance(), 'updateOption');
-    wrapper.instance().updateOption(event);
+    wrapper.instance().updateOption(saveMealResponse.meal);
     expect(updateOptionSpy).toHaveBeenCalled();
-    expect(wrapper.state().mealOption).toBe(1);
+    expect(wrapper.state().mealOption).toEqual(saveMealResponse.meal);
   });
 
   it('should call removeMeal and update state', () => {

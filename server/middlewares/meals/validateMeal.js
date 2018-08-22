@@ -62,7 +62,8 @@ class ValidateMeal {
   static async nameExists(request, response, next) {
     if (request.body.name) {
       const result = await meals.getByName(request.body.name.trim());
-      if (!isEmpty(result.meals)) {
+      if (!isEmpty(result.meals)
+        && result.meals[0].id !== parseInt(request.params.id, 10)) {
         request.errors.name = {
           message: 'Meal name already exists',
           statusCode: 409,

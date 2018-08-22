@@ -9,8 +9,12 @@ const api = {
   meals: {
     post: '/api/v1/meals',
     put: id => (`/api/v1/meals/${id}`),
-    get: (limit = 10, offset = 0) =>
-      (`/api/v1/meals?limit=${limit}&offset=${offset}`),
+    get: (limit = 10, offset = 0, mealName) => {
+      if (mealName) {
+        return `/api/v1/meals?limit=${limit}&offset=${offset}&name=${mealName}`;
+      }
+      return `/api/v1/meals?limit=${limit}&offset=${offset}`;
+    },
     delete: id => (`/api/v1/meals/${id}`),
   },
   menu: {

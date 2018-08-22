@@ -69,7 +69,8 @@ class MealController {
       const updatedMeal = await meals.update(oldMeal);
 
       if (updatedMeal && !updatedMeal.err) {
-        return response.status(200).send({ meal: updatedMeal, message: 'Updated successfully' });
+        return response.status(200)
+          .send({ meal: updatedMeal, message: 'Updated successfully' });
       }
       return response.status(500).send({ message: 'Internal Server Error' });
     }
@@ -85,12 +86,14 @@ class MealController {
   static async get(request, response) {
     const limit = request.query.limit || 10;
     const offset = request.query.offset || 0;
+    const mealName = request.query.name || '';
     if (request.decoded.user.accountType === 'admin') {
-      const mealArray = await meals.getAll(true, limit, offset);
+      const mealArray = await meals.getAll(true, limit, offset, mealName);
       return response.status(200)
         .json({ meals: mealArray.meals, pagination: mealArray.pagination });
     }
-    const mealArray = await meals.getByUserId(request.decoded.user.id, true, limit, offset);
+    const mealArray = await meals
+      .getByUserId(request.decoded.user.id, true, limit, offset, mealName);
     return response.status(200)
       .json({ meals: mealArray.meals, pagination: mealArray.pagination });
   }
