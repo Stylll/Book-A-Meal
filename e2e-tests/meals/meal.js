@@ -1,0 +1,82 @@
+import 'babel-polyfill';
+import { clearUsers, insertSeedUsers, validUser2 } from '../../server/utils/seeders/userSeeder';
+import { clearMeals, insertSeedMeal, validMeal1 } from '../../server/utils/seeders/mealSeeder';
+
+module.exports = {
+  before: async (browser) => {
+    await clearUsers();
+    await insertSeedUsers(validUser2);
+    await clearMeals();
+  },
+  after: (browser) => {
+    browser.end();
+  },
+  'Caterer cannot create meal with invalid information': function (browser) {
+    browser
+      .url('http://localhost:3000/users/signin')
+      .waitForElementVisible('.signin-content', 1000)
+      .setValue('#email', validUser2.email)
+      .setValue('#password', validUser2.password)
+      .click('#app > div > div > div > div.signin-overall > div.signin-content > div:nth-child(2) > div:nth-child(7) > input')
+      .pause(5000)
+      .url('http://localhost:3000/caterer/meals/edit')
+      .waitForElementVisible('.meal-form', 1000)
+      .setValue('#price', -1)
+      .click('#app > div > div > div > div.container.text-center.meal-form > div:nth-child(6) > input')
+      .pause(5000)
+      .assert.containsText('#name-error', 'Meal name is required')
+      .assert.containsText('#price-error', 'Price is invalid');
+  },
+  'Caterer can create meal with valid information': function (browser) {
+    browser
+      .url('http://localhost:3000/caterer/meals/edit')
+      .waitForElementVisible('.meal-form', 1000)
+      .setValue('#name', 'Rice and Bean')
+      .setValue('#price', 1200)
+      .click('#app > div > div > div > div.container.text-center.meal-form > div:nth-child(6) > input')
+      .pause(5000)
+      .assert.containsText('#app > div > div > div > div:nth-child(3) > h1', 'Manage Meals')
+      .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div')
+      .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div')
+      .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div > div.card-img-container')
+      .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div > div.card-content')
+      .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div > div.card-content > div.card-text.black-text > h3')
+      .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div > div.card-content > div.card-text.black-text > h4');
+  },
+  'Caterer can view the list of meals': function (browser) {
+    browser
+      .url('http://localhost:3000/caterer/meals/')
+      .waitForElementVisible('body', 1000)
+      .assert.containsText('#app > div > div > div > div:nth-child(3) > h1', 'Manage Meals')
+      .assert.elementPresent('#app > div > div > div > div:nth-child(3) > div > div > form > input.textbox.meal-textbox')
+      .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div')
+      .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div')
+      .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div > div.card-img-container')
+      .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div > div.card-content')
+      .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div > div.card-content > div.card-text.black-text > h3')
+      .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div > div.card-content > div.card-text.black-text > h4');
+  },
+  'Caterer can delete a meal from the list of meals': function (browser) {
+    browser
+      .url('http://localhost:3000/caterer/meals/')
+      .waitForElementVisible('body', 1000)
+      .assert.containsText('#app > div > div > div > div:nth-child(3) > h1', 'Manage Meals')
+      .assert.elementPresent('#app > div > div > div > div:nth-child(3) > div > div > form > input.textbox.meal-textbox')
+      .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div')
+      .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div')
+      .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div > div.card-img-container')
+      .click('#app > div > div > div > div:nth-child(4) > div > div > div.card-content > div.card-text.black-text > a.btn.btn-danger')
+      .pause(5000)
+      .assert.elementPresent('#react-confirm-alert > div > div')
+      .assert.containsText('#react-confirm-alert > div > div > div > h1', 'Are you sure?')
+      .assert.containsText('#react-confirm-alert > div > div > div > div.row.text-center > button.btn.btn-secondary', 'No, Keep it')
+      .assert.containsText('#react-confirm-alert > div > div > div > div.row.text-center > button.btn.btn-danger', 'Yes, Delete it!')
+      .click('#react-confirm-alert > div > div > div > div.row.text-center > button.btn.btn-secondary')
+      .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div > div.card-img-container')
+      .click('#app > div > div > div > div:nth-child(4) > div > div > div.card-content > div.card-text.black-text > a.btn.btn-danger')
+      .pause(5000)
+      .click('#react-confirm-alert > div > div > div > div.row.text-center > button.btn.btn-danger')
+      .pause(5000)
+      .assert.elementNotPresent('#app > div > div > div > div:nth-child(4) > div > div > div.card-img-container');
+  },
+};
