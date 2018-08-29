@@ -11,3 +11,5 @@ server-coverage
 UI/.DS_Store
 client/src/.DS_Store
 logs/*.log
+reports
+.bin

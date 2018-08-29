@@ -133,7 +133,7 @@ export class CatererPendingOrders extends React.Component {
           </form></h3>
         </div>
         <OrderList
-          orders={this.props.orders}
+          orders={this.props.orders.filter(order => order.status === 'pending')}
           pagination={this.props.pagination}
           handleDecline={this.handleDecline}
           handleApprove={this.handleApprove}

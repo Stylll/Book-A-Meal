@@ -26,9 +26,6 @@ export class ViewMeals extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (isEmpty(nextProps.menu)) {
-      this.props.history.push('/caterer/menus');
-    }
     this.setState({
       menu: nextProps.menu,
       pagination: nextProps.pagination,
@@ -51,18 +48,32 @@ export class ViewMeals extends React.Component {
   render() {
     return (
       <Main allowCaterer>
-        <div className="container">
-        <h1 className="secondary-text-color text-center">View Menu Options</h1>
-        {this.state.menu.name &&
-          <h2 className="black-text bold-text text-center">{this.state.menu.name}</h2>
+        { !isEmpty(this.state.menu) &&
+          <div className="container">
+          <h1 className="secondary-text-color text-center">View Menu Options</h1>
+          {this.state.menu.name &&
+            <h2 className="black-text bold-text text-center">{this.state.menu.name}</h2>
+          }
+          </div>
         }
-        </div>
-        <MealList
-          meals={this.state.menu.meals}
-          pagination={this.state.pagination}
-          showEdit={false}
-          showDelete={false}
-          fetchData={this.fetchData} />
+        { isEmpty(this.state.menu) &&
+          <div className="container">
+          <h1 className="secondary-text-color text-center">Menu not found</h1>
+          </div>
+        }
+        { !isEmpty(this.state.menu) && !isEmpty(this.state.menu.meals) &&
+          <MealList
+            meals={this.state.menu.meals}
+            pagination={this.state.pagination}
+            showEdit={false}
+            showDelete={false}
+            fetchData={this.fetchData} />
+        }
+        { !isEmpty(this.state.menu) && isEmpty(this.state.menu.meals) &&
+          <div className="container">
+          <h4 className="text-center">No meal is set</h4>
+          </div>
+        }
       </Main>
     );
   }

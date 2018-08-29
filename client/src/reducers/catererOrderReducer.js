@@ -25,6 +25,7 @@ const orderReducer = (state = initialState.orders, action) => {
                 ],
             summary: state.catererOrders.summary,
             errors: state.catererOrders.errors,
+            pagination: state.catererOrders.pagination,
           },
         };
 
@@ -35,6 +36,7 @@ const orderReducer = (state = initialState.orders, action) => {
             orders: state.catererOrders.orders,
             errors: action.errors,
             summary: state.catererOrders.summary,
+            pagination: state.catererOrders.pagination,
           },
         };
 
@@ -56,6 +58,7 @@ const orderReducer = (state = initialState.orders, action) => {
             orders: state.catererOrders.orders,
             errors: action.errors,
             summary: state.catererOrders.summary,
+            pagination: state.catererOrders.pagination,
           },
         };
 
@@ -66,6 +69,7 @@ const orderReducer = (state = initialState.orders, action) => {
             orders: state.catererOrders.orders.filter(m => m.id !== action.orderId),
             errors: {},
             summary: state.catererOrders.summary,
+            pagination: state.catererOrders.pagination,
           },
         };
 

@@ -56,6 +56,7 @@ cd Book-A-Meal
 # Create .env file in the root directory
 touch .env
 update env file with required information
+use the .env.example file as a guideline
 
 # Install Package dependencies
 npm install
@@ -66,11 +67,18 @@ run sequelize migrate:db to migrate the database
 
 #Start the application
 npm run start:app
+
+#View the application
+navigate to localhost:3000 to view the application
 ```
 
 ## Testing
 * Server side tests - Run `npm run test:server`
 * Client side tests - Run `npm run test:client`
+### End to End tests
+- Install all dependencies with `npm run e2e-setup`
+- Start the app with `npm run start:e2e-app`
+- Open another bash window and run `npm run test:e2e`
 
 ## Built with
 * [NodeJS](https://nodejs.org/en/) - A Javascript runtime built runtime that uses an event-driven non-blocking I/O model that makes it lightweight and efficient.
@@ -93,6 +101,8 @@ npm run start:app
 * [Jest](https://jestjs.io/) - Delightful JavaScript Testing
 * [Enzyme](http://airbnb.io/enzyme/) - Enzyme is a JavaScript Testing utility for React that makes it easier to assert, manipulate, and traverse your React Components' output.
 * [Moxios](https://github.com/axios/moxios) - Moxios is a package for mocking axios requests for testing
+* [Nightwatch](http://nightwatchjs.org/) - Nightwatch.js is an easy to use Node.js based End-to-End (E2E) testing solution for browser based apps and websites
+* [Selenium](https://www.seleniumhq.org/) - Selenium is a browser automation package that helps to automate web applications for testing purposes
 
 #### Linter(s)
 
@@ -144,6 +154,7 @@ If you are interested in contributing, follow the instructions below.
   - Caterers cannot search for meals using meal name.
   - Caterers cannot search for menu records using a specific date.
   - Social authentication is not integrated.
+  - No payment platform has been integrated.
 
 
 ## License and Copyright
