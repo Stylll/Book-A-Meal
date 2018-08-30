@@ -13,7 +13,8 @@ import orders from './orders';
 const router = express.Router();
 
 router.get('/', (request, response) => {
-  response.status(200).send({ message: 'Welcome to Book A Meal API version 1.' });
+  response.status(200)
+    .json({ message: 'Welcome to Book A Meal API version 1.' });
 });
 
 // create the error object in the request object

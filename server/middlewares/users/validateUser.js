@@ -205,7 +205,8 @@ class ValidateUser {
       return next();
     }
     // check if account type is valid
-    if (request.body.accountType.trim() !== 'customer' && request.body.accountType.trim() !== 'caterer') {
+    if (request.body.accountType.trim() !== 'customer'
+      && request.body.accountType.trim() !== 'caterer') {
       request.errors.accountType = {
         message: 'Account type is invalid',
         statusCode: 400,

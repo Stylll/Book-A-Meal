@@ -2,6 +2,8 @@ import 'babel-polyfill';
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import jwt from 'jsonwebtoken';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import LoadingBar from 'react-redux-loading-bar';
 import { Redirect } from 'react-router-dom';
@@ -16,6 +18,7 @@ export class Main extends React.Component {
     this.logout = this.logout.bind(this);
     this.expandNav = this.expandNav.bind(this);
     this.toggleNav = this.toggleNav.bind(this);
+    this.isTokenExpired = this.isTokenExpired.bind(this);
   }
 
   /**
@@ -57,7 +60,32 @@ export class Main extends React.Component {
     }
   }
 
+  /**
+   * method to verify if user token has expired
+   */
+  isTokenExpired() {
+    if (localStorage.jwtToken) {
+      const token = localStorage.jwtToken;
+      const { exp } = jwt.decode(token);
+      if (moment(Math.floor(Date.now() * 0.001)).isAfter(exp)) {
+        return false;
+      }
+      return true;
+    }
+    return false;
+  }
+
   render() {
+    /**
+     * Check if user token is valid if page does not allow anonymous
+     */
+    if (!this.props.allowAnonymous && !this.isTokenExpired()) {
+      const event = {
+        preventDefault: () => Promise.resolve(),
+      };
+      this.logout(event);
+    }
+
     /**
      * Restricts user from accessing page if user is not authenticated
      */

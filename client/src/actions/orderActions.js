@@ -63,7 +63,8 @@ const saveOrderFailed = (data) => {
       message: data.message,
     };
   }
-  toastr.error('Save Failed', data.message || 'Sorry. You no longer have the permission to make changes to this order.');
+  toastr.error('Save Failed', data.message
+  || 'Sorry. You no longer have the permission to make changes to this order.');
   return {
     type: types.SAVE_ORDER_FAILED,
     errors,

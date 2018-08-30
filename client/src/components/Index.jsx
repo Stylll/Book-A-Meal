@@ -12,7 +12,7 @@ const Index = () => (
           <h3>BAM is an application where customers can make food orders and caterers
             can know what a customer whats to eat</h3>
           <h3>We create a platform for customers to enjoy classy and tasty meals
-            while leveraging the finesse of our world className caterers who are masters
+            while leveraging the finesse of our world class caterers who are masters
             of their craft
           </h3>
           <h3 className="normal-text">

@@ -6,7 +6,6 @@ import path from 'path';
 import webpack from 'webpack';
 import config from '../webpack.config.dev';
 import routes from '../server/routes';
-import trimmer from '../server/utils/trimmer';
 import { cancelPendingOrders } from '../server/utils/jobScheduler';
 
 /* eslint-disable no-console no-unused-vars */
@@ -28,7 +27,6 @@ app.use(require('webpack-hot-middleware')(compiler));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(trimmer);
 
 // static api docs
 app.use('/api-docs', express.static(path.join(__dirname, '../server/api-docs')));

@@ -3,7 +3,7 @@
  * Schedules tasks to be run at specific times
  */
 import schedule from 'node-schedule';
-import Model from '../models';
+import Models from '../models';
 
 /**
  * function to update pending orders to canceled at midnight.
@@ -14,7 +14,7 @@ const cancelPendingOrders = () => {
   rule.hour = 1;
 
   const task = schedule.scheduleJob(rule, () => {
-    Model.Orders.update({
+    Models.Orders.update({
       status: 'canceled',
     }, {
       where: { status: 'pending' },

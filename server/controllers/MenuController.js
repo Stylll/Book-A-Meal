@@ -1,6 +1,6 @@
 import { isEmpty } from 'lodash';
 import menus from '../db/menus';
-import db from '../models';
+import Models from '../models';
 import { getNormalDate } from '../utils/dateBeautifier';
 import Notifications from '../utils/mailer/Notifications';
 import { processMealIds } from '../utils/controllerUtils';
@@ -63,9 +63,13 @@ class MenuController {
     const uniqueIds = new Set(ids.sort());
     const mealIds = [...uniqueIds];
     const newMenu = await menus.update({ id: oldMenu.id, mealIds });
+    const currentDate = getNormalDate(new Date());
 
     if (newMenu && !newMenu.err) {
-      Notifications.customerMenuNotifier(request.headers.host, newMenu);
+      const menuDate = newMenu.dataValues.date;
+      if (menuDate === currentDate) {
+        Notifications.customerMenuNotifier(request.headers.host, newMenu);
+      }
       return response.status(200)
         .json({ menu: newMenu, message: 'Updated successfully' });
     }
@@ -136,7 +140,7 @@ class MenuController {
     if (accountType === 'caterer') {
       where.userId = userId;
     }
-    const menuResponse = await db.Menus.findAndCountAll({
+    const menuResponse = await Models.Menus.findAndCountAll({
       where: {
         id,
       },
@@ -144,7 +148,7 @@ class MenuController {
         ['id', 'DESC'],
       ],
       include: [{
-        model: db.Meals,
+        model: Models.Meals,
         as: 'meals',
         where,
         required: false,

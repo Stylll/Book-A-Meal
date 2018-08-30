@@ -71,7 +71,7 @@ export class ViewMeals extends React.Component {
         }
         { !isEmpty(this.state.menu) && isEmpty(this.state.menu.meals) &&
           <div className="container">
-          <h4 className="text-center">No meal is set</h4>
+          <h2 className="text-center">No meal is set</h2>
           </div>
         }
       </Main>

@@ -5,7 +5,6 @@ import open from 'open';
 import path from 'path';
 import compression from 'compression';
 import routes from '../server/routes';
-import trimmer from '../server/utils/trimmer';
 import { cancelPendingOrders } from '../server/utils/jobScheduler';
 
 /* eslint-disable no-console no-unused-vars */
@@ -21,7 +20,6 @@ app.use(express.static(path.join(__dirname, '../client/dist')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(trimmer);
 
 // static api docs
 app.use('/api-docs', express.static(path.join(__dirname, '../server/api-docs')));

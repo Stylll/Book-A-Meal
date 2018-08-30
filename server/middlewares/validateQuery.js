@@ -20,6 +20,8 @@ class ValidateQuery {
           message: 'Limit is invalid',
           statusCode: 400,
         };
+      } else {
+        request.query.limit = limit;
       }
     }
 
@@ -41,6 +43,8 @@ class ValidateQuery {
           message: 'Offset is invalid',
           statusCode: 400,
         };
+      } else {
+        request.query.offset = offset;
       }
     }
 

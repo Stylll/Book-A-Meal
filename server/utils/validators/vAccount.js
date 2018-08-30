@@ -14,7 +14,8 @@ class account extends BaseValidator {
    * @throws {object} Error message and status code
    */
   static tokenValid(request) {
-    const token = request.body.token || request.query.token || request.headers['x-access-token'];
+    const token = request.body.token || request.query.token
+      || request.headers['x-access-token'];
     if (!token) {
       this.throwError('Authentication failed. No token provided', 401);
     }
