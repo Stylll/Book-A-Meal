@@ -86,7 +86,7 @@ export class Signup extends React.Component {
     }
     if (this.props.isAuthenticated) {
       return (
-        <Redirect to="/customer/orders" />
+        <Redirect to="/customer/menu" />
       );
     }
     return (

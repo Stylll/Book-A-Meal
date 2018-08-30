@@ -3,7 +3,8 @@ import randomstring from 'randomstring';
 import users from '../db/users';
 import Authenticate from '../utils/authentication/authenticate';
 import { Users as UserModel } from '../models';
-import { transporter, mailOptions, forgotPasswordMail, passwordResetMail } from '../utils/mailer/NodeMailer';
+import { transporter, mailOptions, forgotPasswordMail, passwordResetMail }
+  from '../utils/mailer/NodeMailer';
 /**
  * Controller Class to handle user authentication requests
  */
@@ -38,9 +39,10 @@ class UserController {
       // get jwt for user
       const token = Authenticate.authenticateUser(newUser);
 
-      return response.status(201).send({ user: newUser, token, message: 'Created successfully' });
+      return response.status(201)
+        .json({ user: newUser, token, message: 'Created successfully' });
     }
-    return response.status(500).send({ message: 'Internal Server Error' });
+    return response.status(500).json({ message: 'Internal Server Error' });
   }
 
   /**
@@ -55,7 +57,8 @@ class UserController {
     if (user) {
       // if user exists, then compare the passwords
       if (bcrypt.compareSync(request.body.password, user.password)) {
-        // if password is correct, create the user instance to return without the password value
+        // if password is correct,
+        // create the user instance to return without the password value
         const properUser = {
           id: user.id,
           email: user.email,
@@ -66,11 +69,14 @@ class UserController {
         // get authentication token for user
         const token = Authenticate.authenticateUser(properUser);
 
-        return response.status(200).send({ user: properUser, token, message: 'Login successful' });
+        return response.status(200)
+          .json({ user: properUser, token, message: 'Login successful' });
       }
-      return response.status(401).send({ message: 'Email or Password is incorrect' });
+      return response.status(401)
+        .json({ message: 'Email or Password is incorrect' });
     }
-    return response.status(401).send({ message: 'Email or Password is incorrect' });
+    return response.status(401)
+      .json({ message: 'Email or Password is incorrect' });
   }
 
   /**
@@ -97,8 +103,10 @@ class UserController {
           subject,
           forgotPasswordMail(request.headers.host, user.username, resetToken),
         ))
-          .then(() => response.status(200).json({ message: 'A reset link has been sent to your email' }))
-          .catch(() => response.status(500).json({ message: 'Sorry. An error occurred. Please try again.' }));
+          .then(() => response.status(200)
+            .json({ message: 'A reset link has been sent to your email' }))
+          .catch(() => response.status(500)
+            .json({ message: 'Sorry. An error occurred. Please try again.' }));
       }
     }
     return response.status(500).json({ message: 'An error occurred' });
@@ -131,9 +139,12 @@ class UserController {
         subject,
         passwordResetMail(request.headers.host, user.username),
       ))
-        .then(() => response.status(200).json({ message: 'Password reset successful' }))
-        .catch(() => response.status(500).json({ message: 'Sorry. An error occurred. Please try again.' }));
-    })).catch(() => response.status(400).json({ message: 'Reset token is invalid or has expired' }));
+        .then(() => response.status(200)
+          .json({ message: 'Password reset successful' }))
+        .catch(() => response.status(500)
+          .json({ message: 'Sorry. An error occurred. Please try again.' }));
+    })).catch(() => response.status(400)
+      .json({ message: 'Reset token is invalid or has expired' }));
   }
 }
 

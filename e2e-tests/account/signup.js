@@ -34,7 +34,9 @@ module.exports = {
       .setValue('#confirmPassword', '1234567890')
       .click('#app > div > div > div > div.overall > div.signup-content > div:nth-child(2) > div:nth-child(8) > input')
       .pause(5000)
-      .assert.containsText('#app > div > div > div > div.container.text-center.black-text > h1', 'My Order History')
+      .assert.containsText('#app > div > div > div > div.container.text-center.black-text > div > h1', 'Welcome to Book-A-Meal')
+      .assert.containsText('#app > div > div > div > div.container.text-center.black-text > div > h4', 'Your online restaurant to find the finest cuisines.')
+      .assert.containsText('#app > div > div > div > div.container.text-center.black-text > div > p', 'Below is a list of our meal options for the day')
       .end();
   },
 };

@@ -30,7 +30,8 @@ class CloudUpload {
    */
   static uploadImage(source) {
     if (!source || !source.trim()) return defaultImage;
-    const result = this.uploadImageToCloud(source).then(res => res).catch(error => error);
+    const result = this.uploadImageToCloud(source)
+      .then(res => res).catch(error => error);
     return result;
   }
 }

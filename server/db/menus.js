@@ -153,7 +153,8 @@ class Menus {
     return MenuModel.findAndCountAll({
       where: {
         id: {
-          [Op.eq]: Sequelize.literal(`(select "id" from "Menus" where "date" = '${normalDate}')`),
+          [Op.eq]: Sequelize
+            .literal(`(select "id" from "Menus" where "date" = '${normalDate}')`),
         },
       },
       order: [

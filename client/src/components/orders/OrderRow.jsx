@@ -42,7 +42,9 @@ const OrderRow = ({
                 data-tip={order.status}
                 className="status wrap-text">{order.status}</td>
             }
-            <td className="orderdate wrap-text">
+            <td data-for="orderdate"
+                data-tip={beautifyDate(order.createdAt)}
+                className="orderdate wrap-text">
             {beautifyDate(order.createdAt)}</td>
             {showEdit &&
             <td className="edit"><NavLink to={`/customer/orders/edit/${order.id}`}>
@@ -67,6 +69,7 @@ const OrderRow = ({
             <ReactTooltip id="price" delayShow={400} className="tooltip" />
             <ReactTooltip id="cost" delayShow={400} className="tooltip" />
             <ReactTooltip id="status" delayShow={400} className="tooltip" />
+            <ReactTooltip id="orderdate" delayShow={400} className="tooltip" />
         </tr>
 );
 

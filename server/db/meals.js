@@ -189,7 +189,12 @@ class Meals {
    * @param {bool} paranoid default = true
    * @returns {array | null} [meals]
    */
-  static getByUserId(userId, paranoid = true, limit = 10, offset = 0, mealName = '') {
+  static getByUserId(
+    userId,
+    paranoid = true,
+    limit = 10,
+    offset = 0, mealName = '',
+  ) {
     return MealModel.findAndCountAll({
       where: {
         userId,

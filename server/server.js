@@ -4,7 +4,6 @@ import logger from 'morgan';
 import open from 'open';
 import path from 'path';
 import routes from './routes';
-import trimmer from './utils/trimmer';
 
 /* eslint-disable no-console no-unused-vars */
 /* eslint-disable no-unused-vars */
@@ -17,7 +16,6 @@ const address = `http://localhost:${port}/api/v1`;
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(trimmer);
 
 // static api docs
 app.use('/api-docs', express.static(path.join(__dirname, './api-docs')));
@@ -33,7 +31,8 @@ app.use((req, res, next) => {
 });
 
 // Error Handler
-app.use((err, req, res, next) => res.status(err.status || 500).json({ message: err.message || 'Error' }));
+app.use((err, req, res, next) => res.status(err.status || 500)
+  .json({ message: err.message || 'Error' }));
 
 // UnhandledPromiseRejection Handler
 process.on('unhandledRejection', (error) => {

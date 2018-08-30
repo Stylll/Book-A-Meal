@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import logger from '../../../config/winston';
+import logger from '../../../config/logger';
 
 dotenv.config();
 /**
@@ -24,7 +24,7 @@ class Authenticate {
       },
       process.env.SECRET,
       {
-        expiresIn: Number(Date.now() + 5),
+        expiresIn: '24h',
       },
     );
     return token;

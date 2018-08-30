@@ -30,8 +30,9 @@ const meals = (router) => {
   // meal router to handle post requests
   router.post(
     '/meals', upload.single('image'), validateAccount.user,
-    validateAccount.caterer, ValidateMeal.validateName, ValidateMeal.priceValid,
-    ValidateMeal.nameExists, ErrorHandler.handleErrors, AsyncWrapper(MealController.post),
+    validateAccount.caterer, ValidateMeal.validateName,
+    ValidateMeal.priceValid, ValidateMeal.nameExists,
+    ErrorHandler.handleErrors, AsyncWrapper(MealController.post),
   );
 
   // meal router to handle pull requests

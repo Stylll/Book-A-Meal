@@ -15,7 +15,7 @@ export class OrderSummary extends React.Component {
     this.fetchData = this.fetchData.bind(this);
   }
   componentDidMount() {
-    this.fetchData(0, 1);
+    this.fetchData(0, 10);
   }
 
   /**
@@ -36,7 +36,8 @@ export class OrderSummary extends React.Component {
           {/* Date Filter Box Starts */}
           <h3 className="black-text normal-text">Filter orders by date
           <form>
-            <input type="date" className="datepicker textbox order-textbox" placeholder="Click here to select by date..." />
+            <input type="date" className="datepicker textbox order-textbox"
+              placeholder="Click here to select by date..." />
             <input type="submit" value="GO" className="btn btn-secondary" />
           </form></h3>
         </div>

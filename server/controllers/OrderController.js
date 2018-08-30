@@ -4,7 +4,7 @@ import moment from 'moment';
 import { isEmpty } from 'lodash';
 import orders from '../db/orders';
 import meals from '../db/meals';
-import db from '../models';
+import Models from '../models';
 import OrderUtils from '../utils/orders/orderUtils';
 import paginator from '../utils/paginator';
 
@@ -137,33 +137,33 @@ class OrderController {
       /**
        * get order summary for all completed orders
        */
-      const orderSummary = await db.Orders.findAndCountAll({
+      const orderSummary = await Models.Orders.findAndCountAll({
         group: [
-          [db.sequelize.fn(
+          [Models.sequelize.fn(
             'to_char',
-            db.sequelize.col('createdAt'), 'YYYY-MM-DD',
+            Models.sequelize.col('createdAt'), 'YYYY-MM-DD',
           )],
         ],
         order: [
-          [db.sequelize.fn(
+          [Models.sequelize.fn(
             'to_char',
-            db.sequelize.col('createdAt'), 'YYYY-MM-DD',
+            Models.sequelize.col('createdAt'), 'YYYY-MM-DD',
           ), 'DESC'],
         ],
         attributes: [
-          [db.sequelize.fn('COUNT', db.sequelize.col('id')), 'totalOrder'],
-          [db.sequelize.fn(
+          [Models.sequelize.fn('COUNT', Models.sequelize.col('id')), 'totalOrder'],
+          [Models.sequelize.fn(
             'sum',
-            db.sequelize.col('quantity'),
+            Models.sequelize.col('quantity'),
           ), 'totalQuantity'],
-          [db.sequelize.fn('sum', db.sequelize.col('cost')), 'totalSale'],
-          [db.sequelize.fn(
+          [Models.sequelize.fn('sum', Models.sequelize.col('cost')), 'totalSale'],
+          [Models.sequelize.fn(
             'count',
-            db.sequelize.fn('distinct', db.sequelize.col('userId')),
+            Models.sequelize.fn('distinct', Models.sequelize.col('userId')),
           ), 'totalCustomer'],
-          [db.sequelize.fn(
+          [Models.sequelize.fn(
             'to_char',
-            db.sequelize.col('createdAt'), 'YYYY-MM-DD',
+            Models.sequelize.col('createdAt'), 'YYYY-MM-DD',
           ), 'orderDate'],
         ],
         where: {
@@ -190,7 +190,7 @@ class OrderController {
      * get caterers meals,
      * use meals to get order summary
      */
-    let catererMeals = await db.Meals.findAll({
+    let catererMeals = await Models.Meals.findAll({
       where: {
         userId: request.decoded.user.id,
       },
@@ -201,36 +201,36 @@ class OrderController {
 
     catererMeals = catererMeals.map(meal => meal.id);
 
-    const orderSummary = await db.Orders.findAndCountAll({
+    const orderSummary = await Models.Orders.findAndCountAll({
       group: [
-        [db.sequelize.fn(
+        [Models.sequelize.fn(
           'to_char',
-          db.sequelize.col('createdAt'), 'YYYY-MM-DD',
+          Models.sequelize.col('createdAt'), 'YYYY-MM-DD',
         )],
       ],
       order: [
-        [db.sequelize.fn(
+        [Models.sequelize.fn(
           'to_char',
-          db.sequelize.col('createdAt'), 'YYYY-MM-DD',
+          Models.sequelize.col('createdAt'), 'YYYY-MM-DD',
         ), 'DESC'],
       ],
       attributes: [
-        [db.sequelize.fn('COUNT', db.sequelize.col('id')), 'totalOrder'],
-        [db.sequelize.fn('sum', db.sequelize.col('quantity')), 'totalQuantity'],
-        [db.sequelize.fn('sum', db.sequelize.col('cost')), 'totalSale'],
-        [db.sequelize.fn(
+        [Models.sequelize.fn('COUNT', Models.sequelize.col('id')), 'totalOrder'],
+        [Models.sequelize.fn('sum', Models.sequelize.col('quantity')), 'totalQuantity'],
+        [Models.sequelize.fn('sum', Models.sequelize.col('cost')), 'totalSale'],
+        [Models.sequelize.fn(
           'count',
-          db.sequelize.fn('distinct', db.sequelize.col('userId')),
+          Models.sequelize.fn('distinct', Models.sequelize.col('userId')),
         ), 'totalCustomer'],
-        [db.sequelize.fn(
+        [Models.sequelize.fn(
           'to_char',
-          db.sequelize.col('createdAt'), 'YYYY-MM-DD',
+          Models.sequelize.col('createdAt'), 'YYYY-MM-DD',
         ), 'orderDate'],
       ],
       where: {
         status: 'complete',
         mealId: {
-          [db.sequelize.Op.in]: catererMeals,
+          [Models.sequelize.Op.in]: catererMeals,
         },
       },
       limit,

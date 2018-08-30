@@ -155,6 +155,7 @@ If you are interested in contributing, follow the instructions below.
   - Caterers cannot search for menu records using a specific date.
   - Social authentication is not integrated.
   - No payment platform has been integrated.
+  - Forgot and reset password feature is not implemented.
 
 
 ## License and Copyright

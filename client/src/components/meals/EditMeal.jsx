@@ -152,7 +152,8 @@ export class EditMeal extends React.Component {
             </div>
             <div>
               <h3 className="black-text bold-text">Upload Image</h3>
-              <input type="file" name="imageUpload" className="meal-textbox textbox center" onChange={this.handleChange} />
+              <input accept="image/*" type="file" name="imageUpload"
+                className="meal-textbox textbox center" onChange={this.handleChange} />
             </div>
             <br /><br />
             {this.state.loading &&
@@ -160,7 +161,8 @@ export class EditMeal extends React.Component {
             }
             {!this.state.loading &&
             <div>
-              <input type="button" onClick={this.handleSubmit} className="btn btn-secondary" value="Save" />
+              <input type="button" onClick={this.handleSubmit}
+                className="btn btn-secondary" value="Save" />
               &nbsp;&nbsp;
               <NavLink to="/caterer/meals">Cancel</NavLink>
             </div>
