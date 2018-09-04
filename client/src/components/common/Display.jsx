@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
  */
 class Display extends React.Component {
   render() {
-    return (1 === 1 && this.props.check) ? <div>{this.props.children}</div> : null;
+    return (this.props.check) ? <div>{this.props.children}</div> : null;
   }
 }
 

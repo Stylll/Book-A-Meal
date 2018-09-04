@@ -49,7 +49,7 @@ describe('Test suite for EditMeal Component', () => {
     expect(wrapper.length).toBe(1);
   });
 
-  it('should return error messages for invalid input', () => {
+  it('should return error messages when invalid input is submitted', () => {
     const wrapper = setup();
     wrapper.setState({
       ...invalidMeal,
@@ -65,7 +65,7 @@ describe('Test suite for EditMeal Component', () => {
     expect(state.errors.price).toBe('Price is invalid');
   });
 
-  it('should return error messages for empty input', () => {
+  it('should return error messages when empty input is submitted', () => {
     const wrapper = setup();
     wrapper.setState({
       ...emptyMeal,
@@ -81,7 +81,7 @@ describe('Test suite for EditMeal Component', () => {
     expect(state.errors.price).toBe('Price is required');
   });
 
-  it('should call handleChange and update state', () => {
+  it('should update state when handleChange function called', () => {
     const wrapper = setup();
     const handleChangeSpy = jest.spyOn(wrapper.instance(), 'handleChange');
     const event = {
@@ -97,7 +97,7 @@ describe('Test suite for EditMeal Component', () => {
     expect(state.name).toBe('Jollof');
   });
 
-  it('should call handleSubmit and saveMeal action', () => {
+  it('should call saveMeal action when the submit button is clicked', () => {
     const wrapper = setup();
     const saveMealSpy = jest.spyOn(wrapper.instance().props.actions, 'saveMeal');
     wrapper.setState({

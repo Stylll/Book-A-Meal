@@ -165,6 +165,69 @@ const getMenuFailedResponse = {
   message: 'Menu for the day not set',
 };
 
+const getSingleMenuResponse = {
+  menu:
+    {
+      id: 2,
+      name: 'Menu For Friday, 15 June 2018',
+      date: '2018-06-15',
+      mealIds: [
+        1,
+        3,
+        5,
+      ],
+      userId: 1,
+      meals: [
+        {
+          id: 1,
+          name: 'Yam and eggs',
+          image: 'https://res.cloudinary.com/styll/image/upload/v1524560568/foods.jpg',
+          price: 1500,
+          userId: 1,
+          MenuMeals: {
+            menuId: 2,
+            mealId: 1,
+            createdAt: '2018-06-15T16:30:01.188Z',
+            updatedAt: '2018-06-15T16:30:01.188Z',
+          },
+        },
+        {
+          id: 3,
+          name: 'Fried Rice with chicken',
+          image: 'https://res.cloudinary.com/styll/image/upload/v1524560568/foods.jpg',
+          price: 2000,
+          userId: 1,
+          MenuMeals: {
+            menuId: 2,
+            mealId: 3,
+            createdAt: '2018-06-15T16:30:01.188Z',
+            updatedAt: '2018-06-15T16:30:01.188Z',
+          },
+        },
+        {
+          id: 5,
+          name: 'Beans and Bread',
+          image: 'https://res.cloudinary.com/styll/image/upload/v1524560568/foods.jpg',
+          price: 1200,
+          userId: 1,
+          MenuMeals: {
+            menuId: 2,
+            mealId: 5,
+            createdAt: '2018-06-15T16:30:01.188Z',
+            updatedAt: '2018-06-15T16:30:01.188Z',
+          },
+        },
+      ],
+    },
+  pagination: {
+    totalCount: 10,
+    limit: 3,
+    offset: 0,
+    noPage: 4,
+    pageNo: 1,
+  },
+};
+
 export {
   saveMenuResponse,
   updateMenuResponse,
@@ -175,4 +238,5 @@ export {
   emptyMenu,
   getMenuResponse,
   getMenuFailedResponse,
+  getSingleMenuResponse,
 };

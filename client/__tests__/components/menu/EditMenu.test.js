@@ -68,7 +68,7 @@ describe('Test Suite for EditMenu component', () => {
     expect(wrapper.length).toBe(1);
   });
 
-  it('should return error for empty meals array', () => {
+  it('should return error when an empty meals array is submitted', () => {
     const wrapper = setup();
     wrapper.setState({
       mealIds: emptyMenu.mealIds,
@@ -82,7 +82,7 @@ describe('Test Suite for EditMenu component', () => {
     expect(handleSubmitSpy).toHaveBeenCalled();
   });
 
-  it('should return error for invalid meals array', () => {
+  it('should return error when an invalid meals array is submitted', () => {
     const wrapper = setup();
     wrapper.setState({
       mealIds: invalidMenu.mealIds,
@@ -111,7 +111,7 @@ describe('Test Suite for EditMenu component', () => {
     expect(wrapper.state().mealIds).toEqual([5]);
   });
 
-  it('shouild call handleSubmit and call saveMenu action', () => {
+  it('shouild call saveMenu action when handleSubmit function is called', () => {
     const wrapper = setup();
     wrapper.setState({
       mealIds: validMenu.mealIds,
@@ -126,7 +126,7 @@ describe('Test Suite for EditMenu component', () => {
     expect(saveMenuSpy).toHaveBeenCalled();
   });
 
-  it('should call updateOption and update state', () => {
+  it('should update state when updateOption function is called', () => {
     const wrapper = setup();
     const updateOptionSpy = jest.spyOn(wrapper.instance(), 'updateOption');
     wrapper.instance().updateOption(saveMealResponse.meal);
@@ -134,7 +134,7 @@ describe('Test Suite for EditMenu component', () => {
     expect(wrapper.state().mealOption).toEqual(saveMealResponse.meal);
   });
 
-  it('should call removeMeal and update state', () => {
+  it('should update state when removeMeal function is called', () => {
     const wrapper = setup();
     wrapper.setState({
       mealIds: [1, 2, 3, 4, 5],
@@ -149,5 +149,48 @@ describe('Test Suite for EditMenu component', () => {
     wrapper.instance().removeMeal(event);
     expect(removeMealSpy).toHaveBeenCalled();
     expect(wrapper.state().mealIds).toEqual([2, 3, 4, 5]);
+  });
+
+  it('should call handleChange method when componentWillReceiveProps method is called', () => {
+    const wrapper = setup();
+    const props = {
+      actions: {
+        saveMenu: () => (Promise.resolve()),
+        getMenuById: () => (Promise.resolve()),
+      },
+      menu: saveMenuResponse.menu,
+      meals: [saveMealResponse.meal],
+      errors: {},
+      match: {
+        params: {
+          id: 1,
+        },
+      },
+    };
+    const handleChangeSpy = jest.spyOn(wrapper.instance(), 'handlePageChange');
+    wrapper.instance().componentWillReceiveProps(props);
+    expect(handleChangeSpy).toHaveBeenCalled();
+  });
+
+  it('should update state and call getMenuById action when fetchData method is called', () => {
+    const props = {
+      actions: {
+        saveMenu: () => (Promise.resolve()),
+        getMenuById: jest.fn(),
+      },
+      menu: saveMenuResponse.menu,
+      meals: [saveMealResponse.meal],
+      errors: {},
+      match: {
+        params: {
+          id: 1,
+        },
+      },
+    };
+    const wrapper = shallow(<EditMenu {...props} />);
+    wrapper.instance().fetchData({ selected: 1 });
+    expect(wrapper.state().loading).toBe(true);
+    expect(wrapper.state().id).toBe(1);
+    expect(props.actions.getMenuById).toHaveBeenCalled();
   });
 });

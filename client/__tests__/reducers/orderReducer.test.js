@@ -22,7 +22,7 @@ import {
 } from '../helpers/mockOrders';
 
 describe('Test Suite for Order Reducer for customer - SAVE', () => {
-  it('should update state with order if save was successful', () => {
+  it('should update state with order if save order request was successful', () => {
     const action = saveOrderSuccess(saveOrderResponse);
     initialState.orders.isCustomer = true;
     const state = orderReducer(initialState.orders, action);
@@ -32,7 +32,7 @@ describe('Test Suite for Order Reducer for customer - SAVE', () => {
     expect(newState.orders[0].mealId).toBe(saveOrderResponse.order.mealId);
   });
 
-  it('should update state with errors if save failed', () => {
+  it('should update state with errors if save order request failed', () => {
     initialState.orders.isCustomer = true;
     const action = saveOrderFailed(saveOrderFailedResponse);
     const state = orderReducer(initialState.orders, action);
@@ -53,7 +53,7 @@ describe('Test Suite for Order Reducer for customer - SAVE', () => {
 });
 
 describe('Test Suite for order reducer for customer - GET', () => {
-  it('should update state with orders if get request is successful', () => {
+  it('should update state with orders if get order request is successful', () => {
     initialState.orders.isCustomer = true;
     const action = getOrdersSuccess(getOrdersResponse);
     const state = orderReducer(initialState.orders, action);
@@ -62,7 +62,7 @@ describe('Test Suite for order reducer for customer - GET', () => {
     expect(newState.orders[0]).toEqual(getOrdersResponse.orders[0]);
   });
 
-  it('should update state with errors if get request failed', () => {
+  it('should update state with errors if get order request failed', () => {
     initialState.orders.isCustomer = true;
     const action = getOrdersFailed(getOrdersFailedResponse);
     const state = orderReducer(initialState.orders, action);
@@ -72,7 +72,7 @@ describe('Test Suite for order reducer for customer - GET', () => {
 });
 
 describe('Test Suite for order reducer for customer - DELETE', () => {
-  it('should remove order from state if delete is successful', () => {
+  it('should remove order from state if delete order request was successful', () => {
     initialState.orders.isCustomer = true;
     initialState.orders.customerOrders.orders = [];
     initialState.orders.customerOrders.orders.push(saveOrderResponse.order);
@@ -82,7 +82,7 @@ describe('Test Suite for order reducer for customer - DELETE', () => {
     expect(newState.orders.length).toBe(0);
   });
 
-  it('should not update state if delete failed', () => {
+  it('should not update state if delete order request failed', () => {
     initialState.orders.isCustomer = true;
     const action = deleteOrderFailed(deleteOrderFailedResponse);
     const state = orderReducer(initialState.orders, action);
@@ -90,21 +90,21 @@ describe('Test Suite for order reducer for customer - DELETE', () => {
     expect(newState.orders.length).toBe(1);
   });
 
-  it('should set isCustomer to true if a customer logs in', () => {
+  it('should set isCustomer to true if a customer logs in successfully', () => {
     const action = signinSuccess(validCustomer);
     const newState = orderReducer(initialState.orders, action);
     expect(newState.isCaterer).toBe(false);
     expect(newState.isCustomer).toBe(true);
   });
 
-  it('should set isCaterer to true if a caterer logs in', () => {
+  it('should set isCaterer to true if a caterer logs in successfully', () => {
     const action = signinSuccess(validCaterer);
     const newState = orderReducer(initialState.orders, action);
     expect(newState.isCaterer).toBe(true);
     expect(newState.isCustomer).toBe(false);
   });
 
-  it('should clear out the orders object in state on logout', () => {
+  it('should clear out the orders object in state when a user logs out', () => {
     const oldState = initialState.orders;
     const state = orderReducer(initialState.orders, { type: LOGOUT });
     expect(state.isCaterer).toBe(false);

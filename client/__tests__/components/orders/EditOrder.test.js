@@ -86,7 +86,7 @@ describe('Test suite for EditOrder component', () => {
     expect(wrapper.find('input').last().prop('type')).toBe('button');
   });
 
-  it('should return error for invalid input', () => {
+  it('should return error when invalid input is submitted', () => {
     const wrapper = setup();
     wrapper.setState({
       quantity: 0,
@@ -101,7 +101,7 @@ describe('Test suite for EditOrder component', () => {
     expect(state.errors.quantity).toBe('Quantity must be greater than zero');
   });
 
-  it('should call handleSubmit function and saveOrder action for saving an order', () => {
+  it('should call saveOrder action when handleSubmit function is called when saving an order', () => {
     const wrapper = setup();
     wrapper.setState({
       quantity: 1,
@@ -118,7 +118,7 @@ describe('Test suite for EditOrder component', () => {
     expect(sendOrderSpy).toHaveBeenCalled();
   });
 
-  it('should call handleSubmit function and saveOrder action for updating an order', () => {
+  it('should call saveOrder action when handleSubmit function is called when updating an order', () => {
     const wrapper = setupB();
     wrapper.setState({
       quantity: 3,
@@ -136,7 +136,7 @@ describe('Test suite for EditOrder component', () => {
     expect(sendOrderSpy).toHaveBeenCalled();
   });
 
-  it('should call handleChange and update state', () => {
+  it('should update state when handleChange function is called', () => {
     const wrapper = setup();
     const handleChangeSpy = jest.spyOn(wrapper.instance(), 'handleChange');
     const event = {

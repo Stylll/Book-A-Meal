@@ -64,6 +64,8 @@ export class EditMenu extends React.Component {
       ? props.pagination.noPage : 0;
     const pageNo = (props.pagination && props.pagination.pageNo)
       ? props.pagination.pageNo : 0;
+    const totalCount = (props.pagination && props.pagination.totalCount)
+      ? props.pagination.totalCount : 0;
     const rowCount = Math.ceil((menu.meals.length / this.state.rowLength));
     const mealIds = menu.mealIds || [];
     this.setState({
@@ -74,7 +76,7 @@ export class EditMenu extends React.Component {
       mealIds,
       meals: menu.meals,
       loading: false,
-      totalCount: props.pagination.totalCount,
+      totalCount,
       mealOption: {},
     });
   }

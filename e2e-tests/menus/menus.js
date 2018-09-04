@@ -15,7 +15,7 @@ module.exports = {
   after: (browser) => {
     browser.end();
   },
-  'Caterer can create a menu with a meal': function (browser) {
+  'A Caterer should be able to create a menu with a meal': function (browser) {
     browser
       .url('http://localhost:3000/users/signin')
       .waitForElementVisible('.signin-content', 1000)
@@ -41,7 +41,7 @@ module.exports = {
       .assert.elementPresent('#app > div > div > div > div:nth-child(7) > div > div > div:nth-child(2) > a')
       .assert.elementPresent('#app > div > div > div > div:nth-child(7) > div > div > div:nth-child(3) > a');
   },
-  'Caterer can view the list of menu': function (browser) {
+  'A Caterer should be able to view the list of menu': function (browser) {
     browser
       .url('http://localhost:3000/caterer/menus')
       .waitForElementVisible('body', 1000)
@@ -54,7 +54,7 @@ module.exports = {
       .assert.containsText('#app > div > div > div > div:nth-child(7) > div > div > div:nth-child(3) > a', 'View')
       .assert.elementPresent('#app > div > div > div > div:nth-child(7) > ul');
   },
-  'Caterer can view the list of meals in a menu': function (browser) {
+  'A Caterer should be able to view the list of meals in a menu': function (browser) {
     browser
       .url('http://localhost:3000/caterer/menus/view/1')
       .waitForElementVisible('body', 1000)
@@ -68,7 +68,7 @@ module.exports = {
       .assert.containsText('#app > div > div > div > div:nth-child(4) > div > div:nth-child(1) > div.card-content > div.card-text.black-text > h4', validMeal2.price)
       .assert.elementPresent('#app > div > div > div > div:nth-child(4) > ul');
   },
-  'Caterer can edit a menu and add more meals': function (browser) {
+  'A Caterer should be able to edit a menu and add more meals': function (browser) {
     browser
       .url('http://localhost:3000/caterer/menus/edit/1')
       .waitForElementVisible('body', 1000)

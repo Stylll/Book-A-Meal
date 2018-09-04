@@ -20,7 +20,7 @@ module.exports = {
   after: (browser) => {
     browser.end();
   },
-  'Caterer can view pending orders': function (browser) {
+  'A Caterer should be able to view pending orders': function (browser) {
     browser
       .url('http://localhost:3000/users/signin')
       .waitForElementVisible('.signin-content', 1000)
@@ -43,7 +43,7 @@ module.exports = {
       .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div:nth-child(2) > div.card-content > div > div > a.btn.btn-danger')
       .assert.elementPresent('#app > div > div > div > div:nth-child(4) > ul');
   },
-  'Caterer can view all orders': function (browser) {
+  'A Caterer should be able view all orders': function (browser) {
     browser
       .url('http://localhost:3000/caterer/orders')
       .waitForElementVisible('body', 1000)
@@ -57,7 +57,7 @@ module.exports = {
       .assert.containsText('#app > div > div > div > div:nth-child(4) > div > table > tr:nth-child(3) > td.price.wrap-text', validOrder1.price)
       .assert.elementPresent('#app > div > div > div > div:nth-child(4) > ul');
   },
-  'Caterer can approve orders': function (browser) {
+  'A Caterer should be able approve orders': function (browser) {
     browser
       .url('http://localhost:3000/caterer/orders/pending')
       .waitForElementVisible('body', 1000)
@@ -81,7 +81,7 @@ module.exports = {
       .assert.containsText('#app > div > div > div > div:nth-child(4) > div > div:nth-child(1) > div.card-content > div > h3', validMeal1.name)
       .assert.containsText('#app > div > div > div > div:nth-child(4) > div > div:nth-child(1) > div.card-content > div > h4.black-text.light-text.wrap-text', validOrder1.price);
   },
-  'Caterer can decline orders': function (browser) {
+  'A Caterer should be able decline orders': function (browser) {
     browser
       .url('http://localhost:3000/caterer/orders/pending')
       .waitForElementVisible('body', 1000)
@@ -105,7 +105,7 @@ module.exports = {
       .assert.elementNotPresent('#app > div > div > div > div:nth-child(4) > div > div:nth-child(1) > div.card-content > div > h3')
       .assert.elementNotPresent('#app > div > div > div > div:nth-child(4) > div > div:nth-child(1) > div.card-content > div > h4.black-text.light-text.wrap-text');
   },
-  'Caterer can view order summary': function (browser) {
+  'A Caterer should be able to view order summary': function (browser) {
     browser
       .url('http://localhost:3000/caterer/orders/summary')
       .waitForElementVisible('body', 1000)

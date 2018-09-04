@@ -16,13 +16,14 @@
 const processMealIds = (menu, newMealIds, userId) => {
   const oldMealIds = [...menu.mealIds];
   // get the difference
-  const diffIds = oldMealIds.filter(x => !newMealIds.includes(x));
+  const diffIds = oldMealIds.filter(id => !newMealIds.includes(id));
   // loop to difference to check if meal is owned by user
-  diffIds.forEach((item) => {
-    const meal = menu.meals.find(x => x.id === item && x.userId === userId);
+  diffIds.forEach((id) => {
+    const meal = menu.meals
+      .find(mealItem => mealItem.id === id && mealItem.userId === userId);
     // remove meal from oldMealIds if its owned by the user
     if (meal) {
-      oldMealIds.splice(oldMealIds.indexOf(item), 1);
+      oldMealIds.splice(oldMealIds.indexOf(id), 1);
     }
   });
   return oldMealIds.concat(newMealIds);

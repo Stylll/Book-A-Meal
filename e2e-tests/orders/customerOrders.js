@@ -19,7 +19,7 @@ module.exports = {
   after: (browser) => {
     browser.end();
   },
-  'Customer should be able to make an order': function (browser) {
+  'A Customer should be able to make an order': function (browser) {
     browser
       .url('http://localhost:3000/users/signin')
       .waitForElementVisible('.signin-content', 1000)
@@ -66,7 +66,7 @@ module.exports = {
       .assert.containsText('#app > div > div > div > div:nth-child(3) > div > div:nth-child(3) > h3', 'Your order has been received and will be delivered shortly')
       .assert.elementPresent('#app > div > div > div > div:nth-child(3) > div > div:nth-child(3) > a');
   },
-  'Customer can view his order history': function (browser) {
+  'A Customer should be able to view his order history': function (browser) {
     browser
       .url('http://localhost:3000/customer/orders')
       .waitForElementVisible('body', 1000)
@@ -82,7 +82,7 @@ module.exports = {
       .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > table > tr:nth-child(2) > td.orderdate.wrap-text')
       .assert.elementPresent('#app > div > div > div > div:nth-child(4) > ul');
   },
-  'Customer can edit his pending order': function (browser) {
+  'A Customer should be able to edit his pending order': function (browser) {
     browser
       .url('http://localhost:3000/customer/orders/pending')
       .waitForElementVisible('body', 3000)
@@ -107,7 +107,7 @@ module.exports = {
       .assert.containsText('#app > div > div > div > div:nth-child(4) > div > div > div.card-content > div > h4.black-text.light-text.wrap-text', 3500)
       .assert.containsText('#app > div > div > div > div:nth-child(4) > div > div > div.card-content > div > h4.black-text.light-text.wrap-text', 10500);
   },
-  'Customer can cancel a pending order': function (browser) {
+  'A Customer should be able to cancel a pending order': function (browser) {
     browser
       .url('http://localhost:3000/customer/orders/pending')
       .waitForElementVisible('body', 3000)

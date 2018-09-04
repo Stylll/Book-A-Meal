@@ -11,7 +11,7 @@ module.exports = {
   after: (browser) => {
     browser.end();
   },
-  'Caterer cannot create meal with invalid information': function (browser) {
+  'A Caterer should not be able to create a meal with invalid information': function (browser) {
     browser
       .url('http://localhost:3000/users/signin')
       .waitForElementVisible('.signin-content', 1000)
@@ -27,7 +27,7 @@ module.exports = {
       .assert.containsText('#name-error', 'Meal name is required')
       .assert.containsText('#price-error', 'Price is invalid');
   },
-  'Caterer can create meal with valid information': function (browser) {
+  'A Caterer should be able to create a meal with valid information': function (browser) {
     browser
       .url('http://localhost:3000/caterer/meals/edit')
       .waitForElementVisible('.meal-form', 1000)
@@ -43,7 +43,7 @@ module.exports = {
       .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div > div.card-content > div.card-text.black-text > h3')
       .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div > div.card-content > div.card-text.black-text > h4');
   },
-  'Caterer can view the list of meals': function (browser) {
+  'A Caterer should be able to view the list of meals': function (browser) {
     browser
       .url('http://localhost:3000/caterer/meals/')
       .waitForElementVisible('body', 1000)
@@ -56,7 +56,7 @@ module.exports = {
       .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div > div.card-content > div.card-text.black-text > h3')
       .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div > div.card-content > div.card-text.black-text > h4');
   },
-  'Caterer can delete a meal from the list of meals': function (browser) {
+  'A Caterer should be able to delete a meal from the list of meals': function (browser) {
     browser
       .url('http://localhost:3000/caterer/meals/')
       .waitForElementVisible('body', 1000)

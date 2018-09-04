@@ -12,7 +12,7 @@ module.exports = {
   after: (browser) => {
     browser.end();
   },
-  'Unauthorized page should display the expected information': function (browser) {
+  'A user should be redirected to the unauthorized access page when attempting to access an unauthorized route': function (browser) {
     browser
       .url('http://localhost:3000/users/signin')
       .waitForElementVisible('.signin-content', 1000)

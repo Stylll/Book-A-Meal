@@ -47,7 +47,7 @@ describe('Test suite for Signin component', () => {
     expect(wrapper.find('.signin-content').length).toBe(0);
   });
 
-  it('should handleChange and update state', () => {
+  it('should update state when handleChange is called', () => {
     const wrapper = setup();
     const handleChangeSpy = jest.spyOn(wrapper.instance(), 'handleChange');
     const event = {
@@ -91,7 +91,7 @@ describe('Test suite for Signin component', () => {
     expect(wrapper.state().errors.email).toBe('Email is invalid');
   });
 
-  it('should handleSubmit and call signin action', () => {
+  it('should call signin action when handlesubmit method is called', () => {
     const wrapper = setup();
     wrapper.setState({
       email: validUser.email,

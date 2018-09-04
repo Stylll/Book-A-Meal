@@ -6,7 +6,7 @@ const menuReducer = (state = initialState.menus, action) => {
     case types.SAVE_MENU_SUCCESS:
       return {
         ...state,
-        menus: [action.menu, ...state.menus.filter(m => m.id !== action.menu.id)],
+        menus: [action.menu, ...state.menus.filter(menu => menu.id !== action.menu.id)],
         errors: {},
       };
 

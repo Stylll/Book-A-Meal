@@ -16,15 +16,15 @@ import { getMenus } from './menuActions';
 const signup = signupDetails => function (dispatch) {
   dispatch(showLoading());
   return axios.post(api.user.signUp, signupDetails)
-    .then((resp) => {
+    .then((response) => {
       /* eslint-disable no-undef */
-      localStorage.setItem('jwtToken', resp.data.token);
-      setAuthorizationToken(resp.data.token);
-      dispatch(signupSuccess(resp.data.user));
+      localStorage.setItem('jwtToken', response.data.token);
+      setAuthorizationToken(response.data.token);
+      dispatch(signupSuccess(response.data.user));
       dispatch(hideLoading());
     })
-    .catch((err) => {
-      dispatch(signupFailed(err.response.data.errors));
+    .catch((error) => {
+      dispatch(signupFailed(error.response.data.errors));
       dispatch(hideLoading());
     });
 };
@@ -63,19 +63,19 @@ const signupFailed = (errors) => {
 const signin = signinDetails => function (dispatch) {
   dispatch(showLoading());
   return axios.post(api.user.signin, signinDetails)
-    .then((resp) => {
+    .then((response) => {
       /* eslint-disable no-undef */
-      localStorage.setItem('jwtToken', resp.data.token);
-      setAuthorizationToken(resp.data.token);
-      dispatch(signinSuccess(resp.data.user));
+      localStorage.setItem('jwtToken', response.data.token);
+      setAuthorizationToken(response.data.token);
+      dispatch(signinSuccess(response.data.user));
       dispatch(getMenus());
-      if (resp.data.user.accountType !== 'customer') {
+      if (response.data.user.accountType !== 'customer') {
         dispatch(getMeals());
       }
       dispatch(hideLoading());
     })
-    .catch((err) => {
-      dispatch(signinFailed(err.response.data));
+    .catch((error) => {
+      dispatch(signinFailed(error.response.data));
       dispatch(hideLoading());
     });
 };

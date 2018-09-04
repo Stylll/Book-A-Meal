@@ -27,7 +27,7 @@ describe('Test suite for Meal Item', () => {
     expect(wrapper.find('NavLink').length).toBe(1);
   });
 
-  it('should display only showEdit link', () => {
+  it('should display only showEdit link when showedit props is true', () => {
     const props = {
       showEdit: true,
       showDelete: false,
@@ -39,7 +39,7 @@ describe('Test suite for Meal Item', () => {
     expect(wrapper.find('NavLink').length).toBe(1);
   });
 
-  it('should display only showDelete link', () => {
+  it('should display only showDelete link when showdelete props is true', () => {
     const props = {
       showEdit: false,
       showDelete: true,
@@ -52,7 +52,7 @@ describe('Test suite for Meal Item', () => {
     expect(wrapper.find('a').first().text()).toBe('Delete');
   });
 
-  it('should display only showOrder link', () => {
+  it('should display only showOrder link when showorder props is true', () => {
     const props = {
       showEdit: false,
       showDelete: false,

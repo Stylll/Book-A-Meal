@@ -1,7 +1,7 @@
 import 'babel-polyfill';
 
 module.exports = {
-  'Notfound page should display expected information': function (browser) {
+  'A user should be redirected to a not found page when attempting to access a route that does not exist ': function (browser) {
     browser
       .url('http://localhost:3000/stark-enterprise')
       .waitForElementVisible('body', 3000)

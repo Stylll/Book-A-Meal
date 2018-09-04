@@ -20,8 +20,8 @@ const getMessageValue = (complexObject) => {
   if (!isPlainObject(complexObject)) return 'Argument must be an object';
   const simpleObject = {};
   // get error message and format properly
-  Object.keys(complexObject).forEach((obj) => {
-    simpleObject[obj] = complexObject[obj].message;
+  Object.keys(complexObject).forEach((object) => {
+    simpleObject[object] = complexObject[object].message;
   });
 
   return simpleObject;
@@ -34,9 +34,10 @@ const getMessageValue = (complexObject) => {
  * @returns {String} Monday, 21 September 2018
  */
 const beautifyDate = (date) => {
-  const d = new Date(date);
-  if (d.toString() === 'Invalid Date') return null;
-  return `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  const actualDate = new Date(date);
+  if (actualDate.toString() === 'Invalid Date') return null;
+  return `${days[actualDate.getDay()]}, 
+  ${actualDate.getDate()} ${months[actualDate.getMonth()]} ${actualDate.getFullYear()}`;
 };
 
 export {

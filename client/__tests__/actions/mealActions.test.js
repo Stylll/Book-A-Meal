@@ -98,7 +98,7 @@ describe('Test suite for Meal Actions', () => {
 describe('Test suite for Meal get Actions', () => {
   beforeEach(() => moxios.install());
   afterEach(() => moxios.uninstall());
-  it('should return get meal success action with payload', () => {
+  it('should return get meal success action with payload if get request is successful', () => {
     const store = mockStore(initialState);
     const expectedResult = {
       type: types.GET_MEAL_SUCCESS,
@@ -117,7 +117,7 @@ describe('Test suite for Meal get Actions', () => {
       })
   });
 
-  it('should return get meal failed action', () => {
+  it('should return get meal failed action if get request fails', () => {
     const store = mockStore(initialState);
     const expectedResult = {
       type: types.GET_MEAL_FAILED,
@@ -139,7 +139,7 @@ describe('Test suite for Meal delete Actions', () => {
   beforeEach(() => moxios.install());
   afterEach(() => moxios.uninstall());
 
-  it('should return delete success action and payload if successful', () => {
+  it('should return delete success action and payload if delete request is successful', () => {
     const store = mockStore(initialState);
     const expectedResult = {
       type: types.DELETE_MEAL_SUCCESS,
@@ -156,7 +156,7 @@ describe('Test suite for Meal delete Actions', () => {
       });
   });
 
-  it('should return delete failed action and payload if failed', () => {
+  it('should return delete failed action and payload if delete request fails', () => {
     const store = mockStore(initialState);
     const expectedResult = {
       type: types.DELETE_MEAL_FAILED,
@@ -164,22 +164,6 @@ describe('Test suite for Meal delete Actions', () => {
     moxios.stubRequest(api.meals.delete(saveMealResponse.meal.id), {
       status: 401,
       response: deleteMealFailedResponse,
-    });
-    return store.dispatch(deleteMeal(saveMealResponse.meal.id))
-      .then(() => {
-        const actions = store.getActions();
-        expect(actions[1]).toEqual(expectedResult);
-      });
-  });
-
-  it('should return delete failed action type', () => {
-    const store = mockStore(initialState);
-    const expectedResult = {
-      type: types.DELETE_MEAL_FAILED,
-    };
-    moxios.stubRequest(api.meals.delete(saveMealResponse.meal.id), {
-      status: 401,
-      response: deleteMealFailedResponseB,
     });
     return store.dispatch(deleteMeal(saveMealResponse.meal.id))
       .then(() => {
