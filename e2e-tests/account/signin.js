@@ -7,7 +7,7 @@ module.exports = {
     await clearUsers();
     await insertSeedUsers(validUser1);
   },
-  'User cannot signin with invalid information': function (browser) {
+  'A User should not be able signin with invalid information': function (browser) {
     browser
       .url('http://localhost:3000')
       .waitForElementVisible('body', 1000)
@@ -19,7 +19,7 @@ module.exports = {
       .pause(5000)
       .assert.containsText('#email-error', 'Email is invalid');
   },
-  'User can signin with valid information': function (browser) {
+  'A User should be able to signin with valid information': function (browser) {
     browser
       .url('http://localhost:3000')
       .waitForElementVisible('body', 1000)

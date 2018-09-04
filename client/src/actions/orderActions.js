@@ -38,32 +38,32 @@ const saveOrder = orderDetails => (dispatch) => {
 
 /**
  * action to handle successful order save
- * @param {object} responsedata
+ * @param {object} responseObject
  * @returns {object} action object for reducer.
  */
-const saveOrderSuccess = (data) => {
+const saveOrderSuccess = (responseObject) => {
   toastr.success('Saved', 'Order saved successfully');
   return {
     type: types.SAVE_ORDER_SUCCESS,
-    order: data.order,
+    order: responseObject.order,
   };
 };
 
 /**
  * action to handle failed order save
- * @param {object} data
+ * @param {object} errorObject
  * @returns {object} action object for reducer.
  */
-const saveOrderFailed = (data) => {
+const saveOrderFailed = (errorObject) => {
   let errors = {};
-  if (data.errors) {
-    errors = getMessageValue(data.errors);
-  } else if (data.message) {
+  if (errorObject.errors) {
+    errors = getMessageValue(errorObject.errors);
+  } else if (errorObject.message) {
     errors = {
-      message: data.message,
+      message: errorObject.message,
     };
   }
-  toastr.error('Save Failed', data.message
+  toastr.error('Save Failed', errorObject.message
   || 'Sorry. You no longer have the permission to make changes to this order.');
   return {
     type: types.SAVE_ORDER_FAILED,
@@ -90,25 +90,25 @@ const getOrders = (limit = 10, offset = 0, status = '') => (dispatch) => {
 
 /**
  * action to handle successful orders get request
- * @param {object} data
+ * @param {object} responseObject
  * @returns {object} action object for reducer
  */
-const getOrdersSuccess = data => ({
+const getOrdersSuccess = responseObject => ({
   type: types.GET_ORDERS_SUCCESS,
-  orders: data.orders,
-  pagination: data.pagination,
+  orders: responseObject.orders,
+  pagination: responseObject.pagination,
 });
 
 /**
  * action to handle failed orders get request
- * @param {object} data
+ * @param {object} errorObject
  * @returns {object} action object for reducer
  */
-const getOrdersFailed = (data) => {
+const getOrdersFailed = (errorObject) => {
   const errors = {
-    message: data.message,
+    message: errorObject.message,
   };
-  toastr.error('Unexpected Error', data.message || 'Could not get orders');
+  toastr.error('Unexpected Error', errorObject.message || 'Could not get orders');
   return {
     type: types.GET_ORDERS_FAILED,
     errors,
@@ -148,18 +148,18 @@ const deleteOrderSuccess = (orderId) => {
 
 /**
  * action to handle failed order delete request
- * @param {object} data
+ * @param {object} errorObject
  * @returns {object} action object for reducer
  */
-const deleteOrderFailed = (data) => {
+const deleteOrderFailed = (errorObject) => {
   let errors = {};
-  if (data.errors) {
-    errors = getMessageValue(data.errors);
-  } else if (data.message) {
+  if (errorObject.errors) {
+    errors = getMessageValue(errorObject.errors);
+  } else if (errorObject.message) {
     errors = {
-      message: data.message,
+      message: errorObject.message,
     };
-    toastr.error('Unexpected Error', data.message || 'Could not delete order');
+    toastr.error('Unexpected Error', errorObject.message || 'Could not delete order');
   }
   return {
     type: types.DELETE_ORDER_FAILED,
@@ -185,25 +185,25 @@ const getOrderSummary = (limit, offset) => (dispatch) => {
 
 /**
  * action to handle successful orders summary get request
- * @param {object} data
+ * @param {object} responseObject
  * @returns {object} action object for reducer
  */
-const getOrderSummarySuccess = data => ({
+const getOrderSummarySuccess = responseObject => ({
   type: types.GET_ORDER_SUMMARY_SUCCESS,
-  summary: data.orders,
-  pagination: data.pagination,
+  summary: responseObject.orders,
+  pagination: responseObject.pagination,
 });
 
 /**
  * action to handle failed orders summary get request
- * @param {object} data
+ * @param {object} errorObject
  * @returns {object} action object for reducer
  */
-const getOrderSummaryFailed = (data) => {
+const getOrderSummaryFailed = (errorObject) => {
   const errors = {
-    message: data.message,
+    message: errorObject.message,
   };
-  toastr.error('Unexpected Error', data.message || 'Could not get orders');
+  toastr.error('Unexpected Error', errorObject.message || 'Could not get orders');
   return {
     type: types.GET_ORDER_SUMMARY_FAILED,
     errors,

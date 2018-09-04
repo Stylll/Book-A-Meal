@@ -21,7 +21,7 @@ const orderReducer = (state = initialState.orders, action) => {
             orders:
                 [
                   ...state.catererOrders
-                    .orders.filter(m => m.id !== action.order.id), action.order,
+                    .orders.filter(order => order.id !== action.order.id), action.order,
                 ],
             summary: state.catererOrders.summary,
             errors: state.catererOrders.errors,
@@ -66,7 +66,7 @@ const orderReducer = (state = initialState.orders, action) => {
         return {
           ...state,
           catererOrders: {
-            orders: state.catererOrders.orders.filter(m => m.id !== action.orderId),
+            orders: state.catererOrders.orders.filter(order => order.id !== action.orderId),
             errors: {},
             summary: state.catererOrders.summary,
             pagination: state.catererOrders.pagination,

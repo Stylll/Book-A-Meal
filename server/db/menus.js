@@ -24,8 +24,6 @@ class Menus {
       return { err: new Error('Menu date is invalid') };
     }
 
-    // check if menu date exists
-
     // check if user id is provided
     if (!menu.userId) return { err: new Error('User id is required') };
 

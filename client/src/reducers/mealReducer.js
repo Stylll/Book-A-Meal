@@ -6,7 +6,7 @@ const mealReducer = (state = initialState.meals, action) => {
     case types.SAVE_MEAL_SUCCESS:
       return {
         ...state,
-        meals: [action.meal, ...state.meals.filter(m => m.id !== action.meal.id)],
+        meals: [action.meal, ...state.meals.filter(meal => meal.id !== action.meal.id)],
         errors: {},
       };
 
@@ -32,7 +32,7 @@ const mealReducer = (state = initialState.meals, action) => {
     case types.DELETE_MEAL_SUCCESS:
       return {
         ...state,
-        meals: state.meals.filter(m => m.id !== action.mealId),
+        meals: state.meals.filter(meal => meal.id !== action.mealId),
       };
 
     case types.DELETE_MEAL_FAILED:

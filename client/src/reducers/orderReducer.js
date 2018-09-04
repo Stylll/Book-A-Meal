@@ -27,7 +27,7 @@ const orderReducer = (state = initialState.orders, action) => {
             orders:
                 [
                   ...state.customerOrders
-                    .orders.filter(m => m.id !== action.order.id), action.order,
+                    .orders.filter(order => order.id !== action.order.id), action.order,
                 ],
             errors: state.customerOrders.errors,
             pagination: state.customerOrders.pagination,
@@ -68,7 +68,7 @@ const orderReducer = (state = initialState.orders, action) => {
         return {
           ...state,
           customerOrders: {
-            orders: state.customerOrders.orders.filter(m => m.id !== action.orderId),
+            orders: state.customerOrders.orders.filter(order => order.id !== action.orderId),
             errors: {},
             pagination: state.customerOrders.pagination,
           },

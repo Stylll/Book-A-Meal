@@ -64,7 +64,7 @@ describe('Test suite for Summary List', () => {
     expect(wrapper.state().pageCount).toBe(0);
   });
 
-  it('should call fetchMore function and update state when triggered', () => {
+  it('should call fetchMore function and update state when fetchMore function triggered', () => {
     const wrapper = setup();
     const fetchMoreSpy = jest.spyOn(wrapper.instance(), 'fetchMore');
     const event = {

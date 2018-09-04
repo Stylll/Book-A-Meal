@@ -47,16 +47,7 @@ describe('Test Suite for Manage Meal', () => {
     expect(wrapper.length).toBe(1);
   });
 
-  it('should call handleDelete and return delete modal', () => {
-    const wrapper = setup();
-    const deleteMealSpy = jest.spyOn(wrapper.instance().props.actions, 'deleteMeal');
-    const event = {
-      preventDefault: jest.fn(),
-    };
-    const result = wrapper.instance().handleDelete(event, saveMealResponse.meal.id);
-  });
-
-  it('should call deleteItem and call deleteMeal action', () => {
+  it('should call deleteMeal action when deleteItem method is triggered', () => {
     const wrapper = setup();
     const deleteMealSpy = jest.spyOn(wrapper.instance().props.actions, 'deleteMeal');
     wrapper.instance().deleteItem(saveMealResponse.meal.id);

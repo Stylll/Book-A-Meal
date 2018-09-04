@@ -10,7 +10,7 @@ describe('Test Suite for getMessageValue function', () => {
       message: 'Username is required',
     },
   };
-  it('should return correct object', () => {
+  it('should return expected result when a parameter is passed', () => {
     const expectedResult = {
       email: 'Email is required',
       username: 'Username is required',

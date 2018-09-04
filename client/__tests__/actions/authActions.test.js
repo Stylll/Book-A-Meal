@@ -62,7 +62,7 @@ describe('Test Suite for Auth Actions', () => {
       });
   });
 
-  it('should dispatch signin success action type and payload', () => {
+  it('should dispatch signin success action type and payload when signin is successful', () => {
     const store = mockStore(initialState);
     const expectedAction = {
       type: types.SIGNIN_SUCCESS,
@@ -80,7 +80,7 @@ describe('Test Suite for Auth Actions', () => {
       });
   });
 
-  it('should dispatch signin failed action type and payload', () => {
+  it('should dispatch signin failed action type and payload when signin fails', () => {
     const store = mockStore(initialState);
     const expectedAction = {
       type: types.SIGNIN_FAILED,
@@ -98,7 +98,7 @@ describe('Test Suite for Auth Actions', () => {
       });
   });
 
-  it('should dispatch signin failed action type with payload B', () => {
+  it('should dispatch signin failed action type with payload B when signin fails', () => {
     const store = mockStore(initialState);
     const expectedAction = {
       type: types.SIGNIN_FAILED,

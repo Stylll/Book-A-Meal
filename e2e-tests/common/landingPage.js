@@ -1,7 +1,7 @@
 import 'babel-polyfill';
 
 module.exports = {
-  'Landing page should display expected information': function (browser) {
+  'A user should be able to view the landing page': function (browser) {
     browser
       .url('http://localhost:3000')
       .waitForElementVisible('body', 3000)

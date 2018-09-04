@@ -1,4 +1,4 @@
-import account from '../../utils/validators/vAccount';
+import Validator from '../../utils/validators/Validator';
 /**
  * Middleware Class to validate user account.
  * Validates general user
@@ -18,7 +18,7 @@ class ValidateAccount {
    */
   static user(request, response, next) {
     // validate user
-    account.tokenValid(request);
+    Validator.tokenValid(request);
     return next();
   }
 
@@ -32,7 +32,7 @@ class ValidateAccount {
    */
   static caterer(request, response, next) {
     // validate caterer / admin account
-    account.catererAdminValid(request);
+    Validator.catererAdminValid(request);
     return next();
   }
 
@@ -45,7 +45,7 @@ class ValidateAccount {
    * @returns {function} next
    */
   static customer(request, response, next) {
-    account.customerValid(request);
+    Validator.customerValid(request);
     return next();
   }
 }

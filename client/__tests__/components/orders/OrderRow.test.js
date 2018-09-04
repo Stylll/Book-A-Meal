@@ -26,7 +26,7 @@ describe('Test suite for Order Row', () => {
     expect(wrapper.find('.orderdate').length).toBe(1);
   });
 
-  it('should display only edit and delete link', () => {
+  it('should display only edit and delete link when showEdit and showDelete props are true', () => {
     const props = {
       showEdit: true,
       showDelete: true,
@@ -44,7 +44,7 @@ describe('Test suite for Order Row', () => {
     expect(wrapper.find('.decline a').length).toBe(0);
   });
 
-  it('should not display any links', () => {
+  it('should not display any links when showEdit and showDelete props are false', () => {
     const props = {
       showEdit: false,
       showDelete: false,
@@ -62,7 +62,7 @@ describe('Test suite for Order Row', () => {
     expect(wrapper.find('.decline a').length).toBe(0);
   });
 
-  it('should display only approve and decline link', () => {
+  it('should display only approve and decline link when showApprove and showDecline props are true', () => {
     const props = {
       showApprove: true,
       showDecline: true,
@@ -77,7 +77,7 @@ describe('Test suite for Order Row', () => {
     expect(wrapper.find('.decline a').length).toBe(1);
   });
 
-  it('should display customer name', () => {
+  it('should display customer name when showCustomer props is true', () => {
     const props = {
       showCustomer: true,
       order: getOrdersResponse.orders[0],
@@ -88,7 +88,7 @@ describe('Test suite for Order Row', () => {
       .toContain(getOrdersResponse.orders[0].user.username);
   });
 
-  it('should display status', () => {
+  it('should display status when showStatus props is true', () => {
     const props = {
       showStatus: true,
       order: getOrdersResponse.orders[0],
@@ -96,5 +96,46 @@ describe('Test suite for Order Row', () => {
     };
     const wrapper = shallow(<OrderRow {...props} />);
     expect(wrapper.find('.status').length).toBe(1);
+  });
+
+  it('should call handleApprove method when approve button is clicked', () => {
+    const props = {
+      showApprove: true,
+      showDecline: true,
+      order: getOrdersResponse.orders[0],
+      handleDelete: () => Promise.resolve(),
+      handleApprove: jest.fn(),
+      handleDecline: () => Promise.resolve(),
+    };
+    const wrapper = shallow(<OrderRow {...props} />);
+    wrapper.find('a').first().simulate('click');
+    expect(props.handleApprove).toHaveBeenCalled();
+  });
+
+  it('should call handleDelete method when delete button is clicked', () => {
+    const props = {
+      showApprove: true,
+      showDecline: true,
+      order: getOrdersResponse.orders[0],
+      handleDelete: () => Promise.resolve(),
+      handleApprove: () => Promise.resolve(),
+      handleDecline: jest.fn(),
+    };
+    const wrapper = shallow(<OrderRow {...props} />);
+    wrapper.find('a').last().simulate('click');
+    expect(props.handleDecline).toHaveBeenCalled();
+  });
+
+  it('should call handleDecline method when decline button is clicked', () => {
+    const props = {
+      showDelete: true,
+      order: getOrdersResponse.orders[0],
+      handleDelete: jest.fn(),
+      handleApprove: () => Promise.resolve(),
+      handleDecline: () => Promise.resolve(),
+    };
+    const wrapper = shallow(<OrderRow {...props} />);
+    wrapper.find('a').first().simulate('click');
+    expect(props.handleDelete).toHaveBeenCalled();
   });
 });

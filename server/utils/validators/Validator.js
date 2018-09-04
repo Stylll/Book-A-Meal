@@ -5,7 +5,7 @@ import Authenticate from '../../utils/authentication/authenticate';
  * Account Middleware validators
  */
 
-class account extends BaseValidator {
+class Validator extends BaseValidator {
   /**
    * static method to get token from request header
    * verify access token
@@ -58,4 +58,4 @@ class account extends BaseValidator {
   }
 }
 
-export default account;
+export default Validator;

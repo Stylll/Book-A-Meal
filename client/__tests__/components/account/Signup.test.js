@@ -67,7 +67,7 @@ describe('Test Suite for Signup component', () => {
     expect(handleChangeSpy).toHaveBeenCalled();
   });
 
-  it('should call handle submit and signup function', () => {
+  it('should call handle submit function', () => {
     const wrapper = setup();
     const handleSubmitSpy = jest.spyOn(wrapper.instance(), 'handleSubmit');
     const event = {
@@ -95,7 +95,7 @@ describe('Test Suite for Signup component', () => {
     expect(wrapper.length).toBe(1);
   });
 
-  it('should call signup with valid input', () => {
+  it('should call signup function with valid input', () => {
     const wrapper = setup();
     const signupSpy = jest.spyOn(wrapper.instance().props.actions, 'signup');
     wrapper.setState({

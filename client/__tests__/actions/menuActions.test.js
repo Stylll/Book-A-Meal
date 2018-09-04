@@ -1,7 +1,7 @@
 import moxios from 'moxios';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { saveMenu, getMenus, getMenu } from '../../src/actions/menuActions';
+import { saveMenu, getMenus, getMenu, getMenuById } from '../../src/actions/menuActions';
 import {
   saveMenuResponse,
   updateMenuResponse,
@@ -20,6 +20,13 @@ const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 /* eslint-disable no-undef */
 window.localStorage = localStorage;
+const pagination = {
+  totalCount: 10,
+  limit: 4,
+  offset: 0,
+  noPage: 3,
+  pageNo: 1,
+};
 
 describe('Test Suite for Menu Action', () => {
   beforeEach(() => moxios.install());
@@ -103,7 +110,7 @@ describe('Test Suite for Menu Action', () => {
         type: types.GET_MENU_SUCCESS,
         menus: getMenuResponse.menus,
       };
-      moxios.stubRequest(api.menu.get, {
+      moxios.stubRequest(api.menu.get(), {
         status: 200,
         response: getMenuResponse,
       });
@@ -120,7 +127,7 @@ describe('Test Suite for Menu Action', () => {
         type: types.GET_MENU_FAILED,
         errors: getMenuFailedResponse,
       };
-      moxios.stubRequest(api.menu.get, {
+      moxios.stubRequest(api.menu.get(), {
         status: 500,
         response: getMenuFailedResponse,
       });
@@ -142,7 +149,7 @@ describe('Test Suite for Menu Action', () => {
         type: types.GET_CURR_MENU_SUCCESS,
         menu: getMenuResponse.menus[0],
       };
-      moxios.stubRequest(api.menu.get, {
+      moxios.stubRequest(api.menu.get(), {
         status: 200,
         response: { menu: getMenuResponse.menus[0] },
       });
@@ -159,11 +166,51 @@ describe('Test Suite for Menu Action', () => {
         type: types.GET_CURR_MENU_FAILED,
         errors: getMenuFailedResponse,
       };
-      moxios.stubRequest(api.menu.get, {
+      moxios.stubRequest(api.menu.get(), {
         status: 500,
         response: getMenuFailedResponse,
       });
       store.dispatch(getMenu())
+        .then(() => {
+          const actions = store.getActions();
+          expect(actions[1].toEqual(expectedAction));
+        });
+    });
+  });
+
+  describe('Test suite for Menu action - GET MENU BY ID', () => {
+    beforeEach(() => moxios.install());
+    afterEach(() => moxios.uninstall());
+
+    it('it should return proper status and payload if get menu by id request was successful', () => {
+      const store = mockStore(initialState);
+      const expectedAction = {
+        type: types.GET_SINGLE_MENU_SUCCESS,
+        menu: getMenuResponse.menus[0],
+        pagination,
+      };
+      moxios.stubRequest(api.menu.getById(1), {
+        status: 200,
+        response: { menu: getMenuResponse.menus[0] },
+      });
+      store.dispatch(getMenuById(1))
+        .then(() => {
+          const actions = store.getActions();
+          expect(actions[1].toEqual(expectedAction));
+        });
+    });
+
+    it('it should return error status and message if get menu by id request failed', () => {
+      const store = mockStore(initialState);
+      const expectedAction = {
+        type: types.GET_SINGLE_MENU_FAILED,
+        errors: getMenuFailedResponse,
+      };
+      moxios.stubRequest(api.menu.getById(1), {
+        status: 500,
+        response: getMenuFailedResponse,
+      });
+      store.dispatch(getMenuById(1))
         .then(() => {
           const actions = store.getActions();
           expect(actions[1].toEqual(expectedAction));

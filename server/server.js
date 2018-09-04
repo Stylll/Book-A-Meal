@@ -4,6 +4,7 @@ import logger from 'morgan';
 import open from 'open';
 import path from 'path';
 import routes from './routes';
+import CustomLogger from '../config/logger';
 
 /* eslint-disable no-console no-unused-vars */
 /* eslint-disable no-unused-vars */
@@ -24,24 +25,25 @@ app.use('/api-docs', express.static(path.join(__dirname, './api-docs')));
 app.use('/api/v1', routes);
 
 // Handle 404 errors and forward to error handler
-app.use((req, res, next) => {
-  const err = new Error('404 not found');
-  err.status = 404;
-  next(err);
+app.use((request, response, next) => {
+  const error = new Error('404 not found');
+  error.status = 404;
+  next(error);
 });
 
 // Error Handler
-app.use((err, req, res, next) => res.status(err.status || 500)
-  .json({ message: err.message || 'Error' }));
+app.use((error, request, response, next) => response.status(error.status || 500)
+  .json({ message: error.message || 'Error' }));
 
 // UnhandledPromiseRejection Handler
 process.on('unhandledRejection', (error) => {
+  CustomLogger.error(error);
 });
 
 // Listen at designated port
-app.listen(port, (err) => {
-  if (err) {
-    // log to file
+app.listen(port, (error) => {
+  if (error) {
+    CustomLogger.error(error);
   } else {
     open(address);
   }

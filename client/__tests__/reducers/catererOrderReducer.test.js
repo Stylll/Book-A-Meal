@@ -24,7 +24,7 @@ import {
 } from '../helpers/mockOrders';
 
 describe('Test Suite for Order Reducer for caterer - SAVE', () => {
-  it('should update state with order if save was successful', () => {
+  it('should update state with order if save request was successful', () => {
     const action = saveOrderSuccess(saveOrderResponse);
     initialState.orders.isCaterer = true;
     const state = orderReducer(initialState.orders, action);
@@ -34,7 +34,7 @@ describe('Test Suite for Order Reducer for caterer - SAVE', () => {
     expect(newState.orders[0].mealId).toBe(saveOrderResponse.order.mealId);
   });
 
-  it('should update state with errors if save failed', () => {
+  it('should update state with errors if save request failed', () => {
     initialState.orders.isCaterer = true;
     const action = saveOrderFailed(saveOrderFailedResponse);
     const state = orderReducer(initialState.orders, action);
@@ -74,7 +74,7 @@ describe('Test Suite for order reducer for caterer - GET', () => {
 });
 
 describe('Test Suite for order reducer for caterer - DELETE', () => {
-  it('should remove order from state if delete is successful', () => {
+  it('should remove order from state if delete request is successful', () => {
     initialState.orders.isCaterer = true;
     initialState.orders.catererOrders.orders = [];
     initialState.orders.catererOrders.orders.push(saveOrderResponse.order);
@@ -84,7 +84,7 @@ describe('Test Suite for order reducer for caterer - DELETE', () => {
     expect(newState.orders.length).toBe(0);
   });
 
-  it('should not update state if delete failed', () => {
+  it('should not update state if delete request failed', () => {
     initialState.orders.isCaterer = true;
     const action = deleteOrderFailed(deleteOrderFailedResponse);
     const state = orderReducer(initialState.orders, action);
@@ -101,7 +101,7 @@ describe('Test Suite for order reducer for caterer - DELETE', () => {
 });
 
 describe('Test Suite for order reducer for caterer - GET SUMMARY', () => {
-  it('should update state with order summary if request is successful', () => {
+  it('should update state with order summary if get summary request is successful', () => {
     initialState.orders.isCaterer = true;
     const action = getOrderSummarySuccess(getOrderSummaryResponse);
     const state = orderReducer(initialState.orders, action);
@@ -110,7 +110,7 @@ describe('Test Suite for order reducer for caterer - GET SUMMARY', () => {
     expect(newState.summary[0]).toEqual(getOrderSummaryResponse.orders[0]);
   });
 
-  it('should not update state if request failed', () => {
+  it('should not update state if get summary request failed', () => {
     initialState.orders.isCaterer = true;
     const action = getOrderSummaryFailed(getOrderSummaryFailedResponse);
     const state = orderReducer(initialState.orders, action);

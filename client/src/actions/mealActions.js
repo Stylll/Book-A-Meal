@@ -24,54 +24,54 @@ const saveMeal = mealDetails => function (dispatch) {
   }
   if (!mealDetails.id) {
     return axios.post(api.meals.post, formData)
-      .then((resp) => {
-        dispatch(saveMealSuccess(resp.data));
+      .then((response) => {
+        dispatch(saveMealSuccess(response.data));
         dispatch(hideLoading());
       })
-      .catch((err) => {
-        dispatch(saveMealFailed(err.response.data));
+      .catch((error) => {
+        dispatch(saveMealFailed(error.response.data));
         dispatch(hideLoading());
       });
   }
   return axios.put(api.meals.put(mealDetails.id), formData)
-    .then((resp) => {
-      dispatch(saveMealSuccess(resp.data));
+    .then((response) => {
+      dispatch(saveMealSuccess(response.data));
       dispatch(hideLoading());
     })
-    .catch((err) => {
-      dispatch(saveMealFailed(err.response.data));
+    .catch((error) => {
+      dispatch(saveMealFailed(error.response.data));
       dispatch(hideLoading());
     });
 };
 
 /**
  * action to handle successful meal save
- * @param {object} responsedata
+ * @param {object} responseObject
  * @returns {object} action object for reducer.
  */
-const saveMealSuccess = (data) => {
+const saveMealSuccess = (responseObject) => {
   toastr.success('Saved', 'Meal successfully saved');
   return {
     type: types.SAVE_MEAL_SUCCESS,
-    meal: data.meal,
+    meal: responseObject.meal,
   };
 };
 
 /**
  * action to handle failed meal save
- * @param {object} data
+ * @param {object} errorObject
  * @returns {object} action object for reducer.
  */
-const saveMealFailed = (data) => {
+const saveMealFailed = (errorObject) => {
   let errors = {};
-  if (data.errors) {
-    errors = getMessageValue(data.errors);
-  } else if (data.message) {
+  if (errorObject.errors) {
+    errors = getMessageValue(errorObject.errors);
+  } else if (errorObject.message) {
     errors = {
-      message: data.message,
+      message: errorObject.message,
     };
   }
-  toastr.error('Save Failed', data.message || 'An error occurred');
+  toastr.error('Save Failed', errorObject.message || 'An error occurred');
   return {
     type: types.SAVE_MEAL_FAILED,
     errors,
@@ -84,37 +84,37 @@ const saveMealFailed = (data) => {
 const getMeals = (limit = 10, offset = 0, mealName = '') => function (dispatch) {
   dispatch(showLoading());
   return axios.get(api.meals.get(limit, offset, mealName))
-    .then((resp) => {
-      dispatch(getMealsSuccess(resp.data));
+    .then((response) => {
+      dispatch(getMealsSuccess(response.data));
       dispatch(hideLoading());
     })
-    .catch((err) => {
-      dispatch(getMealsFailed(err.response.data));
+    .catch((error) => {
+      dispatch(getMealsFailed(error.response.data));
       dispatch(hideLoading());
     });
 };
 
 /**
  * action to handle successful meals get request
- * @param {object} data
+ * @param {object} responseObject
  * @returns {object} action object for reducer
  */
-const getMealsSuccess = data => ({
+const getMealsSuccess = responseObject => ({
   type: types.GET_MEAL_SUCCESS,
-  meals: data.meals,
-  pagination: data.pagination,
+  meals: responseObject.meals,
+  pagination: responseObject.pagination,
 });
 
 /**
  * action to handle failed meals get request
- * @param {object} data
+ * @param {object} errorObject
  * @returns {object} action object for reducer
  */
-const getMealsFailed = (data) => {
+const getMealsFailed = (errorObject) => {
   const errors = {
-    message: data.message,
+    message: errorObject.message,
   };
-  toastr.error('Unexpected Error', data.message || 'Could not get meals');
+  toastr.error('Unexpected Error', errorObject.message || 'Could not get meals');
   return {
     type: types.GET_MEAL_FAILED,
     errors,
@@ -128,12 +128,12 @@ const getMealsFailed = (data) => {
 const deleteMeal = mealId => function (dispatch) {
   dispatch(showLoading());
   return axios.delete(api.meals.delete(mealId))
-    .then((resp) => {
+    .then((response) => {
       dispatch(deleteMealSuccess(mealId));
       dispatch(hideLoading());
     })
-    .catch((err) => {
-      dispatch(deleteMealFailed(err.response.data));
+    .catch((error) => {
+      dispatch(deleteMealFailed(error.response.data));
       dispatch(hideLoading());
     });
 };
@@ -153,18 +153,18 @@ const deleteMealSuccess = (mealId) => {
 
 /**
  * action to handle failed meal delete request
- * @param {object} data
+ * @param {object} errorObject
  */
-const deleteMealFailed = (data) => {
+const deleteMealFailed = (errorObject) => {
   let errors = {};
-  if (data.errors) {
-    errors = getMessageValue(data.errors);
-  } else if (data.message) {
+  if (errorObject.errors) {
+    errors = getMessageValue(errorObject.errors);
+  } else if (errorObject.message) {
     errors = {
-      message: data.message,
+      message: errorObject.message,
     };
   }
-  toastr.error('Error', errors.meal || data.message || 'Could not delete meal');
+  toastr.error('Error', errors.meal || errorObject.message || 'Could not delete meal');
   return {
     type: types.DELETE_MEAL_FAILED,
   };

@@ -6,7 +6,7 @@ module.exports = {
     await clearUsers();
     await insertSeedUsers(validUser1);
   },
-  'User cannot signup with invalid information': function (browser) {
+  'A User should not be able to signup with invalid information': function (browser) {
     browser
       .url('http://localhost:3000')
       .waitForElementVisible('body', 1000)
@@ -22,7 +22,7 @@ module.exports = {
       .assert.containsText('#password-error', 'Passwords dont match')
       .assert.containsText('#confirmPassword-error', 'Passwords dont match');
   },
-  'User can signup with valid information': function (browser) {
+  'A User should be able to signup with valid information': function (browser) {
     browser
       .url('http://localhost:3000')
       .waitForElementVisible('body', 1000)

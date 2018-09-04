@@ -17,22 +17,22 @@ const saveMenu = menuDetails => function (dispatch) {
   dispatch(showLoading());
   if (!menuDetails.id) {
     return axios.post(api.menu.post, menuDetails)
-      .then((resp) => {
-        dispatch(saveMenuSuccess(resp.data));
+      .then((response) => {
+        dispatch(saveMenuSuccess(response.data));
         dispatch(hideLoading());
       })
-      .catch((err) => {
-        dispatch(saveMenuFailed(err.response.data));
+      .catch((error) => {
+        dispatch(saveMenuFailed(error.response.data));
         dispatch(hideLoading());
       });
   }
   return axios.put(api.menu.put(menuDetails.id), menuDetails)
-    .then((resp) => {
-      dispatch(saveMenuSuccess(resp.data));
+    .then((response) => {
+      dispatch(saveMenuSuccess(response.data));
       dispatch(hideLoading());
     })
-    .catch((err) => {
-      dispatch(saveMenuFailed(err.response.data));
+    .catch((error) => {
+      dispatch(saveMenuFailed(error.response.data));
       dispatch(hideLoading());
     });
 };
@@ -77,39 +77,39 @@ const saveMenuFailed = (errorData) => {
 const getMenus = (limit = 10, offset = 0) => (dispatch) => {
   dispatch(showLoading());
   return axios.get(api.menu.get(limit, offset))
-    .then((resp) => {
-      dispatch(getMenusSuccess(resp.data));
+    .then((response) => {
+      dispatch(getMenusSuccess(response.data));
       dispatch(hideLoading());
     })
-    .catch((err) => {
-      dispatch(getMenusFailed(err.response.data));
+    .catch((error) => {
+      dispatch(getMenusFailed(error.response.data));
       dispatch(hideLoading());
     });
 };
 
 /**
  * Action handle successful get menu request
- * @param {object} data
+ * @param {object} responseObject
  * @returns {object} action object
  */
-const getMenusSuccess = data => (
+const getMenusSuccess = responseObject => (
   {
     type: types.GET_MENU_SUCCESS,
-    menus: data.menus,
-    pagination: data.pagination,
+    menus: responseObject.menus,
+    pagination: responseObject.pagination,
   }
 );
 
 /**
  * action to handle failed menu get request
- * @param {object} data
+ * @param {object} errorObject
  * @return {object} action object
  */
-const getMenusFailed = (data) => {
-  toastr.error('Error', data.message || 'Could not get menus');
+const getMenusFailed = (errorObject) => {
+  toastr.error('Error', errorObject.message || 'Could not get menus');
   return {
     type: types.GET_MENU_FAILED,
-    errors: data,
+    errors: errorObject,
   };
 };
 
@@ -119,26 +119,26 @@ const getMenusFailed = (data) => {
 const getMenu = (limit = 10, offset = 0) => (dispatch) => {
   dispatch(showLoading());
   return axios.get(api.menu.get(limit, offset))
-    .then((resp) => {
-      dispatch(getMenuSuccess(resp.data));
+    .then((response) => {
+      dispatch(getMenuSuccess(response.data));
       dispatch(hideLoading());
     })
-    .catch((err) => {
-      dispatch(getMenuFailed(err.response.data));
+    .catch((error) => {
+      dispatch(getMenuFailed(error.response.data));
       dispatch(hideLoading());
     });
 };
 
 /**
  * Action handle successful get menu request for customer
- * @param {object} data
+ * @param {object} responseObject
  * @returns {object} action object
  */
-const getMenuSuccess = data => (
+const getMenuSuccess = responseObject => (
   {
     type: types.GET_CURR_MENU_SUCCESS,
-    menu: data.menu,
-    pagination: data.pagination,
+    menu: responseObject.menu,
+    pagination: responseObject.pagination,
   }
 );
 
@@ -148,52 +148,52 @@ const getMenuSuccess = data => (
 const getMenuById = (id, limit = 10, offset = 0) => (dispatch) => {
   dispatch(showLoading());
   return axios.get(api.menu.getById(id, limit, offset))
-    .then((resp) => {
-      dispatch(getMenuByIdSuccess(resp.data));
+    .then((response) => {
+      dispatch(getMenuByIdSuccess(response.data));
       dispatch(hideLoading());
     })
-    .catch((err) => {
-      dispatch(getMenuByIdFailed(err.response.data));
+    .catch((error) => {
+      dispatch(getMenuByIdFailed(error.response.data));
       dispatch(hideLoading());
     });
 };
 
 /**
  * Action handle successful get menu request
- * @param {object} data
+ * @param {object} responseObject
  * @returns {object} action object
  */
-const getMenuByIdSuccess = data => (
+const getMenuByIdSuccess = responseObject => (
   {
     type: types.GET_SINGLE_MENU_SUCCESS,
-    menu: data.menu,
-    pagination: data.pagination,
+    menu: responseObject.menu,
+    pagination: responseObject.pagination,
   }
 );
 
 /**
  * action to handle failed menu get request
- * @param {object} data
+ * @param {object} errorObject
  * @return {object} action object
  */
-const getMenuByIdFailed = (data) => {
-  toastr.error('Error', data.message || 'Could not get menu');
+const getMenuByIdFailed = (errorObject) => {
+  toastr.error('Error', errorObject.message || 'Could not get menu');
   return {
     type: types.GET_SINGLE_MENU_FAILED,
-    errors: data,
+    errors: errorObject,
   };
 };
 
 /**
  * action to handle failed menu get request for customer
- * @param {object} data
+ * @param {object} errorObject
  * @return {object} action object
  */
-const getMenuFailed = (data) => {
-  toastr.warning('', data.message || 'Could not get menus');
+const getMenuFailed = (errorObject) => {
+  toastr.warning('', errorObject.message || 'Could not get menus');
   return {
     type: types.GET_CURR_MENU_FAILED,
-    errors: data,
+    errors: errorObject,
   };
 };
 

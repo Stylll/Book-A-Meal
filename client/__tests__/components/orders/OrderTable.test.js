@@ -64,4 +64,27 @@ describe('Test suite for Order List', () => {
     expect(wrapper.find('h3').first().text()).toBe('No Records Found');
     expect(wrapper.state().pageCount).toBe(0);
   });
+
+  it('should call handleChange method when componentWillReceiveProps method is called', () => {
+    const wrapper = setup();
+    const props = {
+      orders,
+      pagination,
+    };
+    const handleChangeSpy = jest.spyOn(wrapper.instance(), 'handlePageChange');
+    wrapper.instance().componentWillReceiveProps(props);
+    expect(handleChangeSpy).toHaveBeenCalled();
+  });
+
+  it('should update state and call fetchData action when fetchMore method is called', () => {
+    const props = {
+      orders,
+      pagination,
+      fetchData: jest.fn(),
+    };
+    const wrapper = shallow(<OrderTable {...props} />);
+    wrapper.instance().fetchMore({ selected: 1 });
+    expect(wrapper.state().loading).toBe(true);
+    expect(props.fetchData).toHaveBeenCalled();
+  });
 });

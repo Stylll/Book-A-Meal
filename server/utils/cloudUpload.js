@@ -12,15 +12,15 @@ class CloudUpload {
    * @returns {Promise} promise
    */
   static uploadImageToCloud(source) {
-    const resp = new Promise(async (resolve, reject) => {
-      await cloudinary.v2.uploader.upload(source, (err, res) => {
-        if (!err) {
-          resolve(res.secure_url);
+    const promise = new Promise(async (resolve, reject) => {
+      await cloudinary.v2.uploader.upload(source, (error, response) => {
+        if (!error) {
+          resolve(response.secure_url);
         }
-        reject(err);
+        reject(error);
       });
     });
-    return resp;
+    return promise;
   }
 
   /**
@@ -31,7 +31,7 @@ class CloudUpload {
   static uploadImage(source) {
     if (!source || !source.trim()) return defaultImage;
     const result = this.uploadImageToCloud(source)
-      .then(res => res).catch(error => error);
+      .then(response => response).catch(error => error);
     return result;
   }
 }

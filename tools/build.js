@@ -7,9 +7,9 @@ process.env.NODE_ENV = 'production'; // this assures the Babel dev config (for h
 
 console.log('Generating minified bundle for production via Webpack. This will take a moment...'.blue);
 
-webpack(webpackConfig).run((err, stats) => {
-  if (err) { // so a fatal error occurred. Stop here.
-    console.log(err.bold.red);
+webpack(webpackConfig).run((error, stats) => {
+  if (error) { // so a fatal error occurred. Stop here.
+    console.log(error.bold.red);
     return 1;
   }
 

@@ -5,7 +5,7 @@ import { Orders as OrderModel } from '../models';
 import paginator from '../utils/paginator';
 
 /**
- * Menu model class
+ * Order model class
  * Performs CRUD operations on an order
  */
 class Orders {
