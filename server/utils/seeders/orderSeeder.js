@@ -2,21 +2,21 @@ import orders from '../../db/orders';
 /**
  * This script contains template order data to use for test.
  */
-const validOrder1 = {
+const orderWith1500 = {
   mealId: 1,
   price: 1500,
   quantity: 3,
   userId: 1,
 };
 
-const validOrder2 = {
+const orderWith1000 = {
   mealId: 1,
   price: 1000,
   quantity: 4,
   userId: 1,
 };
 
-const completeOrder = {
+const completedOrder = {
   mealId: 1,
   price: 1000,
   quantity: 2,
@@ -64,11 +64,11 @@ const clearOrders = async () => {
 };
 
 export {
-  validOrder1,
-  validOrder2,
+  orderWith1500,
+  orderWith1000,
   invalidOrder,
   existingOrder,
-  completeOrder,
+  completedOrder,
   canceledOrder,
   insertSeedOrder,
   clearOrders,

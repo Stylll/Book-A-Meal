@@ -24,8 +24,8 @@ class Orders {
     }
 
     // check if meal id exists
-    const existingMeal = await meals.get(order.mealId);
-    if (!existingMeal) return { err: new Error('Meal does not exist') };
+    const curryRice = await meals.get(order.mealId);
+    if (!curryRice) return { err: new Error('Meal does not exist') };
 
     // check if price is provided
     if (!order.price) return { err: new Error('Price is required') };
@@ -96,8 +96,8 @@ class Orders {
     }
 
     // check if meal id exists if provided
-    const existingMeal = await meals.get(order.mealId);
-    if (order.mealId && !existingMeal) {
+    const curryRice = await meals.get(order.mealId);
+    if (order.mealId && !curryRice) {
       return { err: new Error('Meal does not exist') };
     }
 

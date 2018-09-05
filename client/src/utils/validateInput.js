@@ -83,8 +83,8 @@ const validateMealInput = (state) => {
     errors.price = 'Price is required';
   } else if (/[^0-9.]/gi.test(state.price.trim())) {
     errors.price = 'Price is invalid';
-  } else if (parseFloat(state.price.trim()) <= 1) {
-    errors.price = 'Price must be greater than 1';
+  } else if (parseFloat(state.price.trim()) < 1) {
+    errors.price = 'Price must be at least 1';
   }
 
   return {

@@ -1,11 +1,12 @@
 import 'babel-polyfill';
-import { clearUsers, insertSeedUsers, validUser1 } from '../../server/utils/seeders/userSeeder';
+import { clearUsers, insertSeedUsers, userMatthew } from '../../server/utils/seeders/userSeeder';
 
 
 module.exports = {
   before: async (browser) => {
+    browser.maximizeWindow();
     await clearUsers();
-    await insertSeedUsers(validUser1);
+    await insertSeedUsers(userMatthew);
   },
   'A User should not be able signin with invalid information': function (browser) {
     browser

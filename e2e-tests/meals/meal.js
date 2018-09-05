@@ -1,11 +1,12 @@
 import 'babel-polyfill';
-import { clearUsers, insertSeedUsers, validUser2 } from '../../server/utils/seeders/userSeeder';
-import { clearMeals, insertSeedMeal, validMeal1 } from '../../server/utils/seeders/mealSeeder';
+import { clearUsers, insertSeedUsers, userJane } from '../../server/utils/seeders/userSeeder';
+import { clearMeals, insertSeedMeal, riceAndStew } from '../../server/utils/seeders/mealSeeder';
 
 module.exports = {
   before: async (browser) => {
+    browser.maximizeWindow();
     await clearUsers();
-    await insertSeedUsers(validUser2);
+    await insertSeedUsers(userJane);
     await clearMeals();
   },
   after: (browser) => {
@@ -15,17 +16,29 @@ module.exports = {
     browser
       .url('http://localhost:3000/users/signin')
       .waitForElementVisible('.signin-content', 1000)
-      .setValue('#email', validUser2.email)
-      .setValue('#password', validUser2.password)
+      .setValue('#email', userJane.email)
+      .setValue('#password', userJane.password)
       .click('#app > div > div > div > div.signin-overall > div.signin-content > div:nth-child(2) > div:nth-child(7) > input')
       .pause(5000)
       .url('http://localhost:3000/caterer/meals/edit')
       .waitForElementVisible('.meal-form', 1000)
+      .click('#app > div > div > div > div.container.text-center.meal-form > div:nth-child(6) > input')
+      .pause(5000)
+      .assert.containsText('#name-error', 'Meal name is required')
+      .assert.containsText('#price-error', 'Price is required')
+      .pause(3000)
       .setValue('#price', -1)
       .click('#app > div > div > div > div.container.text-center.meal-form > div:nth-child(6) > input')
       .pause(5000)
       .assert.containsText('#name-error', 'Meal name is required')
-      .assert.containsText('#price-error', 'Price is invalid');
+      .assert.containsText('#price-error', 'Price is invalid')
+      .clearValue('#price')
+      .setValue('#price', 0.98)
+      .click('#app > div > div > div > div.container.text-center.meal-form > div:nth-child(6) > input')
+      .pause(5000)
+      .assert.containsText('#name-error', 'Meal name is required')
+      .assert.containsText('#price-error', 'Price must be at least 1')
+      .pause(3000);
   },
   'A Caterer should be able to create a meal with valid information': function (browser) {
     browser
@@ -41,12 +54,14 @@ module.exports = {
       .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div > div.card-img-container')
       .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div > div.card-content')
       .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div > div.card-content > div.card-text.black-text > h3')
-      .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div > div.card-content > div.card-text.black-text > h4');
+      .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div > div.card-content > div.card-text.black-text > h4')
+      .pause(3000);
   },
   'A Caterer should be able to view the list of meals': function (browser) {
     browser
       .url('http://localhost:3000/caterer/meals/')
       .waitForElementVisible('body', 1000)
+      .waitForElementVisible('#app', 1000)
       .assert.containsText('#app > div > div > div > div:nth-child(3) > h1', 'Manage Meals')
       .assert.elementPresent('#app > div > div > div > div:nth-child(3) > div > div > form > input.textbox.meal-textbox')
       .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div')
@@ -54,12 +69,14 @@ module.exports = {
       .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div > div.card-img-container')
       .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div > div.card-content')
       .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div > div.card-content > div.card-text.black-text > h3')
-      .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div > div.card-content > div.card-text.black-text > h4');
+      .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div > div > div.card-content > div.card-text.black-text > h4')
+      .pause(3000);
   },
   'A Caterer should be able to delete a meal from the list of meals': function (browser) {
     browser
       .url('http://localhost:3000/caterer/meals/')
       .waitForElementVisible('body', 1000)
+      .waitForElementVisible('#app', 1000)
       .assert.containsText('#app > div > div > div > div:nth-child(3) > h1', 'Manage Meals')
       .assert.elementPresent('#app > div > div > div > div:nth-child(3) > div > div > form > input.textbox.meal-textbox')
       .assert.elementPresent('#app > div > div > div > div:nth-child(4) > div')

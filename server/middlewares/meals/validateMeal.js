@@ -83,7 +83,7 @@ class ValidateMeal {
    * static method.
    * check if price is provided.
    * if price is valid.
-   * if price is greater than 1.
+   * if price is greater than 0.
    * @param {object} request
    * @param {object} response
    * @param {function} next
@@ -114,13 +114,15 @@ class ValidateMeal {
       return next();
     }
 
-    if (request.body.price <= 1) {
+    if (parseFloat(request.body.price, 10) < 1) {
       request.errors.price = {
-        message: 'Price must be greater than one',
+        message: 'Price must be atleast 1',
         statusCode: 400,
       };
       return next();
     }
+
+    request.body.price = Number.parseFloat(request.body.price, 10);
 
     return next();
   }
@@ -138,7 +140,7 @@ class ValidateMeal {
     if (!result || (request.decoded.user.accountType !== 'admin' &&
       request.decoded.user.id !== result.userId)) {
       request.errors.access = {
-        message: 'Unauthorized access',
+        message: 'User not allowed to perform this operation',
         statusCode: 403,
       };
       return next();

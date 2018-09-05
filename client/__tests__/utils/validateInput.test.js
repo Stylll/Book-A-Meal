@@ -89,9 +89,9 @@ describe('Test suite for validateMealInput function', () => {
   });
 
   it('meal price should be more than 1', () => {
-    const result = validateMealInput({ ...validMeal, price: '1' });
+    const result = validateMealInput({ ...validMeal, price: '0' });
     expect(result.isValid).to.equal(false);
-    expect(result.errors.price).to.equal('Price must be greater than 1');
+    expect(result.errors.price).to.equal('Price must be at least 1');
   });
 
   it('should not return an error when a valid input is passed', () => {

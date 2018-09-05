@@ -4,8 +4,8 @@ import bcrypt from 'bcrypt';
 import users from '../../db/users';
 import {
   existingUser,
-  validUser1,
-  validUser2,
+  userMatthew,
+  userJane,
   invalidUser,
   insertSeedUsers,
   clearUsers,
@@ -18,17 +18,17 @@ describe('Test Suite for users db model', () => {
     await insertSeedUsers(existingUser);
   });
   it('should add new user to db', async () => {
-    const newUser = await users.add({ ...validUser1 });
-    expect(newUser.email).to.equal(validUser1.email);
+    const newUser = await users.add({ ...userMatthew });
+    expect(newUser.email).to.equal(userMatthew.email);
   });
 
   it('should require email', async () => {
-    const result = await users.add({ ...validUser2, email: '   ' });
+    const result = await users.add({ ...userJane, email: '   ' });
     expect(result.err.message).to.equal('Email is required');
   });
 
   it('should require a valid email', async () => {
-    const result = await users.add({ ...validUser2, email: invalidUser.email });
+    const result = await users.add({ ...userJane, email: invalidUser.email });
     expect(result.err.message).to.equal('Email is invalid');
   });
 
@@ -38,30 +38,30 @@ describe('Test Suite for users db model', () => {
   });
 
   it('should require a username', async () => {
-    const result = await users.add({ ...validUser2, username: '  ' });
+    const result = await users.add({ ...userJane, username: '  ' });
     expect(result.err.message).to.equal('Username is required');
   });
 
   it('should require a unique username', async () => {
-    const result = await users.add({ ...validUser2, username: existingUser.username });
+    const result = await users.add({ ...userJane, username: existingUser.username });
     expect(result.err.message).to.equal('Username exists');
   });
 
   it('should require a password', async () => {
-    const result = await users.add({ ...validUser1, password: '  ' });
+    const result = await users.add({ ...userMatthew, password: '  ' });
     expect(result.err.message).to.equal('Password is required');
   });
 
   it('should require a valid password', async () => {
     const result = await users.add({
-      ...validUser1, password: 'abc',
+      ...userMatthew, password: 'abc',
     });
     expect(result.err.message).to.equal('Password must have atleast 6 characters');
   });
 
   it('should store hash password after adding', async () => {
-    const result = await users.add(validUser1);
-    expect(bcrypt.compareSync(validUser1.password, result.password));
+    const result = await users.add(userMatthew);
+    expect(bcrypt.compareSync(userMatthew.password, result.password));
   });
 
   it('should update user password', async () => {
@@ -73,15 +73,15 @@ describe('Test Suite for users db model', () => {
   });
 
   it('should get user by email', async () => {
-    await users.add(validUser2);
-    const result = await users.getByEmail(validUser2.email);
-    expect(result.email).to.equal(validUser2.email);
+    await users.add(userJane);
+    const result = await users.getByEmail(userJane.email);
+    expect(result.email).to.equal(userJane.email);
   });
 
   it('should get user by username', async () => {
-    await users.add(validUser1);
-    const result = await users.getByUsername(validUser1.username);
-    expect(result.username).to.equal(validUser1.username);
+    await users.add(userMatthew);
+    const result = await users.getByUsername(userMatthew.username);
+    expect(result.username).to.equal(userMatthew.username);
   });
 
   it('should get user by id', async () => {
@@ -96,7 +96,7 @@ describe('Test Suite for users db model', () => {
   });
 
   it('should get all users in the db', async () => {
-    await users.add(validUser2);
+    await users.add(userJane);
     const result = await users.getAll();
     expect(result.length).to.equal(2);
   });

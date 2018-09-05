@@ -4,8 +4,8 @@ import dotenv from 'dotenv';
 import request from 'supertest';
 import app from '../../server';
 import {
-  validUser1,
-  validUser2,
+  userMatthew,
+  userJane,
   existingUser,
   invalidUser,
   insertSeedUsers,
@@ -26,12 +26,12 @@ describe('Test suite for User Controller', () => {
     it('should create account with valid email, username, password and account type', (done) => {
       request(app)
         .post('/api/v1/users/signup')
-        .send(validUser1)
+        .send(userMatthew)
         .end((err, resp) => {
           expect(resp.status).to.equal(201);
-          expect(resp.body.user.email).to.equal(validUser1.email);
-          expect(resp.body.user.username).to.equal(validUser1.username);
-          expect(resp.body.user.accountType).to.equal(validUser1.accountType);
+          expect(resp.body.user.email).to.equal(userMatthew.email);
+          expect(resp.body.user.username).to.equal(userMatthew.username);
+          expect(resp.body.user.accountType).to.equal(userMatthew.accountType);
           done();
         });
     });
@@ -39,7 +39,7 @@ describe('Test suite for User Controller', () => {
     it('should require a valid email', (done) => {
       request(app)
         .post('/api/v1/users/signup')
-        .send({ ...validUser1, email: 'email' })
+        .send({ ...userMatthew, email: 'email' })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
           expect(resp.body.errors.email).to.haveOwnProperty('message');
@@ -49,9 +49,9 @@ describe('Test suite for User Controller', () => {
         .post('/api/v1/users/signup')
         .send({
           email: '  ',
-          username: validUser1.username,
-          password: validUser1.password,
-          accountType: validUser1.accountType,
+          username: userMatthew.username,
+          password: userMatthew.password,
+          accountType: userMatthew.accountType,
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
@@ -65,10 +65,10 @@ describe('Test suite for User Controller', () => {
       request(app)
         .post('/api/v1/users/signup')
         .send({
-          email: validUser1.email,
+          email: userMatthew.email,
           username: '  ',
-          password: validUser1.password,
-          accountType: validUser1.accountType,
+          password: userMatthew.password,
+          accountType: userMatthew.accountType,
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
@@ -82,8 +82,8 @@ describe('Test suite for User Controller', () => {
       request(app)
         .post('/api/v1/users/signup')
         .send({
-          email: validUser1.email,
-          username: validUser1.username,
+          email: userMatthew.email,
+          username: userMatthew.username,
           password: invalidUser.password,
           accountType: invalidUser.accountType,
         })
@@ -96,8 +96,8 @@ describe('Test suite for User Controller', () => {
       request(app)
         .post('/api/v1/users/signup')
         .send({
-          email: validUser1.email,
-          username: validUser1.username,
+          email: userMatthew.email,
+          username: userMatthew.username,
           password: '   ',
           accountType: invalidUser.accountType,
         })
@@ -113,9 +113,9 @@ describe('Test suite for User Controller', () => {
       request(app)
         .post('/api/v1/users/signup')
         .send({
-          email: validUser1.email,
-          username: validUser1.username,
-          password: validUser1.password,
+          email: userMatthew.email,
+          username: userMatthew.username,
+          password: userMatthew.password,
           accountType: invalidUser.accountType,
         })
         .end((err, resp) => {
@@ -127,9 +127,9 @@ describe('Test suite for User Controller', () => {
       request(app)
         .post('/api/v1/users/signup')
         .send({
-          email: validUser1.email,
-          username: validUser1.username,
-          password: validUser1.password,
+          email: userMatthew.email,
+          username: userMatthew.username,
+          password: userMatthew.password,
           accountType: '   ',
         })
         .end((err, resp) => {
@@ -143,7 +143,7 @@ describe('Test suite for User Controller', () => {
     it('should not create account with existing email', (done) => {
       request(app)
         .post('/api/v1/users/signup')
-        .send({ ...validUser1, email: existingUser.email })
+        .send({ ...userMatthew, email: existingUser.email })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
           expect(resp.body.errors.email.statusCode).to.equal(409);
@@ -157,10 +157,10 @@ describe('Test suite for User Controller', () => {
       request(app)
         .post('/api/v1/users/signup')
         .send({
-          email: validUser1.email,
+          email: userMatthew.email,
           username: existingUser.username,
-          password: validUser1.password,
-          accountType: validUser1.accountType,
+          password: userMatthew.password,
+          accountType: userMatthew.accountType,
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
@@ -174,16 +174,16 @@ describe('Test suite for User Controller', () => {
     it('should return response data and code in correct form for valid sign up', (done) => {
       request(app)
         .post('/api/v1/users/signup')
-        .send(validUser1)
+        .send(userMatthew)
         .end((err, resp) => {
           expect(resp.status).to.equal(201);
           expect(resp.body.user).to.haveOwnProperty('id');
           expect(resp.body.user).to.haveOwnProperty('email');
           expect(resp.body.user).to.haveOwnProperty('username');
           expect(resp.body.user).to.haveOwnProperty('accountType');
-          expect(resp.body.user.email).to.equal(validUser1.email);
-          expect(resp.body.user.username).to.equal(validUser1.username);
-          expect(resp.body.user.accountType).to.equal(validUser1.accountType);
+          expect(resp.body.user.email).to.equal(userMatthew.email);
+          expect(resp.body.user.username).to.equal(userMatthew.username);
+          expect(resp.body.user.accountType).to.equal(userMatthew.accountType);
           done();
         });
     });
@@ -191,7 +191,7 @@ describe('Test suite for User Controller', () => {
     it('should return a valid jwt token after signup', (done) => {
       request(app)
         .post('/api/v1/users/signup')
-        .send(validUser2)
+        .send(userJane)
         .end((err, resp) => {
           expect(resp.status).to.equal(201);
           expect(resp.body).to.haveOwnProperty('token');
@@ -205,7 +205,7 @@ describe('Test suite for User Controller', () => {
     it('should require an email', (done) => {
       request(app)
         .post('/api/v1/users/signin')
-        .send({ ...validUser1, email: '   ' })
+        .send({ ...userMatthew, email: '   ' })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
           expect(resp.body.errors.email).to.haveOwnProperty('message');
@@ -217,7 +217,7 @@ describe('Test suite for User Controller', () => {
     it('should require a valid email', (done) => {
       request(app)
         .post('/api/v1/users/signin')
-        .send({ ...validUser1, email: invalidUser.email })
+        .send({ ...userMatthew, email: invalidUser.email })
         .end((err, resp) => {
           expect(resp.status).to.equal(400);
           expect(resp.body.errors.email).to.haveOwnProperty('message');
@@ -261,7 +261,7 @@ describe('Test suite for User Controller', () => {
     it('should not grant access to wrong credentials', (done) => {
       request(app)
         .post('/api/v1/users/signin')
-        .send(validUser2)
+        .send(userJane)
         .end((err, resp) => {
           expect(resp.status).to.equal(401);
           expect(resp.body).to.haveOwnProperty('message');

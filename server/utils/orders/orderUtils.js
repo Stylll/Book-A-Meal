@@ -15,7 +15,7 @@ class OrderUtils {
    * adds meal object to the order
    * adds user object to the order
    * @param {object} orderObject
-   * @returns {object} completeOrder
+   * @returns {object} completedOrder
    */
   static async buildOrder(orderObject) {
     if (isEmpty(orderObject)) return orderObject;

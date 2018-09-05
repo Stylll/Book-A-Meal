@@ -2,15 +2,15 @@ import { expect } from 'chai';
 import 'babel-polyfill';
 import orders from '../../db/orders';
 import {
-  validOrder1,
-  validOrder2,
+  orderWith1500,
+  orderWith1000,
   invalidOrder,
   existingOrder,
   insertSeedOrder,
   clearOrders,
 } from '../../utils/seeders/orderSeeder';
 import {
-  existingMeal,
+  curryRice,
   clearMeals,
   insertSeedMeal,
 } from '../../utils/seeders/mealSeeder';
@@ -22,7 +22,7 @@ describe('Test Suite for orders', () => {
   beforeEach(async () => {
     await clearMeals();
     await clearOrders();
-    await insertSeedMeal(existingMeal);
+    await insertSeedMeal(curryRice);
     await insertSeedOrder(existingOrder);
   });
 
@@ -37,42 +37,42 @@ describe('Test Suite for orders', () => {
   });
 
   it('should require an existing meal', async () => {
-    const result = await orders.add({ ...validOrder2, mealId: 3 });
+    const result = await orders.add({ ...orderWith1000, mealId: 3 });
     expect(result.err.message).to.equal('Meal does not exist');
   });
 
   it('should require price', async () => {
-    const result = await orders.add({ ...validOrder1, price: 0 });
+    const result = await orders.add({ ...orderWith1500, price: 0 });
     expect(result.err.message).to.equal('Price is required');
   });
 
   it('should require a valid price', async () => {
-    const result = await orders.add({ ...validOrder1, price: 'abc' });
+    const result = await orders.add({ ...orderWith1500, price: 'abc' });
     expect(result.err.message).to.equal('Price is invalid');
   });
 
   it('should ensure price is above 1', async () => {
-    const result = await orders.add({ ...validOrder1, price: 1 });
+    const result = await orders.add({ ...orderWith1500, price: 1 });
     expect(result.err.message).to.equal('Price must be greater than one');
   });
 
   it('should require quantity', async () => {
-    const result = await orders.add({ ...validOrder1, quantity: 0 });
+    const result = await orders.add({ ...orderWith1500, quantity: 0 });
     expect(result.err.message).to.equal('Quantity is required');
   });
 
   it('should require a valid quantity', async () => {
-    const result = await orders.add({ ...validOrder1, quantity: 'abs' });
+    const result = await orders.add({ ...orderWith1500, quantity: 'abs' });
     expect(result.err.message).to.equal('Quantity is invalid');
   });
 
   it('should add, set default status to pending and calculate cost', async () => {
-    const result = await orders.add({ ...validOrder2, status: '' });
+    const result = await orders.add({ ...orderWith1000, status: '' });
     expect(result.id).to.equal(2);
-    expect(result.mealId).to.equal(validOrder2.mealId);
-    expect(result.price).to.equal(validOrder2.price);
-    expect(result.quantity).to.equal(validOrder2.quantity);
-    expect(result.cost).to.equal(validOrder2.price * validOrder2.quantity);
+    expect(result.mealId).to.equal(orderWith1000.mealId);
+    expect(result.price).to.equal(orderWith1000.price);
+    expect(result.quantity).to.equal(orderWith1000.quantity);
+    expect(result.cost).to.equal(orderWith1000.price * orderWith1000.quantity);
     expect(result.status).to.equal('pending');
     expect(result).to.haveOwnProperty('createdAt');
     expect(result).to.haveOwnProperty('updatedAt');
@@ -80,12 +80,12 @@ describe('Test Suite for orders', () => {
   });
 
   it('should require user id', async () => {
-    const result = await orders.add({ ...validOrder1, userId: 0 });
+    const result = await orders.add({ ...orderWith1500, userId: 0 });
     expect(result.err.message).to.equal('User id is required');
   });
 
   it('should require a valid user id', async () => {
-    const result = await orders.add({ ...validOrder1, userId: 'abc' });
+    const result = await orders.add({ ...orderWith1500, userId: 'abc' });
     expect(result.err.message).to.equal('User id is invalid');
   });
 

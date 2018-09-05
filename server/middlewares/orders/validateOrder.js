@@ -338,7 +338,7 @@ class order {
     if (request.decoded.user.accountType !== 'admin' &&
         request.decoded.user.id !== meal.userId) {
       request.errors.access = {
-        message: 'Unauthorized access',
+        message: 'User not allowed to perform this operation',
         statusCode: 403,
       };
       return next();
@@ -390,7 +390,7 @@ class order {
       // check if customer is the owner of the order
       if (existingOrder.userId !== request.decoded.user.id) {
         request.errors.access = {
-          message: 'Unauthorized access',
+          message: 'User not allowed to perform this operation',
           statusCode: 403,
         };
         return next();

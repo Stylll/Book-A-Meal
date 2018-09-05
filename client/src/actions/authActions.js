@@ -68,8 +68,8 @@ const signin = signinDetails => function (dispatch) {
       localStorage.setItem('jwtToken', response.data.token);
       setAuthorizationToken(response.data.token);
       dispatch(signinSuccess(response.data.user));
-      dispatch(getMenus());
       if (response.data.user.accountType !== 'customer') {
+        dispatch(getMenus());
         dispatch(getMeals());
       }
       dispatch(hideLoading());

@@ -3,12 +3,12 @@ import MenuMeals from '../../db/menuMeals';
 /**
  * This script contains template menu meal data to use for test.
  */
-const validMenuMeal1 = {
+const menuWithSecondMeal = {
   menuId: 2,
   mealId: 2,
 };
 
-const validMenuMeal2 = {
+const menuWithThirdMeal = {
   menuId: 3,
   mealId: 3,
 };
@@ -18,7 +18,7 @@ const invalidMenuMeal3 = {
   mealId: 0,
 };
 
-const existingMenuMeal = {
+const menuWithFirstMeal = {
   menuId: 1,
   mealId: 1,
 };
@@ -39,10 +39,10 @@ const clearMenuMeals = () => {
 };
 
 export {
-  validMenuMeal1,
-  validMenuMeal2,
+  menuWithSecondMeal,
+  menuWithThirdMeal,
   invalidMenuMeal3,
-  existingMenuMeal,
+  menuWithFirstMeal,
   insertSeedMenuMeal,
   clearMenuMeals,
 };

@@ -4,27 +4,27 @@ import { getNormalDate, getCurrentBeautifiedDate } from '../dateBeautifier';
 /**
  * This script contains template menu data to use for test.
  */
-const validMenu1 = {
+const menuFor23April18 = {
   name: 'Menu For Monday, 23 April 2018',
   date: '2018-04-23',
   userId: 1,
   mealIds: [1, 2],
 };
 
-const validMenu2 = {
+const menuFor24April18 = {
   name: 'Menu For Tuesday, 24 April 2018',
   date: '2018-04-24',
   userId: 1,
   mealIds: [1, 2],
 };
 
-const invalidMenu3 = {
+const invalidMenu = {
   name: 'Menu For Wednesday, 25 April 2018',
   date: '',
   userId: 0,
 };
 
-const existingMenu = {
+const menuFor22April18 = {
   name: 'Menu For Sunday, 22 April 2018',
   date: '2018-04-22',
   userId: 1,
@@ -54,10 +54,10 @@ const clearMenus = async () => {
 };
 
 export {
-  validMenu1,
-  validMenu2,
-  invalidMenu3,
-  existingMenu,
+  menuFor23April18,
+  menuFor24April18,
+  invalidMenu,
+  menuFor22April18,
   currentMenu,
   insertSeedMenu,
   clearMenus,
