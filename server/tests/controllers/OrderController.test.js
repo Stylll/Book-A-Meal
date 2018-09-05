@@ -5,17 +5,17 @@ import Authenticate from '../../utils/authentication/authenticate';
 import {
   existingUser,
   insertSeedUsers,
-  validUser1,
-  validUser2,
-  adminUser,
+  userMatthew,
+  userJane,
+  userStephen,
   clearUsers,
 } from '../../utils/seeders/userSeeder';
 import {
-  existingMeal,
+  curryRice,
   clearMeals,
   insertSeedMeal,
-  validMeal1,
-  validMeal2,
+  riceAndStew,
+  crispyChicken,
 } from '../../utils/seeders/mealSeeder';
 import {
   insertSeedMenu,
@@ -25,8 +25,8 @@ import {
   existingOrder,
   clearOrders,
   insertSeedOrder,
-  validOrder1,
-  validOrder2,
+  orderWith1500,
+  orderWith1000,
 } from '../../utils/seeders/orderSeeder';
 import Orders from '../../db/orders';
 
@@ -36,26 +36,26 @@ describe('Test Suite for Order Controller', () => {
     // create existing users
     await clearUsers();
     await insertSeedUsers(existingUser);
-    await insertSeedUsers(validUser1);
-    await insertSeedUsers(validUser2);
-    await insertSeedUsers(adminUser);
+    await insertSeedUsers(userMatthew);
+    await insertSeedUsers(userJane);
+    await insertSeedUsers(userStephen);
   });
 
   // generate access token for users
-  const catererToken = Authenticate.authenticateUser({ id: 1, ...existingUser });
-  const customerToken = Authenticate.authenticateUser({ id: 2, ...validUser1 });
-  const catererToken2 = Authenticate.authenticateUser({ id: 3, ...validUser2 });
-  const adminToken = Authenticate.authenticateUser({ id: 4, ...adminUser });
+  const alphaCatererToken = Authenticate.authenticateUser({ id: 1, ...existingUser });
+  const customerToken = Authenticate.authenticateUser({ id: 2, ...userMatthew });
+  const betaCatererToken = Authenticate.authenticateUser({ id: 3, ...userJane });
+  const adminToken = Authenticate.authenticateUser({ id: 4, ...userStephen });
 
   describe('POST: Create Order - /api/orders', () => {
     // before each hook to clean and insert data to the db
     beforeEach(async () => {
       await clearMeals();
       await clearOrders();
-      await insertSeedMeal(existingMeal);
+      await insertSeedMeal(curryRice);
       await insertSeedMenu(currentMenu);
-      await insertSeedMeal(validMeal1);
-      await insertSeedMeal(validMeal2);
+      await insertSeedMeal(riceAndStew);
+      await insertSeedMeal(crispyChicken);
       await insertSeedOrder(existingOrder);
     });
 
@@ -85,16 +85,16 @@ describe('Test Suite for Order Controller', () => {
         });
     });
 
-    it('should require a customer user account', (done) => {
+    it('should not allow caterers create an order', (done) => {
       request(app)
         .post('/api/v1/orders')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .send({})
         .end((err, resp) => {
           expect(resp.status).to.equal(403);
-          expect(resp.body.message).to.equal('Unauthorized Access');
+          expect(resp.body.message).to.equal('User not allowed to perform this operation');
           done();
         });
     });
@@ -155,7 +155,7 @@ describe('Test Suite for Order Controller', () => {
           'x-access-token': customerToken,
         })
         .send({
-          mealId: validOrder1.mealId,
+          mealId: orderWith1500.mealId,
           quantity: 0,
         })
         .end((err, resp) => {
@@ -173,7 +173,7 @@ describe('Test Suite for Order Controller', () => {
           'x-access-token': customerToken,
         })
         .send({
-          mealId: validOrder1.mealId,
+          mealId: orderWith1500.mealId,
           quantity: 'abc',
         })
         .end((err, resp) => {
@@ -190,16 +190,16 @@ describe('Test Suite for Order Controller', () => {
         .set({
           'x-access-token': customerToken,
         })
-        .send(validOrder1)
+        .send(orderWith1500)
         .end((err, resp) => {
           expect(resp.status).to.equal(201);
           expect(resp.body.order).to.be.an('object');
           expect(resp.body.order.status).to.equal('pending');
-          expect(resp.body.order.mealId).to.equal(validOrder1.mealId);
-          expect(resp.body.order.price).to.equal(existingMeal.price);
-          expect(resp.body.order.quantity).to.equal(validOrder1.quantity);
+          expect(resp.body.order.mealId).to.equal(orderWith1500.mealId);
+          expect(resp.body.order.price).to.equal(curryRice.price);
+          expect(resp.body.order.quantity).to.equal(orderWith1500.quantity);
           expect(resp.body.order.cost)
-            .to.equal(existingMeal.price * validOrder1.quantity);
+            .to.equal(curryRice.price * orderWith1500.quantity);
           done();
         });
     });
@@ -212,18 +212,18 @@ describe('Test Suite for Order Controller', () => {
           .set({
             'x-access-token': customerToken,
           })
-          .send(validOrder1)
+          .send(orderWith1500)
           .end((err, resp) => {
             expect(resp.status).to.equal(201);
             expect(resp.body.order).to.be.an('object');
             expect(resp.body.order.id).to.equal(2);
-            expect(resp.body.order.mealId).to.equal(validOrder1.mealId);
-            expect(resp.body.order.price).to.equal(existingMeal.price);
-            expect(resp.body.order.quantity).to.equal(validOrder1.quantity);
+            expect(resp.body.order.mealId).to.equal(orderWith1500.mealId);
+            expect(resp.body.order.price).to.equal(curryRice.price);
+            expect(resp.body.order.quantity).to.equal(orderWith1500.quantity);
             expect(resp.body.order.status).to.equal('pending');
             expect(resp.body.order.userId).to.equal(2);
             expect(resp.body.order.cost)
-              .to.equal(existingMeal.price * validOrder1.quantity);
+              .to.equal(curryRice.price * orderWith1500.quantity);
             expect(resp.body.order).to.haveOwnProperty('createdAt');
             expect(resp.body.order).to.haveOwnProperty('updatedAt');
             done();
@@ -237,12 +237,12 @@ describe('Test Suite for Order Controller', () => {
     beforeEach(async () => {
       await clearMeals();
       await clearOrders();
-      await insertSeedMeal(existingMeal);
-      await insertSeedMeal(validMeal1);
+      await insertSeedMeal(curryRice);
+      await insertSeedMeal(riceAndStew);
       await insertSeedMenu(currentMenu);
-      await insertSeedMeal(validMeal2);
+      await insertSeedMeal(crispyChicken);
       await insertSeedOrder({ ...existingOrder, userId: 2 });
-      await insertSeedOrder({ ...validOrder1, userId: 3 });
+      await insertSeedOrder({ ...orderWith1500, userId: 3 });
     });
 
     it('should require an authentication token', (done) => {
@@ -314,7 +314,7 @@ describe('Test Suite for Order Controller', () => {
         });
     });
 
-    it('should require a status', (done) => {
+    it('should require an order status', (done) => {
       request(app)
         .put('/api/v1/orders/1')
         .set({
@@ -330,14 +330,14 @@ describe('Test Suite for Order Controller', () => {
         });
     });
 
-    it('should require a valid status', (done) => {
+    it('should require a valid order status', (done) => {
       request(app)
         .put('/api/v1/orders/1')
         .set({
           'x-access-token': customerToken,
         })
         .send({
-          ...validOrder1,
+          ...orderWith1500,
           status: 'abc',
         })
         .end((err, resp) => {
@@ -352,10 +352,10 @@ describe('Test Suite for Order Controller', () => {
       request(app)
         .put('/api/v1/orders/1')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .send({
-          ...validOrder1,
+          ...orderWith1500,
           status: 'canceled',
         })
         .end((err, resp) => {
@@ -364,14 +364,14 @@ describe('Test Suite for Order Controller', () => {
         });
     });
 
-    it('should not allow customer update status to complete', (done) => {
+    it('should not allow customer update order status to complete', (done) => {
       request(app)
         .put('/api/v1/orders/1')
         .set({
           'x-access-token': customerToken,
         })
         .send({
-          ...validOrder1,
+          ...orderWith1500,
           status: 'complete',
         })
         .end((err, resp) => {
@@ -388,12 +388,12 @@ describe('Test Suite for Order Controller', () => {
           'x-access-token': customerToken,
         })
         .send({
-          ...validOrder1,
+          ...orderWith1500,
           status: 'canceled',
         })
         .end((err, resp) => {
           expect(resp.body.errors.access.statusCode).to.equal(403);
-          expect(resp.body.errors.access.message).to.equal('Unauthorized access');
+          expect(resp.body.errors.access.message).to.equal('User not allowed to perform this operation');
           done();
         });
     });
@@ -402,7 +402,7 @@ describe('Test Suite for Order Controller', () => {
       request(app)
         .put('/api/v1/orders/2')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .send({
           status: 'complete',
@@ -434,7 +434,7 @@ describe('Test Suite for Order Controller', () => {
       request(app)
         .put('/api/v1/orders/1')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .send({
           status: 'canceled',
@@ -450,14 +450,14 @@ describe('Test Suite for Order Controller', () => {
       request(app)
         .put('/api/v1/orders/1')
         .set({
-          'x-access-token': catererToken2,
+          'x-access-token': betaCatererToken,
         })
         .send({
           status: 'canceled',
         })
         .end((err, resp) => {
           expect(resp.body.errors.access.statusCode).to.equal(403);
-          expect(resp.body.errors.access.message).to.equal('Unauthorized access');
+          expect(resp.body.errors.access.message).to.equal('User not allowed to perform this operation');
           done();
         });
     });
@@ -482,7 +482,7 @@ describe('Test Suite for Order Controller', () => {
       request(app)
         .put('/api/v1/orders/1')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .send({
           status: 'complete',
@@ -498,15 +498,15 @@ describe('Test Suite for Order Controller', () => {
       request(app)
         .put('/api/v1/orders/1')
         .set({
-          'x-access-token': catererToken2,
+          'x-access-token': betaCatererToken,
         })
         .send({
-          ...validOrder1,
+          ...orderWith1500,
           status: 'complete',
         })
         .end((err, resp) => {
           expect(resp.body.errors.access.statusCode).to.equal(403);
-          expect(resp.body.errors.access.message).to.equal('Unauthorized access');
+          expect(resp.body.errors.access.message).to.equal('User not allowed to perform this operation');
           done();
         });
     });
@@ -547,11 +547,11 @@ describe('Test Suite for Order Controller', () => {
         });
     });
 
-    it('should not update meal id and quantity for caterer', (done) => {
+    it('should not allow caterer update meal id and quantity', (done) => {
       request(app)
         .put('/api/v1/orders/1')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .send({
           mealId: 1,
@@ -591,7 +591,7 @@ describe('Test Suite for Order Controller', () => {
       request(app)
         .put('/api/v1/orders/1')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .send({
           mealId: 'abc',
@@ -608,7 +608,7 @@ describe('Test Suite for Order Controller', () => {
       request(app)
         .put('/api/v1/orders/1')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .send({
           mealId: 99,
@@ -625,7 +625,7 @@ describe('Test Suite for Order Controller', () => {
       request(app)
         .put('/api/v1/orders/1')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .send({
           mealId: 1,
@@ -642,7 +642,7 @@ describe('Test Suite for Order Controller', () => {
       request(app)
         .put('/api/v1/orders/1')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .send({
           mealId: 1,
@@ -662,11 +662,11 @@ describe('Test Suite for Order Controller', () => {
     beforeEach(async () => {
       await clearMeals();
       await clearOrders();
-      await insertSeedMeal(existingMeal);
+      await insertSeedMeal(curryRice);
       await insertSeedOrder(existingOrder);
       await insertSeedOrder({ ...existingOrder, userId: 2 });
-      await insertSeedOrder({ ...validOrder2, userId: 2 });
-      await insertSeedOrder({ ...validOrder1, userId: 3 });
+      await insertSeedOrder({ ...orderWith1000, userId: 2 });
+      await insertSeedOrder({ ...orderWith1500, userId: 3 });
     });
 
     it('should require an authentication token', (done) => {
@@ -737,7 +737,7 @@ describe('Test Suite for Order Controller', () => {
       request(app)
         .get('/api/v1/orders')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(200);
@@ -757,7 +757,7 @@ describe('Test Suite for Order Controller', () => {
       request(app)
         .get('/api/v1/orders')
         .set({
-          'x-access-token': catererToken2,
+          'x-access-token': betaCatererToken,
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(200);
@@ -773,14 +773,14 @@ describe('Test Suite for Order Controller', () => {
     beforeEach(async () => {
       await clearMeals();
       await clearOrders();
-      await insertSeedMeal(existingMeal);
+      await insertSeedMeal(curryRice);
       await insertSeedOrder({ ...existingOrder, userId: 2 });
       await insertSeedOrder({ ...existingOrder, userId: 2 });
-      await insertSeedOrder({ ...validOrder2, userId: 2 });
-      await insertSeedOrder({ ...validOrder1, userId: 2 });
+      await insertSeedOrder({ ...orderWith1000, userId: 2 });
+      await insertSeedOrder({ ...orderWith1500, userId: 2 });
     });
 
-    it('should return paginated data for customer', (done) => {
+    it('should return paginated orders for customer', (done) => {
       request(app)
         .get('/api/v1/orders?limit=1&offset=0')
         .set({
@@ -809,18 +809,18 @@ describe('Test Suite for Order Controller', () => {
     beforeEach(async () => {
       await clearMeals();
       await clearOrders();
-      await insertSeedMeal({ ...existingMeal, userId: 3 });
+      await insertSeedMeal({ ...curryRice, userId: 3 });
       await insertSeedOrder({ ...existingOrder, userId: 2 });
       await insertSeedOrder({ ...existingOrder, userId: 2 });
-      await insertSeedOrder({ ...validOrder2, userId: 3 });
-      await insertSeedOrder({ ...validOrder1, userId: 3 });
+      await insertSeedOrder({ ...orderWith1000, userId: 3 });
+      await insertSeedOrder({ ...orderWith1500, userId: 3 });
     });
 
-    it('should return paginated data for caterer', (done) => {
+    it('should return paginated orders for caterer', (done) => {
       request(app)
         .get('/api/v1/orders?limit=1&offset=0')
         .set({
-          'x-access-token': catererToken2,
+          'x-access-token': betaCatererToken,
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(200);
@@ -845,14 +845,14 @@ describe('Test Suite for Order Controller', () => {
     beforeEach(async () => {
       await clearMeals();
       await clearOrders();
-      await insertSeedMeal({ ...existingMeal, userId: 3 });
+      await insertSeedMeal({ ...curryRice, userId: 3 });
       await insertSeedOrder({ ...existingOrder, userId: 2 });
       await insertSeedOrder({ ...existingOrder, userId: 2 });
-      await insertSeedOrder({ ...validOrder2, userId: 3 });
-      await insertSeedOrder({ ...validOrder1, userId: 3 });
+      await insertSeedOrder({ ...orderWith1000, userId: 3 });
+      await insertSeedOrder({ ...orderWith1500, userId: 3 });
     });
 
-    it('should return paginated data for admin', (done) => {
+    it('should return paginated orders for admin', (done) => {
       request(app)
         .get('/api/v1/orders?limit=2&offset=0')
         .set({
@@ -882,7 +882,7 @@ describe('Test Suite for Order Controller', () => {
       request(app)
         .get('/api/v1/orders?limit=abc&offset=xyz')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .end((err, resp) => {
           expect(resp.body.errors.limit.statusCode).to.equal(400);

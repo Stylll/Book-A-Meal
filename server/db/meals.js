@@ -22,9 +22,9 @@ class Meals {
       return { err: new Error('Price is invalid') };
     }
 
-    // check if price is less than one
-    if (meal.price <= 1) {
-      return { err: new Error('Price must be greater than 1') };
+    // check if price is atleast one
+    if (meal.price < 1) {
+      return { err: new Error('Price must be atleast one') };
     }
 
     // check if image link exists
@@ -55,9 +55,9 @@ class Meals {
       return { err: new Error('Price is invalid') };
     }
 
-    // check if price is less than one
-    if (meal.price && meal.price <= 1) {
-      return { err: new Error('Price must be greater than 1') };
+    // check if price is atleast one
+    if (meal.price && meal.price < 1) {
+      return { err: new Error('Price must be atleast one') };
     }
 
     // get meal record and update it

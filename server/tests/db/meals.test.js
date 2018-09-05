@@ -1,9 +1,9 @@
 import 'babel-polyfill';
 import { expect } from 'chai';
 import {
-  validMeal1,
-  validMeal2,
-  existingMeal,
+  riceAndStew,
+  crispyChicken,
+  curryRice,
   invalidMeal,
   insertSeedMeal,
   clearMeals,
@@ -26,7 +26,7 @@ describe('Test suite for meals model', () => {
 
   beforeEach(async () => {
     await clearMeals();
-    await insertSeedMeal(existingMeal);
+    await insertSeedMeal(curryRice);
   });
 
   it('should require a meal name', async () => {
@@ -37,37 +37,37 @@ describe('Test suite for meals model', () => {
   });
 
   it('should require a unique meal name', async () => {
-    const result = await meals.add(existingMeal);
+    const result = await meals.add(curryRice);
     expect(result.err.message).to.equal('Meal name already exists');
   });
 
   it('should require price', async () => {
     const result = await meals.add({
-      name: validMeal1.name,
+      name: riceAndStew.name,
     });
     expect(result.err.message).to.equal('Price is required');
   });
 
   it('should not allow price in invalid format', async () => {
     const result = await meals.add({
-      name: validMeal1.name,
+      name: riceAndStew.name,
       price: 'three zero',
     });
     expect(result.err.message).to.equal('Price is invalid');
   });
 
-  it('should require price to be greater than one', async () => {
+  it('should require price to be atleast one', async () => {
     const result = await meals.add({
-      name: validMeal1.name,
-      price: 1,
+      name: riceAndStew.name,
+      price: 0.8,
     });
-    expect(result.err.message).to.equal('Price must be greater than 1');
+    expect(result.err.message).to.equal('Price must be atleast one');
   });
 
   it('should require image link', async () => {
     const result = await meals.add({
-      name: validMeal1.name,
-      price: validMeal1.price,
+      name: riceAndStew.name,
+      price: riceAndStew.price,
       image: invalidMeal.image,
     });
     expect(result.err.message).to.equal('Image link is required');
@@ -75,18 +75,18 @@ describe('Test suite for meals model', () => {
 
   it('should require user id', async () => {
     const result = await meals.add({
-      name: validMeal1.name,
-      price: validMeal1.price,
-      image: validMeal1.image,
+      name: riceAndStew.name,
+      price: riceAndStew.price,
+      image: riceAndStew.image,
     });
     expect(result.err.message).to.equal('User id is required');
   });
 
   it('should add new meal', async () => {
-    const result = await meals.add(validMeal1);
-    expect(result.name).to.equal(validMeal1.name);
-    expect(result.price).to.equal(validMeal1.price);
-    expect(result.image).to.equal(validMeal1.image);
+    const result = await meals.add(riceAndStew);
+    expect(result.name).to.equal(riceAndStew.name);
+    expect(result.price).to.equal(riceAndStew.price);
+    expect(result.image).to.equal(riceAndStew.image);
   });
 
   it('should update a meal', async () => {
@@ -104,9 +104,9 @@ describe('Test suite for meals model', () => {
   });
 
   it('should not update meal that does not exist', async () => {
-    validMeal2.id = 10;
-    validMeal2.name = 'Curry Rice';
-    const result = await meals.update(validMeal2);
+    crispyChicken.id = 10;
+    crispyChicken.name = 'Curry Rice';
+    const result = await meals.update(crispyChicken);
     expect(result.err.message).to.equal('Meal does not exist');
   });
 
@@ -118,14 +118,14 @@ describe('Test suite for meals model', () => {
   });
 
   it('should get all meals', async () => {
-    await meals.add(validMeal1);
+    await meals.add(riceAndStew);
     const result = await meals.getAll();
     expect(result.meals.length).to.equal(2);
   });
 
   it('should get meal by name', async () => {
-    const result = await meals.getByName(existingMeal.name);
-    expect(result.meals[0].name).to.equal(existingMeal.name);
+    const result = await meals.getByName(curryRice.name);
+    expect(result.meals[0].name).to.equal(curryRice.name);
   });
 
   it('should truncate meal db', async () => {

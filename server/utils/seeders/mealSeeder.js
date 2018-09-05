@@ -6,14 +6,14 @@ import Meals from '../../db/meals';
 
 const defaultImage = 'https://res.cloudinary.com/styll/image/upload/v1524560568/foods.jpg';
 
-const validMeal1 = {
+const riceAndStew = {
   name: 'Rice and Stew',
   price: 3500,
   image: 'https://res.cloudinary.com/styll/image/upload/v1524560568/foods.jpg',
   userId: 1,
 };
 
-const validMeal2 = {
+const crispyChicken = {
   name: 'Crispy Chicken',
   price: 3500,
   image: 'https://res.cloudinary.com/styll/image/upload/v1524560568/foods.jpg',
@@ -26,7 +26,7 @@ const invalidMeal = {
   image: '',
 };
 
-const existingMeal = {
+const curryRice = {
   name: 'Curry Rice',
   price: 1000,
   image: 'https://res.cloudinary.com/styll/image/upload/v1524560568/foods.jpg',
@@ -50,10 +50,10 @@ const clearMeals = async () => {
 
 export {
   defaultImage,
-  validMeal1,
-  validMeal2,
+  riceAndStew,
+  crispyChicken,
   invalidMeal,
-  existingMeal,
+  curryRice,
   insertSeedMeal,
   clearMeals,
 };

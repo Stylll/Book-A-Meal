@@ -39,7 +39,7 @@ class Validator extends BaseValidator {
     (decoded && decoded.user && decoded.user.accountType === 'admin')) {
       // nothing
     } else {
-      this.throwError('Unauthorized Access', 403);
+      this.throwError('User not allowed to perform this operation', 403);
     }
   }
 
@@ -53,7 +53,7 @@ class Validator extends BaseValidator {
     if (decoded && decoded.user && decoded.user.accountType === 'customer') {
       // do nothing
     } else {
-      this.throwError('Unauthorized Access', 403);
+      this.throwError('User not allowed to perform this operation', 403);
     }
   }
 }

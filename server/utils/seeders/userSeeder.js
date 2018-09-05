@@ -5,14 +5,14 @@ import users from '../../db/users';
  * template data store for users
  */
 
-const validUser1 = {
+const userMatthew = {
   email: 'matthew@yahoo.com',
   username: 'Matthew',
   password: 'Mat1234',
   accountType: 'customer',
 };
 
-const validUser2 = {
+const userJane = {
   email: 'jane@yahoo.com',
   username: 'jane',
   password: 'janneeh',
@@ -28,7 +28,7 @@ const existingUser = {
   resetPasswordExpires: Date.now() + 360000,
 };
 
-const adminUser = {
+const userStephen = {
   email: 'stephen.aribaba@gmail.com',
   username: 'Stephen',
   password: 'stephen',
@@ -58,11 +58,11 @@ const clearUsers = async () => {
 };
 
 export {
-  validUser1,
-  validUser2,
+  userMatthew,
+  userJane,
   existingUser,
   invalidUser,
-  adminUser,
+  userStephen,
   insertSeedUsers,
   clearUsers,
 };

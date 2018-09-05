@@ -6,28 +6,28 @@ import { getNormalDate, beautifyDate } from '../../utils/dateBeautifier';
 import { transporter } from '../../utils/mailer/NodeMailer';
 
 import {
-  existingMenu,
+  menuFor22April18,
   currentMenu,
   insertSeedMenu,
   clearMenus,
-  validMenu1,
-  validMenu2,
+  menuFor23April18,
+  menuFor24April18,
 } from '../../utils/seeders/menuSeeder';
 
 import {
-  validMeal1,
-  validMeal2,
-  existingMeal,
+  riceAndStew,
+  crispyChicken,
+  curryRice,
   insertSeedMeal,
   clearMeals,
 } from '../../utils/seeders/mealSeeder';
 
 import {
-  validUser1,
+  userMatthew,
   existingUser,
   insertSeedUsers,
-  validUser2,
-  adminUser,
+  userJane,
+  userStephen,
   clearUsers,
 } from '../../utils/seeders/userSeeder';
 
@@ -39,26 +39,26 @@ describe('Test Suite for Menu Controller', () => {
     // create existing users
     await clearUsers();
     await insertSeedUsers(existingUser);
-    await insertSeedUsers(validUser1);
-    await insertSeedUsers(validUser2);
-    await insertSeedUsers(adminUser);
+    await insertSeedUsers(userMatthew);
+    await insertSeedUsers(userJane);
+    await insertSeedUsers(userStephen);
   });
 
   // generate access token for users
-  const catererToken = Authenticate.authenticateUser({ id: 1, ...existingUser });
-  const customerToken = Authenticate.authenticateUser({ id: 2, ...validUser1 });
-  const caterer2Token = Authenticate.authenticateUser({ id: 3, ...validUser2 });
-  const adminToken = Authenticate.authenticateUser({ id: 4, ...adminUser });
+  const alphaCatererToken = Authenticate.authenticateUser({ id: 1, ...existingUser });
+  const customerToken = Authenticate.authenticateUser({ id: 2, ...userMatthew });
+  const betaCatererToken = Authenticate.authenticateUser({ id: 3, ...userJane });
+  const adminToken = Authenticate.authenticateUser({ id: 4, ...userStephen });
 
   describe('POST: Create Menu - /api/v1/menu', () => {
     // before each hook to clean and insert data to the db
     beforeEach(async () => {
       await clearMeals();
       await clearMenus();
-      await insertSeedMeal(existingMeal);
-      await insertSeedMeal(validMeal1);
-      await insertSeedMeal(validMeal2);
-      await insertSeedMenu(existingMenu);
+      await insertSeedMeal(curryRice);
+      await insertSeedMeal(riceAndStew);
+      await insertSeedMeal(crispyChicken);
+      await insertSeedMenu(menuFor22April18);
     });
 
     it('should require an authentication token', (done) => {
@@ -86,7 +86,7 @@ describe('Test Suite for Menu Controller', () => {
         });
     });
 
-    it('should require a caterer / admin user account', (done) => {
+    it('should not allow customer create a menu', (done) => {
       request(app)
         .post('/api/v1/menu')
         .set({
@@ -95,7 +95,7 @@ describe('Test Suite for Menu Controller', () => {
         .send({})
         .end((err, resp) => {
           expect(resp.status).to.equal(403);
-          expect(resp.body.message).to.equal('Unauthorized Access');
+          expect(resp.body.message).to.equal('User not allowed to perform this operation');
           done();
         });
     });
@@ -104,7 +104,7 @@ describe('Test Suite for Menu Controller', () => {
       request(app)
         .post('/api/v1/menu')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .send({ mealIds: [1, 2] })
         .end((err, resp) => {
@@ -124,7 +124,7 @@ describe('Test Suite for Menu Controller', () => {
       request(app)
         .post('/api/v1/menu')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .send({ mealIds: [1, 2] })
         .end((err, resp) => {
@@ -133,11 +133,11 @@ describe('Test Suite for Menu Controller', () => {
         });
     });
 
-    it('should require meal ids', (done) => {
+    it('should require mealIds to be submitted with request', (done) => {
       request(app)
         .post('/api/v1/menu')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .send({
         })
@@ -148,14 +148,30 @@ describe('Test Suite for Menu Controller', () => {
         });
     });
 
-    it('should require meal ids is an array', (done) => {
+    it('should require mealIds parameter to be an array', (done) => {
       request(app)
         .post('/api/v1/menu')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .send({
           mealIds: { 1: 'a', 2: 'b', 3: 'c' },
+        })
+        .end((err, resp) => {
+          expect(resp.body.errors.meals.statusCode).to.equal(400);
+          expect(resp.body.errors.meals.message).to.equal('Meal ids must be in an array');
+          done();
+        });
+    });
+
+    it('should not allow a string as mealIds', (done) => {
+      request(app)
+        .post('/api/v1/menu')
+        .set({
+          'x-access-token': alphaCatererToken,
+        })
+        .send({
+          mealIds: '1, 2',
         })
         .end((err, resp) => {
           expect(resp.body.errors.meals.statusCode).to.equal(400);
@@ -168,7 +184,7 @@ describe('Test Suite for Menu Controller', () => {
       request(app)
         .post('/api/v1/menu')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .send({ mealIds: [1, 1, 2, 2] })
         .end((err, resp) => {
@@ -180,11 +196,11 @@ describe('Test Suite for Menu Controller', () => {
         });
     });
 
-    it('should not add if array contains non existing meals', (done) => {
+    it('should not add meals to menu if meals array contains non existing meals', (done) => {
       request(app)
         .post('/api/v1/menu')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .send({
           mealIds: [1, 2, 5, 7, 8],
@@ -200,7 +216,7 @@ describe('Test Suite for Menu Controller', () => {
       request(app)
         .post('/api/v1/menu')
         .set({
-          'x-access-token': caterer2Token,
+          'x-access-token': betaCatererToken,
         })
         .send({
           mealIds: [3],
@@ -241,15 +257,15 @@ describe('Test Suite for Menu Controller', () => {
     beforeEach(async () => {
       await clearMeals();
       await clearMenus();
-      await insertSeedMeal(existingMeal);
-      await insertSeedMeal(validMeal1);
-      await insertSeedMeal(validMeal2);
-      await insertSeedMenu(existingMenu);
+      await insertSeedMeal(curryRice);
+      await insertSeedMeal(riceAndStew);
+      await insertSeedMeal(crispyChicken);
+      await insertSeedMenu(menuFor22April18);
     });
 
     it('should require an authentication token', (done) => {
       request(app)
-        .post('/api/v1/menu')
+        .put('/api/v1/menu/1')
         .send({})
         .end((err, resp) => {
           expect(resp.status).to.equal(401);
@@ -260,7 +276,7 @@ describe('Test Suite for Menu Controller', () => {
 
     it('should require a valid authentication token', (done) => {
       request(app)
-        .post('/api/v1/menu')
+        .put('/api/v1/menu/1')
         .set({
           'x-access-token': 'rkrri444443223sdkd.rererer.weewewe3434',
         })
@@ -272,16 +288,16 @@ describe('Test Suite for Menu Controller', () => {
         });
     });
 
-    it('should require a caterer / admin user account', (done) => {
+    it('should not allow customers update a menu', (done) => {
       request(app)
-        .post('/api/v1/menu')
+        .put('/api/v1/menu/1')
         .set({
           'x-access-token': customerToken,
         })
         .send({})
         .end((err, resp) => {
           expect(resp.status).to.equal(403);
-          expect(resp.body.message).to.equal('Unauthorized Access');
+          expect(resp.body.message).to.equal('User not allowed to perform this operation');
           done();
         });
     });
@@ -290,7 +306,7 @@ describe('Test Suite for Menu Controller', () => {
       request(app)
         .put('/api/v1/menu/ab')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .send({
         })
@@ -305,7 +321,7 @@ describe('Test Suite for Menu Controller', () => {
       request(app)
         .put('/api/v1/menu/99')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .send({
         })
@@ -316,11 +332,11 @@ describe('Test Suite for Menu Controller', () => {
         });
     });
 
-    it('should require meal ids', (done) => {
+    it('should require mealIds to be submitted with request', (done) => {
       request(app)
         .put('/api/v1/menu/1')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .send({
         })
@@ -331,14 +347,30 @@ describe('Test Suite for Menu Controller', () => {
         });
     });
 
-    it('should require meal ids is an array', (done) => {
+    it('should require mealIds parameter to be an array', (done) => {
       request(app)
         .put('/api/v1/menu/1')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .send({
           mealIds: { 1: 'a', 2: 'b', 3: 'c' },
+        })
+        .end((err, resp) => {
+          expect(resp.body.errors.meals.statusCode).to.equal(400);
+          expect(resp.body.errors.meals.message).to.equal('Meal ids must be in an array');
+          done();
+        });
+    });
+
+    it('should not allow mealIds to be a string', (done) => {
+      request(app)
+        .put('/api/v1/menu/1')
+        .set({
+          'x-access-token': alphaCatererToken,
+        })
+        .send({
+          mealIds: '1, 2, 3',
         })
         .end((err, resp) => {
           expect(resp.body.errors.meals.statusCode).to.equal(400);
@@ -351,7 +383,7 @@ describe('Test Suite for Menu Controller', () => {
       request(app)
         .put('/api/v1/menu/1')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .send({ mealIds: [1, 1, 2, 2] })
         .end((err, resp) => {
@@ -367,7 +399,7 @@ describe('Test Suite for Menu Controller', () => {
       request(app)
         .put('/api/v1/menu/1')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .send({ mealIds: [1, 1, 2, 2, 'a'] })
         .end((err, resp) => {
@@ -380,7 +412,7 @@ describe('Test Suite for Menu Controller', () => {
       request(app)
         .put('/api/v1/menu/1')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .send({
           mealIds: [1, 2, 5, 7, 8],
@@ -398,11 +430,11 @@ describe('Test Suite for Menu Controller', () => {
     beforeEach(async () => {
       await clearMenus();
       await clearMeals();
-      await insertSeedMeal(existingMeal);
-      await insertSeedMeal(validMeal1);
-      await insertSeedMeal(validMeal2);
+      await insertSeedMeal(curryRice);
+      await insertSeedMeal(riceAndStew);
+      await insertSeedMeal(crispyChicken);
       await insertSeedMenu({ ...currentMenu, mealIds: [1, 2] });
-      await insertSeedMenu(existingMenu);
+      await insertSeedMenu(menuFor22April18);
     });
 
     it('should require an authentication token', (done) => {
@@ -433,14 +465,14 @@ describe('Test Suite for Menu Controller', () => {
       request(app)
         .get('/api/v1/menu')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(200);
           expect(resp.body.menus).to.be.an('array');
           expect(resp.body.menus[0].id).to.equal(2);
-          expect(resp.body.menus[0].name).to.equal(existingMenu.name);
-          expect(resp.body.menus[0].date).to.equal(existingMenu.date);
+          expect(resp.body.menus[0].name).to.equal(menuFor22April18.name);
+          expect(resp.body.menus[0].date).to.equal(menuFor22April18.date);
           expect(resp.body.menus.length).to.be.greaterThan(1);
           done();
         });
@@ -467,7 +499,7 @@ describe('Test Suite for Menu Controller', () => {
       request(app)
         .get('/api/v1/menu')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(200);
@@ -500,9 +532,9 @@ describe('Test Suite for Menu Controller', () => {
           expect(resp.body.menu).to.be.an('object');
           expect(resp.body.menu.meals).to.be.an('array');
           expect(resp.body.menu.meals[0].id).to.equal(1);
-          expect(resp.body.menu.meals[0].name).to.equal(existingMeal.name);
-          expect(resp.body.menu.meals[0].price).to.equal(existingMeal.price);
-          expect(resp.body.menu.meals[0].image).to.equal(existingMeal.image);
+          expect(resp.body.menu.meals[0].name).to.equal(curryRice.name);
+          expect(resp.body.menu.meals[0].price).to.equal(curryRice.price);
+          expect(resp.body.menu.meals[0].image).to.equal(curryRice.image);
           expect(resp.body.menu.meals.length).to.be.greaterThan(1);
           done();
         });
@@ -512,16 +544,16 @@ describe('Test Suite for Menu Controller', () => {
       request(app)
         .get('/api/v1/menu/1')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(200);
           expect(resp.body.menu).to.be.an('object');
           expect(resp.body.menu.meals).to.be.an('array');
           expect(resp.body.menu.meals[0].id).to.equal(1);
-          expect(resp.body.menu.meals[0].name).to.equal(existingMeal.name);
-          expect(resp.body.menu.meals[0].price).to.equal(existingMeal.price);
-          expect(resp.body.menu.meals[0].image).to.equal(existingMeal.image);
+          expect(resp.body.menu.meals[0].name).to.equal(curryRice.name);
+          expect(resp.body.menu.meals[0].price).to.equal(curryRice.price);
+          expect(resp.body.menu.meals[0].image).to.equal(curryRice.image);
           expect(resp.body.menu.meals.length).to.be.greaterThan(1);
           done();
         });
@@ -532,15 +564,15 @@ describe('Test Suite for Menu Controller', () => {
     beforeEach(async () => {
       await clearMenus();
       await clearMeals();
-      await insertSeedMeal(existingMeal);
-      await insertSeedMeal(validMeal1);
-      await insertSeedMeal(validMeal2);
-      await insertSeedMenu(existingMenu);
-      await insertSeedMenu(validMenu1);
-      await insertSeedMenu(validMenu2);
+      await insertSeedMeal(curryRice);
+      await insertSeedMeal(riceAndStew);
+      await insertSeedMeal(crispyChicken);
+      await insertSeedMenu(menuFor22April18);
+      await insertSeedMenu(menuFor23April18);
+      await insertSeedMenu(menuFor24April18);
       await insertSeedMenu({ ...currentMenu, mealIds: [1, 2] });
     });
-    it('should return paginated meals data for customer', (done) => {
+    it('should return paginated meals object for customer', (done) => {
       request(app)
         .get('/api/v1/menu?offset=0&limit=1')
         .set({
@@ -555,17 +587,17 @@ describe('Test Suite for Menu Controller', () => {
           expect(resp.body.pagination.noPage).to.equal(2);
           expect(resp.body.pagination.pageNo).to.equal(1);
           expect(resp.body.menu.meals[0].id).to.equal(1);
-          expect(resp.body.menu.meals[0].name).to.equal(existingMeal.name);
-          expect(resp.body.menu.meals[0].price).to.equal(existingMeal.price);
-          expect(resp.body.menu.meals[0].image).to.equal(existingMeal.image);
+          expect(resp.body.menu.meals[0].name).to.equal(curryRice.name);
+          expect(resp.body.menu.meals[0].price).to.equal(curryRice.price);
+          expect(resp.body.menu.meals[0].image).to.equal(curryRice.image);
           done();
         });
     });
-    it('should return paginated data for caterer', (done) => {
+    it('should return paginated meals object for caterer', (done) => {
       request(app)
         .get('/api/v1/menu?offset=0&limit=2')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(200);
@@ -578,11 +610,11 @@ describe('Test Suite for Menu Controller', () => {
           done();
         });
     });
-    it('should return paginated data for caterer when getting single menu', (done) => {
+    it('should return paginated meals object for caterer when getting single menu', (done) => {
       request(app)
         .get('/api/v1/menu/4?offset=0&limit=1')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .end((err, resp) => {
           expect(resp.status).to.equal(200);
@@ -593,9 +625,9 @@ describe('Test Suite for Menu Controller', () => {
           expect(resp.body.pagination.noPage).to.equal(2);
           expect(resp.body.pagination.pageNo).to.equal(1);
           expect(resp.body.menu.meals[0].id).to.equal(1);
-          expect(resp.body.menu.meals[0].name).to.equal(existingMeal.name);
-          expect(resp.body.menu.meals[0].price).to.equal(existingMeal.price);
-          expect(resp.body.menu.meals[0].image).to.equal(existingMeal.image);
+          expect(resp.body.menu.meals[0].name).to.equal(curryRice.name);
+          expect(resp.body.menu.meals[0].price).to.equal(curryRice.price);
+          expect(resp.body.menu.meals[0].image).to.equal(curryRice.image);
           done();
         });
     });
@@ -606,7 +638,7 @@ describe('Test Suite for Menu Controller', () => {
       request(app)
         .get('/api/v1/menu?limit=abc&offset=xyz')
         .set({
-          'x-access-token': catererToken,
+          'x-access-token': alphaCatererToken,
         })
         .end((err, resp) => {
           expect(resp.body.errors.limit.statusCode).to.equal(400);

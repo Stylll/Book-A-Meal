@@ -1,4 +1,5 @@
 import { isEmpty } from 'lodash';
+import { Sequelize } from 'sequelize';
 import { Users as UserModel } from '../models';
 
 class Users {
@@ -79,9 +80,11 @@ class Users {
    */
   static getByEmail(email) {
     return UserModel.findAll({
-      where: {
-        email,
-      },
+      where: Sequelize
+        .where(
+          Sequelize.fn('lower', Sequelize.col('email')),
+          Sequelize.fn('lower', email),
+        ),
     })
       .then((returnedUser) => {
         if (isEmpty(returnedUser)) {
@@ -99,9 +102,11 @@ class Users {
    */
   static getByUsername(username) {
     return UserModel.findAll({
-      where: {
-        username,
-      },
+      where: Sequelize
+        .where(
+          Sequelize.fn('lower', Sequelize.col('username')),
+          Sequelize.fn('lower', username),
+        ),
     })
       .then((returnedUser) => {
         if (isEmpty(returnedUser)) {
