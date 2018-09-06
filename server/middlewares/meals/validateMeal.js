@@ -53,6 +53,8 @@ class ValidateMeal {
 
   /**
    * static method to validate that a meal name exists
+   * if current caterer has a meal with the same name, return error
+   * if another caterer has a meal with the same name, then create for current caterer
    * throws an error if name exists
    * @param {object} request
    * @param {object} response
@@ -64,11 +66,13 @@ class ValidateMeal {
       const result = await meals.getByName(request.body.name.trim());
       if (!isEmpty(result.meals)
         && result.meals[0].id !== parseInt(request.params.id, 10)) {
-        request.errors.name = {
-          message: 'Meal name already exists',
-          statusCode: 409,
-        };
-        return next();
+        if (result.meals[0].userId === request.decoded.user.id) {
+          request.errors.name = {
+            message: 'Meal name already exists',
+            statusCode: 409,
+          };
+          return next();
+        }
       }
       return next();
     }

@@ -1,6 +1,6 @@
 import { isEmpty } from 'lodash';
 import { Op, Sequelize } from 'sequelize';
-import { Meals as MealModel } from '../models';
+import { Meals as MealModel, Users as UserModel } from '../models';
 import paginator from '../utils/paginator';
 
 
@@ -101,6 +101,14 @@ class Meals {
    */
   static get(id, paranoid = true) {
     return MealModel.findById(id, {
+      include: [{
+        model: UserModel,
+        as: 'user',
+        attributes: {
+          exclude: ['accountType', 'password', 'resetPasswordToken', 'resetPasswordExpires',
+            'createdAt', 'updatedAt'],
+        },
+      }],
       attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
       order: [['createdAt', 'DESC']],
       paranoid,
@@ -127,6 +135,14 @@ class Meals {
           Sequelize.fn('lower', Sequelize.col('name')),
           Sequelize.fn('lower', name),
         ),
+      include: [{
+        model: UserModel,
+        as: 'user',
+        attributes: {
+          exclude: ['accountType', 'password', 'resetPasswordToken', 'resetPasswordExpires',
+            'createdAt', 'updatedAt'],
+        },
+      }],
       attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
       order: [['createdAt', 'DESC']],
       paranoid,
@@ -155,6 +171,14 @@ class Meals {
    */
   static getAll(paranoid = true, limit = 10, offset = 0, mealName = '') {
     return MealModel.findAndCountAll({
+      include: [{
+        model: UserModel,
+        as: 'user',
+        attributes: {
+          exclude: ['accountType', 'password', 'resetPasswordToken', 'resetPasswordExpires',
+            'createdAt', 'updatedAt'],
+        },
+      }],
       attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
       order: [['createdAt', 'DESC']],
       paranoid,
@@ -204,6 +228,14 @@ class Meals {
             Sequelize.col('name'),
           ), 'LIKE', `%${mealName.toLowerCase()}%`),
       },
+      include: [{
+        model: UserModel,
+        as: 'user',
+        attributes: {
+          exclude: ['accountType', 'password', 'resetPasswordToken', 'resetPasswordExpires',
+            'createdAt', 'updatedAt'],
+        },
+      }],
       attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
       order: [['createdAt', 'DESC']],
       paranoid,

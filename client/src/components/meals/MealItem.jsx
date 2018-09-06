@@ -21,6 +21,9 @@ const MealItem = ({
               <h4 data-for="price"
                 data-tip={meal.price}
                 className="black-text light-text wrap-text">Price: &#8358;{meal.price}</h4>
+              {meal.user && meal.user.username &&
+                <h4 className="black-text light-text wrap-text">Caterer: {meal.user.username}</h4>
+              }
               {showOrder &&
               <NavLink to={`/customer/orders/confirm/${meal.id}`} className="btn btn-secondary">Order</NavLink>
               }

@@ -40,6 +40,7 @@ describe('Test Suite for Meal Controller', () => {
   // generate access token for users
   const alphaCatererToken = Authenticate.authenticateUser({ id: 1, ...existingUser });
   const betaCatererToken = Authenticate.authenticateUser({ id: 5, ...existingUser });
+  const gammaCatererToken = Authenticate.authenticateUser({ id: 3, ...userJane });
   const customerToken = Authenticate.authenticateUser({ id: 2, ...userMatthew });
   const adminToken = Authenticate.authenticateUser({ id: 4, ...userStephen });
 
@@ -258,6 +259,40 @@ describe('Test Suite for Meal Controller', () => {
           done();
         });
     });
+
+    it('should create meal for caterer if another caterer has meal with the same name', (done) => {
+      request(app)
+        .post('/api/v1/meals')
+        .set({
+          'x-access-token': gammaCatererToken,
+        })
+        .send(curryRice)
+        .end((err, resp) => {
+          expect(resp.status).to.equal(201);
+          expect(resp.body).to.haveOwnProperty('meal');
+          expect(resp.body.meal.name).to.equal(curryRice.name);
+          expect(resp.body.meal.price).to.equal(curryRice.price);
+          expect(resp.body.meal.image).to.equal(defaultImage);
+          expect(resp.body.meal).to.haveOwnProperty('userId');
+          expect(resp.body.meal.userId).to.not.equal(null);
+          expect(resp.body.meal.userId).to.equal(3);
+          done();
+        });
+    });
+
+    it('should not create meal if caterer has an existing meal with the same name', (done) => {
+      request(app)
+        .post('/api/v1/meals')
+        .set({
+          'x-access-token': alphaCatererToken,
+        })
+        .send(curryRice)
+        .end((err, resp) => {
+          expect(resp.body.errors.name.statusCode).to.equal(409);
+          expect(resp.body.errors.name.message).to.equal('Meal name already exists');
+          done();
+        });
+    });
   });
 
   describe('PUT: Update Meal - /api/v1/meals/:id', () => {
@@ -452,6 +487,20 @@ describe('Test Suite for Meal Controller', () => {
           done();
         });
     });
+
+    it('should not update meal if caterer has an existing meal with the same name which is not what is being updated', (done) => {
+      request(app)
+        .put('/api/v1/meals/1')
+        .set({
+          'x-access-token': alphaCatererToken,
+        })
+        .send(crispyChicken)
+        .end((err, resp) => {
+          expect(resp.body.errors.name.statusCode).to.equal(409);
+          expect(resp.body.errors.name.message).to.equal('Meal name already exists');
+          done();
+        });
+    });
   });
 
   describe('GET: Get Meals - /api/v1/meals', () => {
@@ -509,7 +558,7 @@ describe('Test Suite for Meal Controller', () => {
           expect(resp.status).to.equal(200);
           expect(resp.body.meals).to.be.an('array');
           expect(resp.body.meals[0])
-            .to.have.all.deep.keys('id', 'name', 'price', 'image', 'userId');
+            .to.have.all.deep.keys('id', 'name', 'price', 'image', 'user', 'userId');
           expect(resp.body.meals.length).to.equal(2);
           expect(resp.body.meals[0].name).to.equal(riceAndStew.name);
           expect(resp.body.meals[1].name).to.equal(curryRice.name);
@@ -529,7 +578,7 @@ describe('Test Suite for Meal Controller', () => {
           expect(resp.status).to.equal(200);
           expect(resp.body.meals).to.be.an('array');
           expect(resp.body.meals[0])
-            .to.have.all.deep.keys('id', 'name', 'price', 'image', 'userId');
+            .to.have.all.deep.keys('id', 'name', 'price', 'image', 'user', 'userId');
           expect(resp.body.meals.length).to.equal(3);
           expect(resp.body.meals[0].name).to.equal(crispyChicken.name);
           expect(resp.body.meals[1].name).to.equal(riceAndStew.name);

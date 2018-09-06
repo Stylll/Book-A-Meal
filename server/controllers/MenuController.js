@@ -158,6 +158,14 @@ class MenuController {
         order: [
           ['id', 'DESC'],
         ],
+        include: [{
+          model: Models.Users,
+          as: 'user',
+          attributes: {
+            exclude: ['accountType', 'password', 'resetPasswordToken', 'resetPasswordExpires',
+              'createdAt', 'updatedAt'],
+          },
+        }],
       }],
       attributes: { exclude: ['createdAt', 'updatedAt'] },
       limit,
