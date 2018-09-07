@@ -2,7 +2,7 @@ import { isEmpty } from 'lodash';
 import { Op, Sequelize } from 'sequelize';
 import { getNormalDate } from '../utils/dateBeautifier';
 import MealUtils from '../utils/meals/mealUtils';
-import { Menus as MenuModel, Meals as MealModel } from '../models';
+import { Menus as MenuModel, Meals as MealModel, Users as UserModel } from '../models';
 import paginator from '../utils/paginator';
 
 /**
@@ -125,6 +125,14 @@ class Menus {
         model: MealModel,
         as: 'meals',
         attributes: { exclude: ['createdAt', 'updatedAt', 'MenuMeals'] },
+        include: [{
+          model: UserModel,
+          as: 'user',
+          attributes: {
+            exclude: ['accountType', 'password', 'resetPasswordToken', 'resetPasswordExpires',
+              'createdAt', 'updatedAt'],
+          },
+        }],
       }],
       attributes: { exclude: ['createdAt', 'updatedAt'] },
       order: [['createdAt', 'DESC']],
@@ -167,6 +175,14 @@ class Menus {
         order: [
           ['id', 'DESC'],
         ],
+        include: [{
+          model: UserModel,
+          as: 'user',
+          attributes: {
+            exclude: ['accountType', 'password', 'resetPasswordToken', 'resetPasswordExpires',
+              'createdAt', 'updatedAt'],
+          },
+        }],
       }],
       attributes: { exclude: ['createdAt', 'updatedAt'] },
       offset,
@@ -201,6 +217,14 @@ class Menus {
           userId,
         },
         attributes: { exclude: ['createdAt', 'updatedAt', 'MenuMeals'] },
+        include: [{
+          model: UserModel,
+          as: 'user',
+          attributes: {
+            exclude: ['accountType', 'password', 'resetPasswordToken', 'resetPasswordExpires',
+              'createdAt', 'updatedAt'],
+          },
+        }],
       }],
       attributes: { exclude: ['createdAt', 'updatedAt'] },
       limit,

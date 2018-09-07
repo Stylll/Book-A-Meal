@@ -3,10 +3,6 @@ export default (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: {
-        args: true,
-        msg: 'Meal name already exists',
-      },
       validate: {
         notEmpty: {
           args: true,
@@ -38,6 +34,7 @@ export default (sequelize, DataTypes) => {
   Meals.associate = (models) => {
     // associations can be defined here
     Meals.belongsTo(models.Users, {
+      as: 'user',
       foreignKey: 'userId',
       onDelete: 'CASCADE',
     });

@@ -36,11 +36,6 @@ describe('Test suite for meals model', () => {
     expect(result.err.message).to.equal('Meal name is required');
   });
 
-  it('should require a unique meal name', async () => {
-    const result = await meals.add(curryRice);
-    expect(result.err.message).to.equal('Meal name already exists');
-  });
-
   it('should require price', async () => {
     const result = await meals.add({
       name: riceAndStew.name,

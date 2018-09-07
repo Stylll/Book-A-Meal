@@ -22,7 +22,6 @@ class MealController {
         image = result;
       }
     }
-
     // add meal to db
     const meal = await meals.add({
       name: request.body.name.trim(),
